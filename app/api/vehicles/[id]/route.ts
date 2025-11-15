@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { mockVehicles, mockTrips } from "@/lib/mock-data";
 
-export async function GET(
-  _: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(_: NextRequest, context: any) {
   try {
-    const id = params.id;
+    const id = context.params.id;
 
     const vehicle = mockVehicles.find((v) => v.id === id);
 
