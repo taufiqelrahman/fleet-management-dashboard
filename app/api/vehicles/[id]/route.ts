@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { mockVehicles, mockTrips } from "@/lib/mock-data";
 
 export async function GET(
-  request: NextRequest,
+  _: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
@@ -26,7 +26,7 @@ export async function GET(
       },
       success: true,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { success: false, message: "Failed to fetch vehicle details" },
       { status: 500 }
