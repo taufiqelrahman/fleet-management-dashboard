@@ -49,10 +49,13 @@ export async function GET(request: Request) {
         }),
       ]);
 
-      const averageConsumption =
+      const averageConsumption: number =
         vehicles.length > 0
-          ? vehicles.reduce((sum: number, v) => sum + v.fuelConsumption, 0) /
-            vehicles.length
+          ? vehicles.reduce(
+              (sum: number, v: { fuelConsumption: number }) =>
+                sum + v.fuelConsumption,
+              0
+            ) / vehicles.length
           : 0;
 
       const stats = {
