@@ -156,7 +156,7 @@ You should see:
 
 - ✅ Login successful
 - ✅ Dashboard loads
-- ✅ Mock data displays (from lib/mock-data.ts)
+- ✅ Real data from Neon PostgreSQL database
 
 ---
 
