@@ -32,8 +32,8 @@ npm run prisma:generate
 # Push schema to database (creates tables)
 npm run prisma:push
 
-# (Optional) Seed database with mock data
-npm run db:seed
+# (Optional) Seed database with Indonesian demo data
+npm run prisma:seed
 ```
 
 ## Step 4: Verify Database

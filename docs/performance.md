@@ -494,8 +494,8 @@ With Cache:
 └─────────────────────────────────────────────────┘
                       ▼
 ┌─────────────────────────────────────────────────┐
-│               Database (SQLite)                 │
-│  Persistent Data Storage                        │
+│         Neon PostgreSQL (Serverless)            │
+│  Persistent Data Storage + Connection Pooling   │
 └─────────────────────────────────────────────────┘
 ```
 

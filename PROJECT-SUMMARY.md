@@ -79,7 +79,8 @@
 - Type-safe database queries
 - Database branching support
 - Connection pooling built-in
-- Comprehensive mock data
+- Indonesian localized demo data (vehicles, drivers, destinations)
+- Database seeding script with realistic data
 
 #### 9. ✅ Documentation (English)
 

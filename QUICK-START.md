@@ -37,6 +37,7 @@ NEXTAUTH_SECRET="run-openssl-rand-base64-32-to-generate"
 ```bash
 npm run prisma:generate
 npm run prisma:push
+npm run prisma:seed  # Optional: Seed with Indonesian demo data
 ```
 
 ## 6️⃣ Start Development
@@ -46,6 +47,11 @@ npm run dev
 ```
 
 Visit: http://localhost:3000
+
+**Login with:**
+
+- Email: `admin@nextfleet.com`
+- Password: `password123`
 
 ---
 
