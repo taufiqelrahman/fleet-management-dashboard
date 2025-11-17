@@ -3,23 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 
 import type { User } from "./types";
-
-const mockUsers = [
-  {
-    id: "admin-1",
-    email: "admin@nextfleet.com",
-    password: "$2a$10$FvWKmzAEucC.wByC2It4e.SVFfhyqSLaDdM2Ry32AVh8JTdMpzBo2",
-    name: "Admin User",
-    role: "ADMIN" as const,
-  },
-  {
-    id: "operator-1",
-    email: "operator@nextfleet.com",
-    password: "$2a$10$FvWKmzAEucC.wByC2It4e.SVFfhyqSLaDdM2Ry32AVh8JTdMpzBo2",
-    name: "Operator User",
-    role: "OPERATOR" as const,
-  },
-];
+import { prisma } from "./prisma";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -34,7 +18,16 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const user = mockUsers.find((u) => u.email === credentials.email);
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+          select: {
+            id: true,
+            email: true,
+            password: true,
+            name: true,
+            role: true,
+          },
+        });
 
         if (!user) {
           return null;

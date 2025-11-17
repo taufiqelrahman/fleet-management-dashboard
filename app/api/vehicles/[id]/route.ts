@@ -1,11 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import { mockVehicles, mockTrips } from "@/lib/mock-data";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(_: NextRequest, context: any) {
   try {
     const id = context.params.id;
 
-    const vehicle = mockVehicles.find((v) => v.id === id);
+    const vehicle = await prisma.vehicle.findUnique({
+      where: { id },
+      include: {
+        trips: {
+          orderBy: {
+            startDate: "desc",
+          },
+          take: 50, // Limit to last 50 trips
+        },
+      },
+    });
 
     if (!vehicle) {
       return NextResponse.json(
@@ -14,16 +24,12 @@ export async function GET(_: NextRequest, context: any) {
       );
     }
 
-    const trips = mockTrips[id] || [];
-
     return NextResponse.json({
-      data: {
-        ...vehicle,
-        trips,
-      },
+      data: vehicle,
       success: true,
     });
-  } catch {
+  } catch (error) {
+    console.error("Get vehicle detail error:", error);
     return NextResponse.json(
       { success: false, message: "Failed to fetch vehicle details" },
       { status: 500 }
