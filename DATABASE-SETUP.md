@@ -113,24 +113,6 @@ model Trip {
 }
 ```
 
-## API Changes
-
-### Before (Mock Data)
-
-```typescript
-import { mockVehicles } from "@/lib/mock-data";
-// Returns static array
-```
-
-### After (Database)
-
-```typescript
-import { prisma } from "@/lib/prisma";
-
-// Real database queries
-const vehicles = await prisma.vehicle.findMany();
-```
-
 ## Key Features
 
 ### ✅ Full CRUD Operations
