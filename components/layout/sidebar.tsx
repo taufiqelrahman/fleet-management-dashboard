@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { LayoutDashboard, Car, BarChart3, LogOut } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
+import { User } from "@/lib/types";
 
 const menuItems = [
   {
@@ -69,7 +70,7 @@ export function Sidebar() {
               {session?.user?.name}
             </p>
             <p className="text-xs text-muted-foreground truncate">
-              {(session?.user as any)?.role || "User"}
+              {(session?.user as User)?.role || "User"}
             </p>
           </div>
         </div>
