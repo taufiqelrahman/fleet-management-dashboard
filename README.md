@@ -117,11 +117,14 @@ fleet-management-dashboard/
 ├── prisma/
 │   ├── schema.prisma             # Database schema
 │   └── seed.ts                   # Database seeder
-documentation
 ├── docs/                         # Documentation
 │   ├── architecture.md           # Architecture overview
 │   ├── design-decisions.md       # Design decisions
-│   └── performance.md            # Performance optimizations
+│   ├── performance.md            # Performance optimizations
+│   └── neon-setup.md             # Neon PostgreSQL setup guide
+├── __tests__/                    # Unit tests
+│   ├── utils.test.ts             # Utility tests
+│   └── validation.test.ts        # Validation tests
 ├── middleware.ts                 # Route protection
 ├── tailwind.config.ts            # Tailwind configuration
 ├── tsconfig.json                 # TypeScript configuration
@@ -228,29 +231,8 @@ npm run test:coverage
 - `npm run prisma:generate` - Generate Prisma client
 - `npm run prisma:push` - Push schema to database
 - `npm run prisma:studio` - Open Prisma Studio
-
-Edit `.env.local` with your configuration:
-
-```env
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your-secret-key-here
-DATABASE_URL="file:./dev.db"
-```
-
-4. Initialize the database:
-
-```bash
-npx prisma generate
-npx prisma db push
-```
-
-5. Run the development server:
-
-```bash
-npm run dev
-```
-
-6. Open [http://localhost:3000](http://localhost:3000) in your browser.
+- `npm run prisma:migrate` - Run database migrations
+- `npm run prisma:seed` - Seed database with Indonesian demo data
 
 ### Demo Credentials
 
