@@ -1,20 +1,21 @@
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-// import { compare } from "bcryptjs";
+import { compare } from "bcryptjs";
+
 import type { User } from "./types";
 
 const mockUsers = [
   {
     id: "admin-1",
     email: "admin@nextfleet.com",
-    password: "$2a$10$K7L6JmZXZ6Y0jY0qZ0qZ0e.Q0Z0Z0Z0Z0Z0Z0Z0Z0Z0Z0Z0Z0Z0Z0",
+    password: "$2a$10$FvWKmzAEucC.wByC2It4e.SVFfhyqSLaDdM2Ry32AVh8JTdMpzBo2",
     name: "Admin User",
     role: "ADMIN" as const,
   },
   {
     id: "operator-1",
     email: "operator@nextfleet.com",
-    password: "$2a$10$K7L6JmZXZ6Y0jY0qZ0qZ0e.Q0Z0Z0Z0Z0Z0Z0Z0Z0Z0Z0Z0Z0Z0Z0",
+    password: "$2a$10$FvWKmzAEucC.wByC2It4e.SVFfhyqSLaDdM2Ry32AVh8JTdMpzBo2",
     name: "Operator User",
     role: "OPERATOR" as const,
   },
@@ -39,16 +40,21 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        if (credentials.password === "password123") {
-          return {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-            role: user.role,
-          };
+        const isPasswordValid = await compare(
+          String(credentials.password),
+          String(user.password)
+        );
+
+        if (!isPasswordValid) {
+          return null;
         }
 
-        return null;
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+        };
       },
     }),
   ],
