@@ -26,8 +26,8 @@ NextFleet follows a modern, scalable architecture pattern built on Next.js 15's 
 ┌─────────────────────────────────────────────────────────┐
 │                   Data Layer                             │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
-│  │  NodeCache   │  │    Prisma    │  │  Mock Data   │  │
-│  │   (Memory)   │  │   (SQLite)   │  │  Generator   │  │
+│  │  NodeCache   │  │    Prisma    │  │     Neon     │  │
+│  │   (Memory)   │  │     ORM      │  │  PostgreSQL  │  │
 │  └──────────────┘  └──────────────┘  └──────────────┘  │
 └─────────────────────────────────────────────────────────┘
 ```
@@ -93,8 +93,9 @@ NextFleet follows a modern, scalable architecture pattern built on Next.js 15's 
 #### Technologies
 
 - Prisma ORM
-- SQLite (development)
+- Neon PostgreSQL (serverless)
 - Type-safe queries
+- Connection pooling
 
 ## Data Flow
 

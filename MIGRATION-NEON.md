@@ -181,8 +181,8 @@ If you had existing SQLite data:
 # Push new schema
 npm run prisma:push
 
-# Use mock data (already in project)
-# Mock data is served from lib/mock-data.ts
+# Seed database with Indonesian data
+npm run prisma:seed
 ```
 
 ## Production Deployment

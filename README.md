@@ -113,9 +113,11 @@ fleet-management-dashboard/
 │   ├── validation.ts             # Zod schemas
 │   ├── types.ts                  # TypeScript types
 │   ├── utils.ts                  # Utility functions
-│   └── mock-data.ts              # Mock data
+│   └── prisma.ts                 # Prisma client instance
 ├── prisma/
-│   └── schema.prisma             # Database schema
+│   ├── schema.prisma             # Database schema
+│   └── seed.ts                   # Database seeder
+documentation
 ├── docs/                         # Documentation
 │   ├── architecture.md           # Architecture overview
 │   ├── design-decisions.md       # Design decisions
