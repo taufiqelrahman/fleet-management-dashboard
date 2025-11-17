@@ -51,7 +51,7 @@ export async function GET(request: Request) {
 
       const averageConsumption =
         vehicles.length > 0
-          ? vehicles.reduce((sum, v) => sum + v.fuelConsumption, 0) /
+          ? vehicles.reduce((sum: number, v) => sum + v.fuelConsumption, 0) /
             vehicles.length
           : 0;
 
