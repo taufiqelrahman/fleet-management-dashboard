@@ -1,19 +1,83 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCachedData, setCachedData } from "@/lib/cache";
+import type { Prisma } from "@prisma/client";
 
-const DASHBOARD_CACHE_KEY = "dashboard-stats";
-const MONTHLY_CACHE_KEY = "monthly-data";
-const ANALYTICS_CACHE_KEY = "analytics-data";
+const DASHBOARD_CACHE_KEY = "dashboard-stats" as const;
+const MONTHLY_CACHE_KEY = "monthly-data" as const;
+const ANALYTICS_CACHE_KEY = "analytics-data" as const;
 
-export async function GET(request: Request) {
+// Prisma result types
+type VehicleWithFuelConsumption = Prisma.VehicleGetPayload<{
+  select: { fuelConsumption: true };
+}>;
+
+type TripWithVehicle = Prisma.TripGetPayload<{
+  include: { vehicle: true };
+}>;
+
+type VehicleWithTrips = Prisma.VehicleGetPayload<{
+  include: {
+    trips: {
+      where: {
+        startDate: { gte: Date };
+      };
+    };
+  };
+}>;
+
+type Trip = Prisma.TripGetPayload<Record<string, never>>;
+
+// Response types
+interface DashboardStats {
+  totalVehicles: number;
+  activeVehicles: number;
+  averageConsumption: number;
+  upcomingMaintenance: number;
+}
+
+interface MonthlyData {
+  month: string;
+  mileage: number;
+  activeVehicles: number;
+  inactiveVehicles: number;
+}
+
+interface FuelConsumption {
+  month: string;
+  consumption: number;
+}
+
+interface UtilizationRate {
+  vehicle: string;
+  rate: number;
+}
+
+interface DriverPerformance {
+  driver: string;
+  score: number;
+}
+
+interface AnalyticsData {
+  fuelConsumption: FuelConsumption[];
+  utilizationRate: UtilizationRate[];
+  driverPerformance: DriverPerformance[];
+}
+
+interface DriverStats {
+  totalDistance: number;
+  totalFuel: number;
+  tripCount: number;
+}
+
+export async function GET(request: Request): Promise<NextResponse> {
   try {
     const { searchParams } = new URL(request.url);
     const type = searchParams.get("type");
 
     if (type === "dashboard") {
-      const cachedStats = getCachedData(DASHBOARD_CACHE_KEY);
-      const cachedMonthly = getCachedData(MONTHLY_CACHE_KEY);
+      const cachedStats = getCachedData<DashboardStats>(DASHBOARD_CACHE_KEY);
+      const cachedMonthly = getCachedData<MonthlyData[]>(MONTHLY_CACHE_KEY);
 
       if (cachedStats && cachedMonthly) {
         return NextResponse.json({
@@ -32,7 +96,7 @@ export async function GET(request: Request) {
         activeVehicles,
         vehicles,
         upcomingMaintenanceCount,
-      ] = await Promise.all([
+      ] = (await Promise.all([
         prisma.vehicle.count(),
         prisma.vehicle.count({
           where: { status: "ACTIVE" },
@@ -47,7 +111,7 @@ export async function GET(request: Request) {
             },
           },
         }),
-      ]);
+      ])) as [number, number, VehicleWithFuelConsumption[], number];
 
       const averageConsumption: number =
         vehicles.length > 0
@@ -58,7 +122,7 @@ export async function GET(request: Request) {
             ) / vehicles.length
           : 0;
 
-      const stats = {
+      const stats: DashboardStats = {
         totalVehicles,
         activeVehicles,
         averageConsumption: Number(averageConsumption.toFixed(2)),
@@ -69,7 +133,7 @@ export async function GET(request: Request) {
       const sixMonthsAgo = new Date();
       sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
-      const trips = await prisma.trip.findMany({
+      const trips: TripWithVehicle[] = await prisma.trip.findMany({
         where: {
           startDate: {
             gte: sixMonthsAgo,
@@ -86,7 +150,7 @@ export async function GET(request: Request) {
         { mileage: number; vehicles: Set<string> }
       >();
 
-      trips.forEach((trip) => {
+      trips.forEach((trip: TripWithVehicle) => {
         const month = new Date(trip.startDate).toLocaleString("en-US", {
           month: "short",
         });
@@ -100,7 +164,7 @@ export async function GET(request: Request) {
         data.vehicles.add(trip.vehicleId);
       });
 
-      const monthlyData = Array.from(monthlyMap.entries()).map(
+      const monthlyData: MonthlyData[] = Array.from(monthlyMap.entries()).map(
         ([month, data]) => ({
           month,
           mileage: Math.round(data.mileage),
@@ -123,7 +187,7 @@ export async function GET(request: Request) {
     }
 
     if (type === "analytics") {
-      const cachedAnalytics = getCachedData(ANALYTICS_CACHE_KEY);
+      const cachedAnalytics = getCachedData<AnalyticsData>(ANALYTICS_CACHE_KEY);
 
       if (cachedAnalytics) {
         return NextResponse.json({
@@ -137,7 +201,7 @@ export async function GET(request: Request) {
       const sixMonthsAgo = new Date();
       sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
-      const trips = await prisma.trip.findMany({
+      const trips: Trip[] = await prisma.trip.findMany({
         where: {
           startDate: {
             gte: sixMonthsAgo,
@@ -153,15 +217,15 @@ export async function GET(request: Request) {
         fuelByMonth.set(month, (fuelByMonth.get(month) || 0) + trip.fuelUsed);
       });
 
-      const fuelConsumption = Array.from(fuelByMonth.entries()).map(
-        ([month, consumption]) => ({
-          month,
-          consumption: Math.round(consumption),
-        })
-      );
+      const fuelConsumption: FuelConsumption[] = Array.from(
+        fuelByMonth.entries()
+      ).map(([month, consumption]) => ({
+        month,
+        consumption: Math.round(consumption),
+      }));
 
       // Get utilization rate per vehicle
-      const vehicles = await prisma.vehicle.findMany({
+      const vehicles: VehicleWithTrips[] = await prisma.vehicle.findMany({
         include: {
           trips: {
             where: {
@@ -173,7 +237,7 @@ export async function GET(request: Request) {
         },
       });
 
-      const utilizationRate = vehicles.map((vehicle) => {
+      const utilizationRate: UtilizationRate[] = vehicles.map((vehicle) => {
         const tripCount = vehicle.trips.length;
         const maxTrips = 180; // Assume max 1 trip per day for 6 months
         const rate = Math.min((tripCount / maxTrips) * 100, 100);
@@ -184,10 +248,7 @@ export async function GET(request: Request) {
       });
 
       // Get driver performance (based on fuel efficiency)
-      const driverStats = new Map<
-        string,
-        { totalDistance: number; totalFuel: number; tripCount: number }
-      >();
+      const driverStats = new Map<string, DriverStats>();
 
       trips.forEach((trip) => {
         if (!trip.driverName) return;
@@ -206,16 +267,16 @@ export async function GET(request: Request) {
         stats.tripCount += 1;
       });
 
-      const driverPerformance = Array.from(driverStats.entries()).map(
-        ([driver, stats]) => {
-          // Calculate score: lower fuel consumption per km = higher score
-          const fuelEfficiency = stats.totalFuel / stats.totalDistance;
-          const score = Math.min(Math.round((15 / fuelEfficiency) * 10), 100);
-          return { driver, score };
-        }
-      );
+      const driverPerformance: DriverPerformance[] = Array.from(
+        driverStats.entries()
+      ).map(([driver, stats]) => {
+        // Calculate score: lower fuel consumption per km = higher score
+        const fuelEfficiency = stats.totalFuel / stats.totalDistance;
+        const score = Math.min(Math.round((15 / fuelEfficiency) * 10), 100);
+        return { driver, score };
+      });
 
-      const analyticsData = {
+      const analyticsData: AnalyticsData = {
         fuelConsumption,
         utilizationRate,
         driverPerformance,
