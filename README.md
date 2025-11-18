@@ -397,11 +397,38 @@ For more design decisions, see [design-decisions.md](docs/design-decisions.md).
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please read the contributing guidelines first.
+We ❤️ contributions!
+
+- Check out good first issues here
+- Fork the repo & create a branch:
+
+```bash
+git checkout -b feature/amazing-feature
+```
+
+- Commit & push your changes:
+
+```bash
+git commit -m "Add amazing feature"
+git push origin feature/amazing-feature
+```
+
+- Open a Pull Request to main.
+
+### Guidelines
+
+- Follow TypeScript best practices
+- Write tests for new features
+- Use conventional commit messages
+- Keep code clean & formatted
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+MIT License
+
+## 🐛 Bug Reports & Feature Requests
+
+Submit via [GitHub Issues](https://github.com/taufiqelrahman/fleet-management-dashboard/issues).
 
 ## 👨‍💻 Author
 
