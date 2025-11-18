@@ -30,9 +30,9 @@ const COLORS = [
 export function UtilizationRateChart({ data }: UtilizationRateChartProps) {
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <BarChart data={data} layout="horizontal">
+      <BarChart data={data} layout="vertical">
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis type="number" domain={[0, 100]} />
+        <XAxis type="number" domain={[0, 3]} />
         <YAxis dataKey="vehicle" type="category" width={100} />
         <Tooltip />
         <Bar dataKey="rate" name="Utilization Rate (%)">
