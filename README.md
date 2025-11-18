@@ -118,10 +118,7 @@ fleet-management-dashboard/
 │   ├── schema.prisma             # Database schema
 │   └── seed.ts                   # Database seeder
 ├── docs/                         # Documentation
-│   ├── architecture.md           # Architecture overview
-│   ├── design-decisions.md       # Design decisions
-│   ├── performance.md            # Performance optimizations
-│   └── neon-setup.md             # Neon PostgreSQL setup guide
+│   └── TECHNICAL.md              # Architecture & technical details
 ├── __tests__/                    # Unit tests
 │   ├── utils.test.ts             # Utility tests
 │   └── validation.test.ts        # Validation tests
@@ -270,11 +267,10 @@ npm run test:coverage
 - Type-safe API routes and responses
 - End-to-end type safety from API to UI
 
-For detailed architecture documentation, see:
+For detailed documentation, see:
 
-- [architecture.md](docs/architecture.md) - System architecture
-- [neon-setup.md](docs/neon-setup.md) - Neon PostgreSQL setup guide
-- [MIGRATION-NEON.md](MIGRATION-NEON.md) - Migration guide from SQLite to Neon
+- [QUICK-START.md](QUICK-START.md) - Quick setup guide
+- [docs/TECHNICAL.md](docs/TECHNICAL.md) - Architecture & technical details
 
 ## 📊 Key Features Demonstration
 
@@ -358,7 +354,7 @@ The project is optimized for Vercel deployment:
 - TanStack Query staleTime configuration
 - Suspense boundaries for progressive loading
 
-See [performance.md](docs/performance.md) for detailed analysis.
+See [docs/TECHNICAL.md](docs/TECHNICAL.md) for detailed technical documentation.
 
 ## 🎨 Design Decisions
 
