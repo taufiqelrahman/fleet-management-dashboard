@@ -7,32 +7,32 @@ import { LayoutDashboard, Car, BarChart3, LogOut } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { User } from "@/lib/types";
+import { useTranslations, useLocale } from "next-intl";
+import { LocaleSwitcher } from "@/components/locale-switcher";
 
-const menuItems = [
-  {
-    title: "Dashboard",
-    href: "/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Vehicles",
-    href: "/dashboard/vehicles",
-    icon: Car,
-  },
-  {
-    title: "Analytics",
-    href: "/dashboard/analytics",
-    icon: BarChart3,
-  },
-];
-
-interface SidebarProps {
-  mobile?: boolean;
-}
-
-export function Sidebar({ mobile = false }: SidebarProps) {
+export function Sidebar({ mobile = false }: { mobile?: boolean }) {
+  const t = useTranslations();
+  const locale = useLocale();
   const pathname = usePathname();
   const { data: session } = useSession();
+
+  const menuItems = [
+    {
+      title: t("nav.dashboard"),
+      href: `/${locale}/dashboard`,
+      icon: LayoutDashboard,
+    },
+    {
+      title: t("nav.vehicles"),
+      href: `/${locale}/dashboard/vehicles`,
+      icon: Car,
+    },
+    {
+      title: t("nav.analytics"),
+      href: `/${locale}/dashboard/analytics`,
+      icon: BarChart3,
+    },
+  ];
 
   return (
     <aside
@@ -83,14 +83,17 @@ export function Sidebar({ mobile = false }: SidebarProps) {
             </p>
           </div>
         </div>
-        <Button
-          variant="outline"
-          className="w-full justify-start gap-2"
-          onClick={() => signOut({ callbackUrl: "/login" })}
-        >
-          <LogOut className="h-4 w-4" />
-          Logout
-        </Button>
+        <div className="flex gap-2 mb-2">
+          <Button
+            variant="outline"
+            className="flex-1 justify-start gap-2"
+            onClick={() => signOut({ callbackUrl: `/${locale}/login` })}
+          >
+            <LogOut className="h-4 w-4" />
+            {t("auth.logout")}
+          </Button>
+          <LocaleSwitcher />
+        </div>
       </div>
     </aside>
   );

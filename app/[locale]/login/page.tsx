@@ -18,8 +18,10 @@ import {
 } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function LoginPage() {
+  const t = useTranslations();
   const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
@@ -43,17 +45,17 @@ export default function LoginPage() {
 
       if (result?.error) {
         toast({
-          title: "Login Failed",
-          description: "Invalid email or password",
+          title: t("auth.login"),
+          description: t("auth.invalidCredentials"),
           variant: "destructive",
         });
       } else {
         router.push("/dashboard");
       }
-    } catch (error) {
+    } catch {
       toast({
-        title: "Error",
-        description: "An unexpected error occurred",
+        title: t("common.error"),
+        description: t("errors.generic"),
         variant: "destructive",
       });
     } finally {
@@ -69,13 +71,13 @@ export default function LoginPage() {
             NextFleet
           </CardTitle>
           <CardDescription className="text-center">
-            Fleet Management Dashboard
+            {t("auth.loginDescription")}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t("auth.email")}</Label>
               <Input
                 id="email"
                 type="email"
@@ -90,7 +92,7 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t("auth.password")}</Label>
               <Input
                 id="password"
                 type="password"
@@ -106,7 +108,7 @@ export default function LoginPage() {
 
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Sign In
+              {t("auth.signIn")}
             </Button>
           </form>
 
