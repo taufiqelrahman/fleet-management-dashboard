@@ -37,7 +37,7 @@ export default function AnalyticsPage() {
                 <CardTitle>Fuel Consumption Trend</CardTitle>
               </CardHeader>
               <CardContent>
-                <FuelConsumptionChart data={data?.data.fuelConsumption || []} />
+                <FuelConsumptionChart data={data?.fuelConsumption || []} />
               </CardContent>
             </Card>
 
@@ -46,7 +46,7 @@ export default function AnalyticsPage() {
                 <CardTitle>Vehicle Utilization Rate</CardTitle>
               </CardHeader>
               <CardContent>
-                <UtilizationRateChart data={data?.data.utilizationRate || []} />
+                <UtilizationRateChart data={data?.utilizationRate || []} />
               </CardContent>
             </Card>
 
@@ -55,9 +55,7 @@ export default function AnalyticsPage() {
                 <CardTitle>Driver Performance Index</CardTitle>
               </CardHeader>
               <CardContent>
-                <DriverPerformanceChart
-                  data={data?.data.driverPerformance || []}
-                />
+                <DriverPerformanceChart data={data?.driverPerformance || []} />
               </CardContent>
             </Card>
           </div>

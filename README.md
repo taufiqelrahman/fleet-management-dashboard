@@ -45,7 +45,7 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
 - 📊 Fuel consumption trends
 - 📈 Vehicle utilization rates
 - 👤 Driver performance metrics
-- 💾 In-memory caching (60s TTL) with NodeCache
+- ⚡ Real-time data fetching with Server Actions
 
 ### Database
 
@@ -72,7 +72,7 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
 - **Form Validation**: [Zod](https://zod.dev/) + [React Hook Form](https://react-hook-form.com/)
 - **Charts**: [Recharts](https://recharts.org/)
 - **Database**: [Neon PostgreSQL](https://neon.tech/) + [Prisma ORM](https://www.prisma.io/)
-- **Caching**: [NodeCache](https://www.npmjs.com/package/node-cache)
+- **Data Fetching**: Next.js Server Actions
 
 ## 📁 Project Structure
 
@@ -80,9 +80,7 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
 fleet-management-dashboard/
 ├── app/                          # Next.js App Router
 │   ├── api/                      # API Routes
-│   │   ├── auth/[...nextauth]/   # NextAuth configuration
-│   │   ├── vehicles/             # Vehicle CRUD endpoints
-│   │   └── analytics/            # Analytics data endpoint
+│   │   └── auth/[...nextauth]/   # NextAuth configuration
 │   ├── dashboard/                # Dashboard pages
 │   │   ├── vehicles/             # Vehicle management
 │   │   │   └── [id]/             # Vehicle detail page
@@ -94,6 +92,9 @@ fleet-management-dashboard/
 │   ├── layout.tsx                # Root layout
 │   ├── providers.tsx             # Provider setup
 │   └── globals.css               # Global styles
+├── actions/                      # Server Actions
+│   ├── vehicles.ts               # Vehicle CRUD operations
+│   └── analytics.ts              # Analytics data operations
 ├── components/
 │   ├── ui/                       # ShadCN UI components
 │   ├── charts/                   # Recharts components
@@ -107,8 +108,7 @@ fleet-management-dashboard/
 │   ├── useAnalytics.ts           # Analytics data hooks
 │   └── useRole.ts                # Role-based access hook
 ├── lib/
-│   ├── api-client.ts             # API client wrapper
-│   ├── cache.ts                  # NodeCache configuration
+│   ├── auth-check.ts             # Authentication helpers
 │   ├── auth.ts                   # NextAuth configuration
 │   ├── validation.ts             # Zod schemas
 │   ├── types.ts                  # TypeScript types
@@ -258,10 +258,10 @@ npm run test:coverage
 
 ### Data Fetching Strategy
 
-- TanStack Query for client-side data management
-- Server-side caching with NodeCache (60s TTL)
+- Next.js Server Actions for direct database access
+- TanStack Query for client-side caching and mutations
 - Optimistic updates for better UX
-- Automatic cache invalidation on mutations
+- Automatic cache revalidation with revalidatePath
 
 ### Type Safety
 
@@ -302,14 +302,17 @@ const updateVehicle = useUpdateVehicle();
 // Rollback in onError
 ```
 
-### 4. In-Memory Caching
+### 4. Server Actions
 
 ```typescript
-// NodeCache with 60s TTL
-const cached = getCachedData<Vehicle[]>("vehicles");
-if (cached) return cached;
-// Fetch and cache
-setCachedData("vehicles", data, 60);
+// Direct database access from server
+export async function getVehicles() {
+  const authResult = await checkAuth();
+  if (!authResult.success) return { success: false, error: authResult.error };
+
+  const vehicles = await prisma.vehicle.findMany();
+  return { success: true, data: vehicles };
+}
 ```
 
 ## 🧪 Testing
@@ -351,7 +354,7 @@ The project is optimized for Vercel deployment:
 - Dynamic imports for code splitting
 - Image optimization with Next.js Image
 - Route prefetching
-- In-memory caching (NodeCache)
+- Next.js automatic cache revalidation
 - TanStack Query staleTime configuration
 - Suspense boundaries for progressive loading
 

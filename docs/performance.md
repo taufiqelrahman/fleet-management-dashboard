@@ -128,25 +128,24 @@ import Image from "next/image";
 - **Perceived Performance**: Instant navigation
 - **Server Load**: Significantly reduced
 
-#### B. Server-Side Caching (NodeCache)
+#### B. Next.js Cache Revalidation
 
 **Implementation**:
 
 ```typescript
-// 60-second TTL for API responses
-const cached = getCachedData<Vehicle[]>("vehicles");
-if (cached) return cached;
-
-// Fetch and cache
-const data = await fetchVehicles();
-setCachedData("vehicles", data, 60);
+// Automatic cache revalidation in Server Actions
+export async function createVehicle(data: VehicleInput) {
+  const vehicle = await prisma.vehicle.create({ data });
+  revalidatePath("/dashboard/vehicles");
+  return vehicle;
+}
 ```
 
 **Impact**:
 
-- **Response Time**: 150ms → 2ms (cached)
-- **Database Queries**: Reduced by 95%
-- **Scalability**: Handles 10x more requests
+- **Cache Management**: Automatic and precise
+- **Consistency**: Always fresh data after mutations
+- **Developer Experience**: No manual cache invalidation
 
 ### 5. Optimistic Updates
 
@@ -489,8 +488,8 @@ With Cache:
 └─────────────────────────────────────────────────┘
                       ▼
 ┌─────────────────────────────────────────────────┐
-│           NodeCache (Server Memory)             │
-│  API Data: 60s TTL                              │
+│            Next.js Cache (Server)               │
+│  Automatic revalidation on mutations           │
 └─────────────────────────────────────────────────┘
                       ▼
 ┌─────────────────────────────────────────────────┐
@@ -506,13 +505,16 @@ With Cache:
 ```typescript
 // Automatic invalidation after mutations
 queryClient.invalidateQueries(["vehicles"]);
+
+// Server-side cache revalidation
+revalidatePath("/dashboard/vehicles");
 ```
 
 **On Time Expiry**:
 
 ```typescript
-// NodeCache auto-expires after TTL
 // TanStack Query marks as stale after staleTime
+// Next.js automatically revalidates on demand
 ```
 
 ## Future Optimizations

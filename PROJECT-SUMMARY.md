@@ -65,12 +65,12 @@
 - Performance metrics
 - Data export capabilities
 
-#### 7. ✅ Caching Implementation
+#### 7. ✅ Data Management
 
-- NodeCache with 60-second TTL
-- API route caching
+- Next.js Server Actions for data operations
 - TanStack Query client-side caching
-- Cache invalidation on mutations
+- Automatic cache revalidation
+- Optimistic updates on mutations
 
 #### 8. ✅ Database & ORM
 
@@ -125,7 +125,7 @@
 | Total Files Created | 60+   |
 | Configuration Files | 10    |
 | Library Files       | 7     |
-| API Routes          | 4     |
+| Server Actions      | 2     |
 | UI Components       | 10    |
 | Custom Hooks        | 3     |
 | Pages               | 7     |
@@ -171,9 +171,10 @@
 - **Connection Pooling** - Built-in for optimal performance
 - **Database Branching** - Git-like workflow for databases
 
-### Caching
+### Data Fetching
 
-- **NodeCache 5.1.2** - In-memory caching (60s TTL)
+- **Next.js Server Actions** - Server-side data operations
+- **TanStack Query** - Client-side caching and state management
 
 ### Testing
 
@@ -266,9 +267,10 @@ All documentation is in English and located in the `/docs` folder:
 ### Performance Optimizations
 
 - Server Components (60% JS reduction)
+- Server Actions for direct database access
 - Automatic code splitting
 - Image optimization
-- Multi-layer caching strategy (NodeCache + TanStack Query)
+- TanStack Query client-side caching
 - Optimistic updates for instant UI feedback
 
 ### Developer Experience

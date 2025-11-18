@@ -126,21 +126,23 @@ This document explains the key design decisions made in the NextFleet project an
 - Learning curve for SQL experts
 - Some advanced SQL features may be harder to use
 
-### 8. NodeCache for In-Memory Caching
+### 8. Server Actions for Data Operations
 
-**Decision**: Use NodeCache for API response caching (TTL: 60s)
+**Decision**: Use Next.js Server Actions instead of REST API routes
 
 **Rationale**:
 
-- **Simplicity**: Easy to set up and use
-- **Performance**: In-memory is extremely fast
-- **TTL Support**: Automatic cache expiration
-- **No External Dependencies**: No Redis needed for development
+- **Simplicity**: No need for separate API layer
+- **Performance**: Direct database access without HTTP overhead
+- **Type Safety**: End-to-end TypeScript types from DB to UI
+- **Security**: Server-only code, automatic CSRF protection
+- **DX**: Automatic cache revalidation with revalidatePath
 
 **Trade-offs**:
 
-- Not suitable for multi-instance deployments (use Redis for production)
-- Cache is lost on server restart
+- Requires Next.js 13+ with App Router
+- Not suitable for public APIs (use API routes for that)
+- Less familiar pattern for developers used to REST
 
 ## Architecture Decisions
 
@@ -319,9 +321,9 @@ No data → Descriptive message → Call to action
 
 **Strategies**:
 
-- **Server Components**: Initial data fetching
-- **TanStack Query**: Client-side data management
-- **NodeCache**: Server-side caching
+- **Server Actions**: Direct database operations
+- **TanStack Query**: Client-side caching and state
+- **Next.js Cache**: Automatic revalidation
 
 **Rationale**: Optimize for both initial load and subsequent interactions
 

@@ -18,17 +18,17 @@ NextFleet follows a modern, scalable architecture pattern built on Next.js 15's 
 ┌─────────────────────────────────────────────────────────┐
 │                   Next.js Server                         │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
-│  │   Server     │  │  API Routes  │  │  Middleware  │  │
-│  │  Components  │  │   (REST)     │  │   (Auth)     │  │
+│  │   Server     │  │    Server    │  │  Middleware  │  │
+│  │  Components  │  │   Actions    │  │   (Auth)     │  │
 │  └──────────────┘  └──────────────┘  └──────────────┘  │
 └─────────────────────────────────────────────────────────┘
                           ▼
 ┌─────────────────────────────────────────────────────────┐
 │                   Data Layer                             │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
-│  │  NodeCache   │  │    Prisma    │  │     Neon     │  │
-│  │   (Memory)   │  │     ORM      │  │  PostgreSQL  │  │
-│  └──────────────┘  └──────────────┘  └──────────────┘  │
+│  ┌──────────────┐                   ┌──────────────┐   │
+│  │    Prisma    │                   │     Neon     │   │
+│  │     ORM      │                   │  PostgreSQL  │   │
+│  └──────────────┘                   └──────────────┘   │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -66,21 +66,21 @@ NextFleet follows a modern, scalable architecture pattern built on Next.js 15's 
 - **Utility Functions**: Date formatting, calculations
 - **Type Definitions**: Shared TypeScript interfaces
 
-### 3. Data Access Layer (`app/api/`, `lib/`)
+### 3. Data Access Layer (`actions/`, `lib/`)
 
 #### Responsibilities
 
-- API route handlers
-- Database interactions
-- Caching strategies
+- Server Actions for data mutations
+- Database interactions via Prisma
+- Authentication checks
 - Data transformation
 
 #### Key Features
 
-- RESTful API design
-- In-memory caching with NodeCache
-- Optimistic updates
-- Error handling
+- Server-only code execution
+- Type-safe end-to-end
+- Automatic cache revalidation
+- Built-in error handling
 
 ### 4. Data Storage Layer (`prisma/`)
 
@@ -102,11 +102,11 @@ NextFleet follows a modern, scalable architecture pattern built on Next.js 15's 
 ### Read Operations (GET)
 
 ```
-User Action → Component → TanStack Query Hook → API Route
-                ↓                                    ↓
-            Cache Check ←─────────── NodeCache Check
-                ↓                                    ↓
-          Render Data ←────────────── Database Query
+User Action → Component → TanStack Query Hook → Server Action
+                ↓                                      ↓
+            Cache Check                      Auth Check (Session)
+                ↓                                      ↓
+          Render Data ←────────────── Database Query (Prisma)
 ```
 
 ### Write Operations (POST/PUT/DELETE)
@@ -118,11 +118,13 @@ User Action → Form Submit → Validation (Zod)
                 ↓
         Optimistic Update (UI)
                 ↓
-          API Route Handler
+          Server Action Handler
+                ↓
+        Auth Check (Admin Only)
                 ↓
           Database Operation
                 ↓
-        Cache Invalidation
+        Cache Revalidation (revalidatePath)
                 ↓
           Refetch Data
 ```
@@ -185,11 +187,10 @@ components/
   optimisticUpdates: true          // Immediate UI feedback
 }
 
-// NodeCache Configuration
+// Next.js Cache Revalidation
 {
-  stdTTL: 60,                      // 60 seconds
-  checkperiod: 120,                // Cleanup every 120s
-  useClones: false                 // Performance optimization
+  revalidatePath: '/dashboard',    // Automatic cache invalidation
+  revalidatePath: '/dashboard/vehicles', // After mutations
 }
 ```
 
@@ -217,34 +218,45 @@ Middleware Check → Session Check → Role Extraction
                               Component-level Permissions
 ```
 
-## API Design Principles
+## Server Actions Design
 
-### RESTful Endpoints
+### Server Action Endpoints
 
 ```
-GET    /api/vehicles           # List all vehicles
-POST   /api/vehicles           # Create vehicle
-PUT    /api/vehicles           # Update vehicle
-DELETE /api/vehicles?id=:id    # Delete vehicle
-GET    /api/vehicles/:id       # Get vehicle details
-GET    /api/analytics?type=:type # Get analytics data
+// Vehicle Operations (actions/vehicles.ts)
+getVehicles()              # List all vehicles
+getVehicleById(id)         # Get vehicle details
+createVehicle(data)        # Create vehicle (admin)
+updateVehicle(id, updates) # Update vehicle (admin)
+deleteVehicle(id)          # Delete vehicle (admin)
+
+// Analytics Operations (actions/analytics.ts)
+getDashboardData()         # Dashboard stats & charts
+getAnalyticsData()         # Detailed analytics
 ```
 
 ### Response Format
 
 ```typescript
 // Success Response
+type ActionResponse<T> =
+  | { success: true; data: T }
+  | { success: false; error: string };
+
+// Example
 {
-  data: T,
   success: true,
-  cached?: boolean
+  data: {
+    id: "123",
+    name: "Vehicle 1",
+    // ... vehicle data
+  }
 }
 
 // Error Response
 {
   success: false,
-  message: string,
-  code?: string
+  error: "Unauthorized access"
 }
 ```
 
@@ -259,8 +271,9 @@ GET    /api/analytics?type=:type # Get analytics data
 ### Authorization
 
 - Middleware-level route protection
+- Server Action authentication checks
 - Component-level permission checks
-- API route authorization
+- Role-based access control (ADMIN/OPERATOR)
 
 ### Data Validation
 
@@ -286,9 +299,9 @@ GET    /api/analytics?type=:type # Get analytics data
 ### Caching Strategy
 
 - **Browser Cache**: Static assets
-- **Memory Cache**: NodeCache (60s TTL)
-- **React Query Cache**: Client-side data cache
-- **Next.js Cache**: Static page generation
+- **React Query Cache**: Client-side data cache (60s)
+- **Next.js Cache**: Static page generation + revalidation
+- **Prisma Connection Pool**: Database connection reuse
 
 ### Bundle Optimization
 
@@ -330,13 +343,22 @@ app/
 ### API Error Handling
 
 ```typescript
-try {
-  // API operation
-} catch (error) {
-  return NextResponse.json(
-    { success: false, message: error.message },
-    { status: 500 }
-  );
+// Server Action Error Handling
+export async function createVehicle(
+  data: VehicleInput
+): Promise<ActionResponse<Vehicle>> {
+  try {
+    const authResult = await checkAdminAuth();
+    if (!authResult.success) {
+      return { success: false, error: authResult.error };
+    }
+
+    const vehicle = await prisma.vehicle.create({ data });
+    revalidatePath("/dashboard/vehicles");
+    return { success: true, data: vehicle };
+  } catch (error) {
+    return { success: false, error: "Failed to create vehicle" };
+  }
 }
 ```
 
@@ -357,7 +379,7 @@ try {
 
 ### Integration Tests
 
-- API routes
+- Server Actions
 - Component interactions
 - Form submissions
 
@@ -384,7 +406,7 @@ GitHub Push → Vercel Build → Edge Network → CDN
                     ↓
               Static Generation
                     ↓
-              Serverless Functions (API Routes)
+              Server Actions (Serverless)
 ```
 
 ## Monitoring & Observability
