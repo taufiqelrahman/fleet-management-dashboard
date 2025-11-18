@@ -28,6 +28,12 @@ jobs:
         with:
           version: 10.14.0
 
+      - name: Cache Prisma Engines
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/prisma
+          key: prisma-engines-${{ runner.os }}-${{ hashFiles('prisma/schema.prisma') }}
+
       - name: Install pnpm
         uses: pnpm/action-setup@v3
         with:
@@ -70,6 +76,12 @@ jobs:
         with:
           version: 10.14.0
 
+      - name: Cache Prisma Engines
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/prisma
+          key: prisma-engines-${{ runner.os }}-${{ hashFiles('prisma/schema.prisma') }}
+
       - name: Install pnpm
         uses: pnpm/action-setup@v3
         with:
@@ -86,8 +98,6 @@ jobs:
 
       - name: Generate Prisma Client
         run: pnpm prisma generate
-        env:
-          PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING: 1
 
       - name: Run tests
         run: pnpm exec jest --passWithNoTests --coverage
@@ -121,6 +131,12 @@ jobs:
         with:
           version: 10.14.0
 
+      - name: Cache Prisma Engines
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/prisma
+          key: prisma-engines-${{ runner.os }}-${{ hashFiles('prisma/schema.prisma') }}
+
       - name: Install pnpm
         uses: pnpm/action-setup@v3
         with:
@@ -137,8 +153,6 @@ jobs:
 
       - name: Generate Prisma Client
         run: pnpm prisma generate
-        env:
-          PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING: 1
 
       - name: Build application
         run: pnpm build
@@ -174,6 +188,12 @@ jobs:
         uses: pnpm/action-setup@v3
         with:
           version: 10.14.0
+
+      - name: Cache Prisma Engines
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/prisma
+          key: prisma-engines-${{ runner.os }}-${{ hashFiles('prisma/schema.prisma') }}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v3
@@ -225,6 +245,12 @@ jobs:
 
       - name: Cache Prisma Engines
         uses: actions/cache@v4
+        with:
+          path: ~/.cache/prisma
+          key: prisma-engines-${{ runner.os }}-${{ hashFiles('prisma/schema.prisma') }}
+
+      - name: Cache Prisma Engines
+        uses: actions/cache@v3
         with:
           path: ~/.cache/prisma
           key: prisma-engines-${{ runner.os }}-${{ hashFiles('prisma/schema.prisma') }}
