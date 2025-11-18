@@ -35,18 +35,22 @@ NEXTAUTH_SECRET="run-openssl-rand-base64-32-to-generate"
 ## 5️⃣ Initialize Database
 
 ```bash
-npm run prisma:generate
-npm run prisma:push
-npm run prisma:seed  # Optional: Seed with Indonesian demo data
+pnpm prisma:generate
+pnpm prisma:push
+pnpm prisma:seed  # Optional: Seed with Indonesian demo data
 ```
 
 ## 6️⃣ Start Development
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
-Visit: http://localhost:3000
+**Visit:**
+
+- English: http://localhost:3000/en/dashboard
+- Indonesian: http://localhost:3000/id/dashboard
+- Auto-redirect: http://localhost:3000
 
 **Login with:**
 
@@ -98,7 +102,7 @@ Visit: http://localhost:3000
 
 ```bash
 npx prisma migrate reset --force
-npm run prisma:push
+pnpm prisma:push
 ```
 
 ### "Module not found: @prisma/client"
@@ -106,9 +110,17 @@ npm run prisma:push
 ✅ **Solution:**
 
 ```bash
-npm install
-npm run prisma:generate
+pnpm install
+pnpm prisma:generate
 ```
+
+### Language not switching
+
+✅ **Solution:**
+
+- Clear browser cache
+- Check URL includes locale (`/en/` or `/id/`)
+- Click language switcher icon in sidebar (🌐)
 
 ---
 
@@ -117,12 +129,29 @@ npm run prisma:generate
 ### Option 1: Prisma Studio (Local)
 
 ```bash
-npm run prisma:studio
+pnpm prisma:studio
 ```
 
 ### Option 2: Neon Console (Online)
 
 Visit: https://console.neon.tech
+
+---
+
+## 🌍 Language Support
+
+**Switching Languages:**
+
+1. Look for the language icon (🌐) in the sidebar
+2. Click to open language dropdown
+3. Select:
+   - 🇺🇸 English
+   - 🇮🇩 Indonesia
+
+**Direct URL Access:**
+
+- English: Add `/en/` to URL (e.g., `/en/dashboard`)
+- Indonesian: Add `/id/` to URL (e.g., `/id/dashboard`)
 
 ---
 

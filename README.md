@@ -47,6 +47,14 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
 - 👤 Driver performance metrics
 - ⚡ Real-time data fetching with Server Actions
 
+### Internationalization (i18n)
+
+- 🌍 Multi-language support (English & Indonesian)
+- 🔄 Seamless language switching with locale-aware routing
+- 🎌 Visual language selector with flag indicators
+- 📝 Comprehensive translations for all UI elements
+- 🔗 Locale-prefixed URLs for SEO optimization
+
 ### Database
 
 - 🐘 PostgreSQL via [Neon](https://neon.tech) - Serverless, auto-scaling
@@ -73,23 +81,27 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
 - **Charts**: [Recharts](https://recharts.org/)
 - **Database**: [Neon PostgreSQL](https://neon.tech/) + [Prisma ORM](https://www.prisma.io/)
 - **Data Fetching**: Next.js Server Actions
+- **Internationalization**: [next-intl](https://next-intl-docs.vercel.app/) (English & Indonesian)
 
 ## 📁 Project Structure
 
 ```
 fleet-management-dashboard/
 ├── app/                          # Next.js App Router
+│   ├── [locale]/                 # Locale-based routing (en, id)
+│   │   ├── dashboard/            # Dashboard pages
+│   │   │   ├── vehicles/         # Vehicle management
+│   │   │   │   └── [id]/         # Vehicle detail page
+│   │   │   ├── analytics/        # Analytics page
+│   │   │   ├── page.tsx          # Main dashboard
+│   │   │   ├── loading.tsx       # Loading state
+│   │   │   └── error.tsx         # Error boundary
+│   │   ├── login/                # Login page
+│   │   └── layout.tsx            # Locale layout with i18n provider
 │   ├── api/                      # API Routes
 │   │   └── auth/[...nextauth]/   # NextAuth configuration
-│   ├── dashboard/                # Dashboard pages
-│   │   ├── vehicles/             # Vehicle management
-│   │   │   └── [id]/             # Vehicle detail page
-│   │   ├── analytics/            # Analytics page
-│   │   ├── page.tsx              # Main dashboard
-│   │   ├── loading.tsx           # Loading state
-│   │   └── error.tsx             # Error boundary
-│   ├── login/                    # Login page
 │   ├── layout.tsx                # Root layout
+│   ├── page.tsx                  # Root redirect
 │   ├── providers.tsx             # Provider setup
 │   └── globals.css               # Global styles
 ├── actions/                      # Server Actions
@@ -99,8 +111,9 @@ fleet-management-dashboard/
 │   ├── ui/                       # ShadCN UI components
 │   ├── charts/                   # Recharts components
 │   ├── forms/                    # Form components
+│   ├── locale-switcher.tsx       # Language switcher component
 │   └── layout/                   # Layout components
-│       ├── sidebar.tsx           # Navigation sidebar
+│       ├── sidebar.tsx           # Navigation sidebar (with locale switcher)
 │       ├── navbar.tsx            # Mobile navbar
 │       └── dashboard-layout.tsx  # Dashboard wrapper
 ├── hooks/
@@ -114,6 +127,9 @@ fleet-management-dashboard/
 │   ├── types.ts                  # TypeScript types
 │   ├── utils.ts                  # Utility functions
 │   └── prisma.ts                 # Prisma client instance
+├── messages/                     # i18n translation files
+│   ├── en.json                   # English translations
+│   └── id.json                   # Indonesian translations
 ├── prisma/
 │   ├── schema.prisma             # Database schema
 │   └── seed.ts                   # Database seeder
@@ -123,6 +139,12 @@ fleet-management-dashboard/
 │   ├── utils.test.ts             # Utility tests
 │   └── validation.test.ts        # Validation tests
 ├── middleware.ts                 # Route protection
+├── tailwind.config.ts            # Tailwind configuration
+├── __tests__/                    # Unit tests
+│   ├── utils.test.ts             # Utility tests
+│   └── validation.test.ts        # Validation tests
+├── i18n.ts                       # i18n configuration (next-intl)
+├── middleware.ts                 # Route protection & locale handling
 ├── tailwind.config.ts            # Tailwind configuration
 ├── tsconfig.json                 # TypeScript configuration
 └── package.json                  # Dependencies
@@ -134,7 +156,7 @@ fleet-management-dashboard/
 ### Prerequisites
 
 - Node.js >= 18.0.0
-- npm >= 9.0.0
+- pnpm >= 8.0.0 (recommended) or npm >= 9.0.0
 - Docker (optional, for containerization)
 
 ### Installation
@@ -149,7 +171,7 @@ cd fleet-management-dashboard
 2. Install dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
 3. Set up environment variables:
@@ -177,17 +199,26 @@ NEXTAUTH_SECRET="your-secret-key-change-this-in-production"
 5. Initialize the database:
 
 ```bash
-npm run prisma:generate
-npm run prisma:push
+pnpm run prisma:generate
+pnpm run prisma:push
 ```
 
-6. Start the development server:
+6. (Optional) Seed the database with sample data:
 
 ```bash
-npm run dev
+pnpm run prisma:seed
 ```
 
-7. Open [http://localhost:3000](http://localhost:3000) in your browser
+7. Start the development server:
+
+```bash
+pnpm dev
+```
+
+8. Open your browser:
+   - English: [http://localhost:3000/en/dashboard](http://localhost:3000/en/dashboard)
+   - Indonesian: [http://localhost:3000/id/dashboard](http://localhost:3000/id/dashboard)
+   - Root (auto-redirects): [http://localhost:3000](http://localhost:3000)
 
 ### 🐳 Docker Deployment
 
@@ -208,28 +239,49 @@ docker-compose up
 
 ```bash
 # Run all tests
-npm test
+pnpm test
 
 # Run tests in watch mode
-npm run test:watch
+pnpm run test:watch
 
 # Generate coverage report
-npm run test:coverage
+pnpm run test:coverage
 ```
 
 ### 📊 Available Scripts
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm start` - Start production server
-- `npm run lint` - Run ESLint
-- `npm run type-check` - Run TypeScript type checking
-- `npm test` - Run Jest tests
-- `npm run prisma:generate` - Generate Prisma client
-- `npm run prisma:push` - Push schema to database
-- `npm run prisma:studio` - Open Prisma Studio
-- `npm run prisma:migrate` - Run database migrations
-- `npm run prisma:seed` - Seed database with Indonesian demo data
+- `pnpm dev` - Start development server
+- `pnpm build` - Build for production
+- `pnpm start` - Start production server
+- `pnpm lint` - Run ESLint
+- `pnpm type-check` - Run TypeScript type checking
+- `pnpm test` - Run Jest tests
+- `pnpm prisma:generate` - Generate Prisma client
+- `pnpm prisma:push` - Push schema to database
+- `pnpm prisma:studio` - Open Prisma Studio
+- `pnpm prisma:migrate` - Run database migrations
+- `pnpm prisma:seed` - Seed database with Indonesian demo data
+
+### 🌍 Language Support
+
+The application supports two languages:
+
+**English (Default)**
+
+- Access: `/en/*` routes
+- Example: `http://localhost:3000/en/dashboard`
+
+**Indonesian (Bahasa Indonesia)**
+
+- Access: `/id/*` routes
+- Example: `http://localhost:3000/id/dashboard`
+
+**Switching Languages:**
+
+1. Click the language icon (🌐) in the sidebar
+2. Select your preferred language from the dropdown
+3. The interface will immediately switch to the selected language
+4. URLs will update to reflect the chosen locale
 
 ### Demo Credentials
 
@@ -315,13 +367,13 @@ export async function getVehicles() {
 
 ```bash
 # Run unit tests
-npm test
+pnpm test
 
 # Run tests in watch mode
-npm run test:watch
+pnpm test:watch
 
 # Type checking
-npm run type-check
+pnpm type-check
 ```
 
 ## 🔨 Build & Deployment
@@ -329,8 +381,18 @@ npm run type-check
 ### Production Build
 
 ```bash
-npm run build
-npm start
+pnpm build
+pnpm start
+```
+
+### Environment Variables for Production
+
+Ensure these are set:
+
+```env
+DATABASE_URL="your-production-database-url"
+NEXTAUTH_URL="https://your-domain.com"
+NEXTAUTH_SECRET="your-production-secret"
 ```
 
 ### Vercel Deployment
@@ -353,6 +415,7 @@ The project is optimized for Vercel deployment:
 - Next.js automatic cache revalidation
 - TanStack Query staleTime configuration
 - Suspense boundaries for progressive loading
+- Locale-aware routing with next-intl (minimal runtime overhead)
 
 See [docs/TECHNICAL.md](docs/TECHNICAL.md) for detailed technical documentation.
 
@@ -364,6 +427,15 @@ See [docs/TECHNICAL.md](docs/TECHNICAL.md) for detailed technical documentation.
 - Excellent TypeScript support
 - Built-in optimizations
 - Easy deployment
+- Native i18n routing support
+
+### Why next-intl?
+
+- Seamless Next.js 15 App Router integration
+- Type-safe translations
+- Server Component support
+- Automatic locale detection
+- Zero runtime overhead for static messages
 
 ### Why TanStack Query?
 
@@ -379,20 +451,20 @@ See [docs/TECHNICAL.md](docs/TECHNICAL.md) for detailed technical documentation.
 - Copy-paste friendly
 - TypeScript-first
 
-For more design decisions, see [design-decisions.md](docs/design-decisions.md).
-
 ## 🔮 Future Improvements
 
+- [x] Multi-language support (English & Indonesian) ✅
 - [ ] Real-time updates with WebSockets
 - [ ] Advanced filtering and search
 - [ ] Export to PDF/Excel
-- [ ] Multi-language support (i18n)
+- [ ] Additional language support (Arabic, etc.)
 - [ ] Dark mode toggle
 - [ ] Email notifications
 - [ ] Advanced analytics with AI insights
 - [ ] Mobile app (React Native)
 - [ ] Integration with GPS tracking
 - [ ] Maintenance scheduling system
+- [ ] Voice commands for accessibility
 
 ## 🤝 Contributing
 
