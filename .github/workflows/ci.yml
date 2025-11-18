@@ -179,6 +179,7 @@ jobs:
             http://localhost:3000/login
           uploadArtifacts: true
           temporaryPublicStorage: true
+          artifactName: lhci
 
   docker:
     name: Build Docker Image
