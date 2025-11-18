@@ -15,20 +15,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "18"
-          cache: "npm"
+          cache: "pnpm"
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Run ESLint
-        run: npm run lint
+        run: pnpm lint
 
       - name: Type check
-        run: npm run type-check
+        run: pnpm type-check
 
   test:
     name: Run Tests
@@ -39,20 +44,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "18"
-          cache: "npm"
+          cache: "pnpm"
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Generate Prisma Client
-        run: npx prisma generate
+        run: pnpm prisma generate
 
       - name: Run tests
-        run: npm test -- --coverage
+        run: pnpm test -- --coverage
 
       - name: Upload coverage
         uses: codecov/codecov-action@v3
@@ -70,20 +80,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "18"
-          cache: "npm"
+          cache: "pnpm"
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Generate Prisma Client
-        run: npx prisma generate
+        run: pnpm prisma generate
 
       - name: Build application
-        run: npm run build
+        run: pnpm build
         env:
           NEXT_TELEMETRY_DISABLED: 1
 
@@ -104,18 +119,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "18"
+          cache: "pnpm"
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build and start app
         run: |
-          npm run build
-          npm start &
+          pnpm build
+          pnpm start &
           sleep 10
 
       - name: Run Lighthouse
