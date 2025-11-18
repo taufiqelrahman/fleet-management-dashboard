@@ -26,12 +26,21 @@ const menuItems = [
   },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  mobile?: boolean;
+}
+
+export function Sidebar({ mobile = false }: SidebarProps) {
   const pathname = usePathname();
   const { data: session } = useSession();
 
   return (
-    <aside className="hidden md:flex w-64 flex-col border-r bg-card">
+    <aside
+      className={cn(
+        "flex w-64 flex-col border-r bg-card",
+        !mobile && "hidden md:flex"
+      )}
+    >
       <div className="p-6">
         <h1 className="text-2xl font-bold text-primary">NextFleet</h1>
         <p className="text-sm text-muted-foreground">Fleet Management</p>
