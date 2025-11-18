@@ -223,6 +223,7 @@ jobs:
             http://localhost:3000/login
           uploadArtifacts: false
           temporaryPublicStorage: true
+          artifactName: lhci
 
       - name: Upload lighthouse results
         uses: actions/upload-artifact@v4
