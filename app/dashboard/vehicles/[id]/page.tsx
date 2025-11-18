@@ -41,7 +41,7 @@ export default function VehicleDetailPage({
     );
   }
 
-  const vehicle = data?.data;
+  const vehicle = data;
 
   if (!vehicle) {
     return (

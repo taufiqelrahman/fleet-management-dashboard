@@ -1,31 +1,32 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "@/lib/api-client";
-import type {
-  DashboardStats,
-  MonthlyData,
-  AnalyticsData,
-  ApiResponse,
-} from "@/lib/types";
+import { getDashboardData, getAnalyticsData } from "@/actions/analytics";
 
 export function useDashboardData() {
-  return useQuery<
-    ApiResponse<{
-      stats: DashboardStats;
-      monthlyData: MonthlyData[];
-    }>
-  >({
+  return useQuery({
     queryKey: ["dashboard"],
-    queryFn: () => apiClient.get("/api/analytics?type=dashboard"),
+    queryFn: async () => {
+      const result = await getDashboardData();
+      if (!result.success) {
+        throw new Error(result.message || "Failed to fetch dashboard data");
+      }
+      return result.data;
+    },
     staleTime: 30000,
   });
 }
 
 export function useAnalyticsData() {
-  return useQuery<ApiResponse<AnalyticsData>>({
+  return useQuery({
     queryKey: ["analytics"],
-    queryFn: () => apiClient.get("/api/analytics?type=analytics"),
+    queryFn: async () => {
+      const result = await getAnalyticsData();
+      if (!result.success) {
+        throw new Error(result.message || "Failed to fetch analytics data");
+      }
+      return result.data;
+    },
     staleTime: 30000,
   });
 }

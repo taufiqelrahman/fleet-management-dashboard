@@ -35,7 +35,7 @@ function DashboardStats() {
     );
   }
 
-  const stats = data?.data.stats;
+  const stats = data?.stats;
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -95,7 +95,7 @@ function DashboardStats() {
 function DashboardCharts() {
   const { data } = useDashboardData();
 
-  if (!data?.data.monthlyData) return null;
+  if (!data?.monthlyData) return null;
 
   return (
     <div className="grid gap-4 md:grid-cols-2 mt-4">
@@ -104,7 +104,7 @@ function DashboardCharts() {
           <CardTitle>Monthly Mileage Trend</CardTitle>
         </CardHeader>
         <CardContent>
-          <MonthlyMileageChart data={data.data.monthlyData} />
+          <MonthlyMileageChart data={data.monthlyData} />
         </CardContent>
       </Card>
 
@@ -113,7 +113,7 @@ function DashboardCharts() {
           <CardTitle>Vehicle Status Overview</CardTitle>
         </CardHeader>
         <CardContent>
-          <VehicleStatusChart data={data.data.monthlyData} />
+          <VehicleStatusChart data={data.monthlyData} />
         </CardContent>
       </Card>
     </div>

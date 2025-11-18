@@ -164,8 +164,8 @@ export default function VehiclesPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {data?.data && data.data.length > 0 ? (
-                    data.data.map((vehicle) => (
+                  {data && data.length > 0 ? (
+                    data.map((vehicle) => (
                       <TableRow key={vehicle.id}>
                         <TableCell className="font-medium">
                           {vehicle.name}
