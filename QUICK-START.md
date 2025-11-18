@@ -136,11 +136,10 @@ Visit: https://console.neon.tech
 
 ---
 
-## 📚 Full Documentation
+## 📚 Documentation
 
-- [README.md](README.md) - Complete project guide
-- [MIGRATION-NEON.md](MIGRATION-NEON.md) - Detailed migration guide
-- [docs/neon-setup.md](docs/neon-setup.md) - Advanced setup options
+- [README.md](README.md) - Complete project overview
+- [docs/TECHNICAL.md](docs/TECHNICAL.md) - Architecture & technical details
 
 ---
 
