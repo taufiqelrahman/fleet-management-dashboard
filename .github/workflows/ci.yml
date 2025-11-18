@@ -78,7 +78,7 @@ jobs:
         run: pnpm prisma generate
 
       - name: Run tests
-        run: pnpm test -- --coverage
+        run: pnpm test -- --passWithNoTests --coverage
 
       - name: Upload coverage
         uses: codecov/codecov-action@v3

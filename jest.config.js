@@ -20,6 +20,7 @@ const customJestConfig = {
     "!**/node_modules/**",
     "!**/.next/**",
   ],
+  testRegex: undefined,
   testMatch: ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],
 };
 
