@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Vehicle } from "@/lib/types";
+import type { Vehicle, VehicleStatus, VehicleType } from "@/lib/types";
 
 interface VehicleFormProps {
   vehicle?: Vehicle;
@@ -63,7 +63,7 @@ export function VehicleForm({
       <div className="space-y-2">
         <Label htmlFor="type">Vehicle Type</Label>
         <Select
-          onValueChange={(value) => setValue("type", value as any)}
+          onValueChange={(value) => setValue("type", value as VehicleType)}
           defaultValue={vehicle?.type}
         >
           <SelectTrigger>
@@ -98,7 +98,7 @@ export function VehicleForm({
       <div className="space-y-2">
         <Label htmlFor="status">Status</Label>
         <Select
-          onValueChange={(value) => setValue("status", value as any)}
+          onValueChange={(value) => setValue("status", value as VehicleStatus)}
           defaultValue={vehicle?.status || "ACTIVE"}
         >
           <SelectTrigger>
