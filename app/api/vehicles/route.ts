@@ -1,10 +1,17 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCachedData, setCachedData, deleteCachedData } from "@/lib/cache";
+import { checkAuth, checkAdminAuth } from "@/lib/auth-check";
+import { Prisma } from "@prisma/client";
 
 const CACHE_KEY = "vehicles";
 
 export async function GET() {
+  const authCheck = await checkAuth();
+  if (!authCheck.authorized) {
+    return authCheck.response;
+  }
+
   try {
     const cachedVehicles = getCachedData(CACHE_KEY);
 
@@ -39,6 +46,11 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const authCheck = await checkAdminAuth();
+  if (!authCheck.authorized) {
+    return authCheck.response;
+  }
+
   try {
     const body = await request.json();
 
@@ -80,6 +92,11 @@ export async function POST(request: Request) {
 }
 
 export async function PUT(request: Request) {
+  const authCheck = await checkAdminAuth();
+  if (!authCheck.authorized) {
+    return authCheck.response;
+  }
+
   try {
     const body = await request.json();
     const { id, ...updates } = body;
@@ -123,7 +140,10 @@ export async function PUT(request: Request) {
   } catch (error) {
     console.error("Update vehicle error:", error);
 
-    if ((error as any).code === "P2025") {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
       return NextResponse.json(
         { success: false, message: "Vehicle not found" },
         { status: 404 }
@@ -138,6 +158,11 @@ export async function PUT(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  const authCheck = await checkAdminAuth();
+  if (!authCheck.authorized) {
+    return authCheck.response;
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
@@ -164,7 +189,10 @@ export async function DELETE(request: Request) {
   } catch (error) {
     console.error("Delete vehicle error:", error);
 
-    if ((error as any).code === "P2025") {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
       return NextResponse.json(
         { success: false, message: "Vehicle not found" },
         { status: 404 }

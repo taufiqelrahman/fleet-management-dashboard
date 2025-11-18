@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCachedData, setCachedData } from "@/lib/cache";
+import { checkAuth } from "@/lib/auth-check";
 import type { Prisma } from "@prisma/client";
 
 const DASHBOARD_CACHE_KEY = "dashboard-stats" as const;
@@ -71,6 +72,11 @@ interface DriverStats {
 }
 
 export async function GET(request: Request): Promise<NextResponse> {
+  const authCheck = await checkAuth();
+  if (!authCheck.authorized) {
+    return authCheck.response;
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const type = searchParams.get("type");

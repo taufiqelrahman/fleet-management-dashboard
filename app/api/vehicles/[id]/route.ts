@@ -1,7 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { checkAuth } from "@/lib/auth-check";
 
-export async function GET(_: NextRequest, context: any) {
+interface RouteContext {
+  params: {
+    id: string;
+  };
+}
+
+export async function GET(_: NextRequest, context: RouteContext) {
+  const authCheck = await checkAuth();
+  if (!authCheck.authorized) {
+    return authCheck.response;
+  }
+
   try {
     const id = context.params.id;
 
