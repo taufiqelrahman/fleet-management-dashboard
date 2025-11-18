@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { checkAuth, checkAdminAuth } from "@/lib/auth-check";
 import { Prisma } from "@prisma/client";
-import type { Vehicle } from "@/lib/types";
+import type { Vehicle, VehicleWithTrips } from "@/lib/types";
 
 // Response type for server actions
 type ActionResponse<T = unknown> = {
@@ -46,7 +46,7 @@ export async function getVehicles(): Promise<ActionResponse<Vehicle[]>> {
 // Get single vehicle with trips
 export async function getVehicleById(
   id: string
-): Promise<ActionResponse<Vehicle & { trips?: unknown[] }>> {
+): Promise<ActionResponse<VehicleWithTrips>> {
   const authCheck = await checkAuth();
   if (!authCheck.authorized) {
     return {
@@ -77,7 +77,7 @@ export async function getVehicleById(
 
     return {
       success: true,
-      data: vehicle as Vehicle & { trips?: unknown[] },
+      data: vehicle as VehicleWithTrips,
     };
   } catch (error) {
     console.error("Get vehicle error:", error);

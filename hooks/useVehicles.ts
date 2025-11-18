@@ -8,7 +8,7 @@ import {
   updateVehicle,
   deleteVehicle,
 } from "@/actions/vehicles";
-import type { Vehicle } from "@/lib/types";
+import type { Vehicle, VehicleWithTrips } from "@/lib/types";
 import type { VehicleInput } from "@/lib/validation";
 
 export function useVehicles() {
@@ -26,14 +26,14 @@ export function useVehicles() {
 }
 
 export function useVehicle(id: string) {
-  return useQuery({
+  return useQuery<VehicleWithTrips>({
     queryKey: ["vehicle", id],
     queryFn: async () => {
       const result = await getVehicleById(id);
       if (!result.success) {
         throw new Error(result.message || "Failed to fetch vehicle");
       }
-      return result.data;
+      return result.data!;
     },
     enabled: !!id,
   });
