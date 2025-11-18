@@ -60,6 +60,8 @@ jobs:
 
       - name: Generate Prisma Client
         run: pnpm prisma generate
+        env:
+          PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING: 1
 
       - name: Run tests
         run: pnpm test -- --coverage
@@ -96,6 +98,8 @@ jobs:
 
       - name: Generate Prisma Client
         run: pnpm prisma generate
+        env:
+          PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING: 1
 
       - name: Build application
         run: pnpm build
