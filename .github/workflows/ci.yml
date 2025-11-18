@@ -29,9 +29,9 @@ jobs:
           version: 10.14.0
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: 10.14.0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -71,9 +71,9 @@ jobs:
           version: 10.14.0
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: 10.14.0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -120,9 +120,9 @@ jobs:
           version: 10.14.0
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: 10.14.0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -172,9 +172,9 @@ jobs:
           version: 10.14.0
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: 10.14.0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
