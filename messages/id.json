@@ -44,7 +44,12 @@
     "monthlyMileage": "Jarak Tempuh Bulanan",
     "vehicleStatus": "Status Kendaraan",
     "recentActivity": "Aktivitas Terbaru",
-    "viewAll": "Lihat Semua"
+    "viewAll": "Lihat Semua",
+    "fleetSize": "Ukuran armada",
+    "currentlyOperational": "Saat ini beroperasi",
+    "per100km": "Per 100km",
+    "vehiclesCount": "Kendaraan",
+    "monthlyMileageKm": "Jarak Tempuh Bulanan (km)"
   },
   "vehicles": {
     "title": "Kendaraan",
@@ -80,10 +85,16 @@
     "deleteConfirm": "Apakah Anda yakin ingin menghapus kendaraan ini?",
     "deleteSuccess": "Kendaraan berhasil dihapus",
     "createSuccess": "Kendaraan berhasil dibuat",
-    "updateSuccess": "Kendaraan berhasil diperbarui"
+    "updateSuccess": "Kendaraan berhasil diperbarui",
+    "driverOptional": "Nama Pengemudi (Opsional)",
+    "mileageKm": "Jarak Tempuh (km)",
+    "fuelConsumptionLabel": "Konsumsi BBM (L/100km)",
+    "createVehicle": "Buat Kendaraan",
+    "updateVehicle": "Perbarui Kendaraan"
   },
   "analytics": {
     "title": "Analitik",
+    "description": "Wawasan mendalam tentang performa armada",
     "fuelConsumption": "Konsumsi Bahan Bakar",
     "vehicleUtilization": "Utilisasi Kendaraan",
     "driverPerformance": "Performa Pengemudi",
@@ -116,7 +127,7 @@
     "tryAgain": "Silakan coba lagi"
   },
   "roles": {
-    "admin": "Admin",
+    "admin": "Administrator",
     "operator": "Operator",
     "viewer": "Pengunjung"
   }

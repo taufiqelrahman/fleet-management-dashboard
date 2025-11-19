@@ -10,6 +10,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { useTranslations } from "next-intl";
 
 interface VehicleStatusChartProps {
   data: Array<{
@@ -20,6 +21,7 @@ interface VehicleStatusChartProps {
 }
 
 export function VehicleStatusChart({ data }: VehicleStatusChartProps) {
+  const t = useTranslations();
   return (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart data={data}>
@@ -28,8 +30,16 @@ export function VehicleStatusChart({ data }: VehicleStatusChartProps) {
         <YAxis />
         <Tooltip />
         <Legend />
-        <Bar dataKey="activeVehicles" fill="#10b981" name="Active" />
-        <Bar dataKey="inactiveVehicles" fill="#ef4444" name="Inactive" />
+        <Bar
+          dataKey="activeVehicles"
+          fill="#10b981"
+          name={t("vehicles.active")}
+        />
+        <Bar
+          dataKey="inactiveVehicles"
+          fill="#ef4444"
+          name={t("vehicles.inactive")}
+        />
       </BarChart>
     </ResponsiveContainer>
   );

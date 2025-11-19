@@ -79,7 +79,9 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
               {session?.user?.name}
             </p>
             <p className="text-xs text-muted-foreground truncate">
-              {(session?.user as User)?.role || "User"}
+              {(session?.user as User)?.role
+                ? t(`roles.${(session?.user as User).role.toLowerCase()}`)
+                : t("roles.viewer")}
             </p>
           </div>
         </div>

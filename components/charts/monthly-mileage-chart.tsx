@@ -10,6 +10,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { useTranslations } from "next-intl";
 
 interface MonthlyMileageChartProps {
   data: Array<{
@@ -19,6 +20,7 @@ interface MonthlyMileageChartProps {
 }
 
 export function MonthlyMileageChart({ data }: MonthlyMileageChartProps) {
+  const t = useTranslations();
   return (
     <ResponsiveContainer width="100%" height={300}>
       <LineChart data={data}>
@@ -32,7 +34,7 @@ export function MonthlyMileageChart({ data }: MonthlyMileageChartProps) {
           dataKey="mileage"
           stroke="#2563eb"
           strokeWidth={2}
-          name="Monthly Mileage (km)"
+          name={t("dashboard.monthlyMileageKm")}
         />
       </LineChart>
     </ResponsiveContainer>

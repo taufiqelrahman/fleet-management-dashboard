@@ -6,14 +6,16 @@ import { FuelConsumptionChart } from "@/components/charts/fuel-consumption-chart
 import { UtilizationRateChart } from "@/components/charts/utilization-rate-chart";
 import { DriverPerformanceChart } from "@/components/charts/driver-performance-chart";
 import { useAnalyticsData } from "@/hooks/useAnalytics";
+import { useTranslations } from "next-intl";
 
 export default function AnalyticsPage() {
+  const t = useTranslations();
   const { data, isLoading, error } = useAnalyticsData();
 
   if (error) {
     return (
       <DashboardLayout>
-        <div className="text-destructive">Failed to load analytics data</div>
+        <div className="text-destructive">{t("errors.generic")}</div>
       </DashboardLayout>
     );
   }
@@ -22,19 +24,19 @@ export default function AnalyticsPage() {
     <DashboardLayout>
       <div className="space-y-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
-          <p className="text-muted-foreground">
-            Deep insights into fleet performance
-          </p>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {t("analytics.title")}
+          </h1>
+          <p className="text-muted-foreground">{t("analytics.description")}</p>
         </div>
 
         {isLoading ? (
-          <div className="text-center py-8">Loading analytics...</div>
+          <div className="text-center py-8">{t("common.loading")}</div>
         ) : (
           <div className="grid gap-4">
             <Card>
               <CardHeader>
-                <CardTitle>Fuel Consumption Trend</CardTitle>
+                <CardTitle>{t("analytics.fuelConsumption")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <FuelConsumptionChart data={data?.fuelConsumption || []} />
@@ -43,7 +45,7 @@ export default function AnalyticsPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Vehicle Utilization Rate</CardTitle>
+                <CardTitle>{t("analytics.utilizationRate")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <UtilizationRateChart data={data?.utilizationRate || []} />
@@ -52,7 +54,7 @@ export default function AnalyticsPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Driver Performance Index</CardTitle>
+                <CardTitle>{t("analytics.driverPerformance")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <DriverPerformanceChart data={data?.driverPerformance || []} />

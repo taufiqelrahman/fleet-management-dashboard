@@ -48,7 +48,9 @@ function DashboardStats() {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{stats?.totalVehicles || 0}</div>
-          <p className="text-xs text-muted-foreground">Fleet size</p>
+          <p className="text-xs text-muted-foreground">
+            {t("dashboard.fleetSize")}
+          </p>
         </CardContent>
       </Card>
 
@@ -61,7 +63,9 @@ function DashboardStats() {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{stats?.activeVehicles || 0}</div>
-          <p className="text-xs text-muted-foreground">Currently operational</p>
+          <p className="text-xs text-muted-foreground">
+            {t("dashboard.currentlyOperational")}
+          </p>
         </CardContent>
       </Card>
 
@@ -76,7 +80,9 @@ function DashboardStats() {
           <div className="text-2xl font-bold">
             {formatNumber(stats?.averageConsumption || 0, 2)} L
           </div>
-          <p className="text-xs text-muted-foreground">Per 100km</p>
+          <p className="text-xs text-muted-foreground">
+            {t("dashboard.per100km")}
+          </p>
         </CardContent>
       </Card>
 
@@ -91,7 +97,9 @@ function DashboardStats() {
           <div className="text-2xl font-bold">
             {stats?.upcomingMaintenance || 0}
           </div>
-          <p className="text-xs text-muted-foreground">Vehicles</p>
+          <p className="text-xs text-muted-foreground">
+            {t("dashboard.vehiclesCount")}
+          </p>
         </CardContent>
       </Card>
     </div>

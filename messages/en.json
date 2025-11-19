@@ -36,7 +36,7 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "overview": "Overview",
+    "overview": "Overview and quick stats",
     "totalVehicles": "Total Vehicles",
     "activeVehicles": "Active Vehicles",
     "avgFuelConsumption": "Avg. Fuel Consumption",
@@ -44,7 +44,12 @@
     "monthlyMileage": "Monthly Mileage",
     "vehicleStatus": "Vehicle Status",
     "recentActivity": "Recent Activity",
-    "viewAll": "View All"
+    "viewAll": "View All",
+    "fleetSize": "Fleet size",
+    "currentlyOperational": "Currently operational",
+    "per100km": "Per 100km",
+    "vehiclesCount": "Vehicles",
+    "monthlyMileageKm": "Monthly Mileage (km)"
   },
   "vehicles": {
     "title": "Vehicles",
@@ -80,10 +85,16 @@
     "deleteConfirm": "Are you sure you want to delete this vehicle?",
     "deleteSuccess": "Vehicle deleted successfully",
     "createSuccess": "Vehicle created successfully",
-    "updateSuccess": "Vehicle updated successfully"
+    "updateSuccess": "Vehicle updated successfully",
+    "driverOptional": "Driver Name (Optional)",
+    "mileageKm": "Mileage (km)",
+    "fuelConsumptionLabel": "Fuel Consumption (L/100km)",
+    "createVehicle": "Create Vehicle",
+    "updateVehicle": "Update Vehicle"
   },
   "analytics": {
     "title": "Analytics",
+    "description": "Deep insights into fleet performance",
     "fuelConsumption": "Fuel Consumption",
     "vehicleUtilization": "Vehicle Utilization",
     "driverPerformance": "Driver Performance",

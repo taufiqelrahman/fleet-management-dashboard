@@ -32,8 +32,10 @@ import { Plus, Edit, Trash2 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import type { Vehicle } from "@/lib/types";
 import type { VehicleInput } from "@/lib/validation";
+import { useTranslations } from "next-intl";
 
 export default function VehiclesPage() {
+  const t = useTranslations();
   const { data, isLoading, error } = useVehicles();
   const createVehicle = useCreateVehicle();
   const updateVehicle = useUpdateVehicle();
@@ -50,14 +52,14 @@ export default function VehiclesPage() {
     try {
       await createVehicle.mutateAsync(data);
       toast({
-        title: "Success",
-        description: "Vehicle created successfully",
+        title: t("common.success"),
+        description: t("vehicles.createSuccess"),
       });
       setIsCreateOpen(false);
-    } catch (error) {
+    } catch {
       toast({
-        title: "Error",
-        description: "Failed to create vehicle",
+        title: t("common.error"),
+        description: t("errors.generic"),
         variant: "destructive",
       });
     }
@@ -72,15 +74,15 @@ export default function VehiclesPage() {
         ...data,
       });
       toast({
-        title: "Success",
-        description: "Vehicle updated successfully",
+        title: t("common.success"),
+        description: t("vehicles.updateSuccess"),
       });
       setIsEditOpen(false);
       setSelectedVehicle(null);
-    } catch (error) {
+    } catch {
       toast({
-        title: "Error",
-        description: "Failed to update vehicle",
+        title: t("common.error"),
+        description: t("errors.generic"),
         variant: "destructive",
       });
     }
@@ -92,15 +94,15 @@ export default function VehiclesPage() {
     try {
       await deleteVehicle.mutateAsync(selectedVehicle.id);
       toast({
-        title: "Success",
-        description: "Vehicle deleted successfully",
+        title: t("common.success"),
+        description: t("vehicles.deleteSuccess"),
       });
       setIsDeleteOpen(false);
       setSelectedVehicle(null);
-    } catch (error) {
+    } catch {
       toast({
-        title: "Error",
-        description: "Failed to delete vehicle",
+        title: t("common.error"),
+        description: t("errors.generic"),
         variant: "destructive",
       });
     }
@@ -122,7 +124,7 @@ export default function VehiclesPage() {
   if (error) {
     return (
       <DashboardLayout>
-        <div className="text-destructive">Failed to load vehicles</div>
+        <div className="text-destructive">{t("errors.generic")}</div>
       </DashboardLayout>
     );
   }
@@ -132,35 +134,39 @@ export default function VehiclesPage() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Vehicles</h1>
-            <p className="text-muted-foreground">Manage your fleet vehicles</p>
+            <h1 className="text-3xl font-bold tracking-tight">
+              {t("vehicles.title")}
+            </h1>
+            <p className="text-muted-foreground">{t("dashboard.overview")}</p>
           </div>
           {canCreate && (
             <Button onClick={() => setIsCreateOpen(true)}>
               <Plus className="mr-2 h-4 w-4" />
-              Add Vehicle
+              {t("vehicles.addVehicle")}
             </Button>
           )}
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Vehicle List</CardTitle>
+            <CardTitle>{t("vehicles.title")}</CardTitle>
           </CardHeader>
           <CardContent>
             {isLoading ? (
-              <div className="text-center py-8">Loading...</div>
+              <div className="text-center py-8">{t("common.loading")}</div>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>License Plate</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Driver</TableHead>
-                    <TableHead>Last Maintenance</TableHead>
-                    {(canEdit || canDelete) && <TableHead>Actions</TableHead>}
+                    <TableHead>{t("vehicles.model")}</TableHead>
+                    <TableHead>{t("vehicles.fuelType")}</TableHead>
+                    <TableHead>{t("vehicles.plate")}</TableHead>
+                    <TableHead>{t("vehicles.status")}</TableHead>
+                    <TableHead>{t("vehicles.driver")}</TableHead>
+                    <TableHead>{t("vehicles.lastMaintenance")}</TableHead>
+                    {(canEdit || canDelete) && (
+                      <TableHead>{t("common.edit")}</TableHead>
+                    )}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -225,7 +231,7 @@ export default function VehiclesPage() {
                         colSpan={7}
                         className="text-center text-muted-foreground py-8"
                       >
-                        No vehicles found
+                        {t("vehicles.noVehicles")}
                       </TableCell>
                     </TableRow>
                   )}
@@ -239,9 +245,9 @@ export default function VehiclesPage() {
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create Vehicle</DialogTitle>
+            <DialogTitle>{t("vehicles.addVehicle")}</DialogTitle>
             <DialogDescription>
-              Add a new vehicle to your fleet
+              {t("vehicles.vehicleDetails")}
             </DialogDescription>
           </DialogHeader>
           <VehicleForm
@@ -254,8 +260,10 @@ export default function VehiclesPage() {
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Vehicle</DialogTitle>
-            <DialogDescription>Update vehicle information</DialogDescription>
+            <DialogTitle>{t("vehicles.editVehicle")}</DialogTitle>
+            <DialogDescription>
+              {t("vehicles.vehicleDetails")}
+            </DialogDescription>
           </DialogHeader>
           {selectedVehicle && (
             <VehicleForm
@@ -270,22 +278,21 @@ export default function VehiclesPage() {
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Vehicle</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete {selectedVehicle?.name}? This
-              action cannot be undone.
-            </DialogDescription>
+            <DialogTitle>{t("vehicles.deleteVehicle")}</DialogTitle>
+            <DialogDescription>{t("vehicles.deleteConfirm")}</DialogDescription>
           </DialogHeader>
           <div className="flex justify-end gap-2">
             <Button variant="outline" onClick={() => setIsDeleteOpen(false)}>
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button
               variant="destructive"
               onClick={handleDelete}
               disabled={deleteVehicle.isPending}
             >
-              {deleteVehicle.isPending ? "Deleting..." : "Delete"}
+              {deleteVehicle.isPending
+                ? t("common.loading")
+                : t("common.delete")}
             </Button>
           </div>
         </DialogContent>

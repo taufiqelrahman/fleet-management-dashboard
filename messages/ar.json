@@ -44,7 +44,12 @@
     "monthlyMileage": "المسافة الشهرية",
     "vehicleStatus": "حالة المركبات",
     "recentActivity": "النشاط الأخير",
-    "viewAll": "عرض الكل"
+    "viewAll": "عرض الكل",
+    "fleetSize": "حجم الأسطول",
+    "currentlyOperational": "قيد التشغيل حالياً",
+    "per100km": "لكل ١٠٠ كم",
+    "vehiclesCount": "مركبات",
+    "monthlyMileageKm": "المسافة الشهرية (كم)"
   },
   "vehicles": {
     "title": "المركبات",
@@ -80,10 +85,16 @@
     "deleteConfirm": "هل أنت متأكد من حذف هذه المركبة؟",
     "deleteSuccess": "تم حذف المركبة بنجاح",
     "createSuccess": "تم إنشاء المركبة بنجاح",
-    "updateSuccess": "تم تحديث المركبة بنجاح"
+    "updateSuccess": "تم تحديث المركبة بنجاح",
+    "driverOptional": "اسم السائق (اختياري)",
+    "mileageKm": "المسافة المقطوعة (كم)",
+    "fuelConsumptionLabel": "استهلاك الوقود (لتر/١٠٠كم)",
+    "createVehicle": "إنشاء مركبة",
+    "updateVehicle": "تحديث المركبة"
   },
   "analytics": {
     "title": "التحليلات",
+    "description": "رؤى عميقة حول أداء الأسطول",
     "fuelConsumption": "استهلاك الوقود",
     "vehicleUtilization": "استخدام المركبات",
     "driverPerformance": "أداء السائقين",

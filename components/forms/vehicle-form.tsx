@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { Vehicle, VehicleStatus, VehicleType } from "@/lib/types";
+import { useTranslations } from "next-intl";
 
 interface VehicleFormProps {
   vehicle?: Vehicle;
@@ -26,6 +27,7 @@ export function VehicleForm({
   onSubmit,
   isLoading,
 }: VehicleFormProps) {
+  const t = useTranslations();
   const {
     register,
     handleSubmit,
@@ -49,7 +51,7 @@ export function VehicleForm({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="name">Vehicle Name</Label>
+        <Label htmlFor="name">{t("vehicles.model")}</Label>
         <Input
           id="name"
           {...register("name")}
@@ -61,13 +63,13 @@ export function VehicleForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="type">Vehicle Type</Label>
+        <Label htmlFor="type">{t("vehicles.fuelType")}</Label>
         <Select
           onValueChange={(value) => setValue("type", value as VehicleType)}
           defaultValue={vehicle?.type}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select type" />
+            <SelectValue placeholder={t("forms.selectOption")} />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="SEDAN">Sedan</SelectItem>
@@ -82,7 +84,7 @@ export function VehicleForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="licensePlate">License Plate</Label>
+        <Label htmlFor="licensePlate">{t("vehicles.plate")}</Label>
         <Input
           id="licensePlate"
           {...register("licensePlate")}
@@ -96,18 +98,20 @@ export function VehicleForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="status">Status</Label>
+        <Label htmlFor="status">{t("vehicles.status")}</Label>
         <Select
           onValueChange={(value) => setValue("status", value as VehicleStatus)}
           defaultValue={vehicle?.status || "ACTIVE"}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select status" />
+            <SelectValue placeholder={t("forms.selectOption")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="ACTIVE">Active</SelectItem>
-            <SelectItem value="INACTIVE">Inactive</SelectItem>
-            <SelectItem value="MAINTENANCE">Maintenance</SelectItem>
+            <SelectItem value="ACTIVE">{t("vehicles.active")}</SelectItem>
+            <SelectItem value="INACTIVE">{t("vehicles.inactive")}</SelectItem>
+            <SelectItem value="MAINTENANCE">
+              {t("vehicles.maintenance")}
+            </SelectItem>
           </SelectContent>
         </Select>
         {errors.status && (
@@ -116,7 +120,7 @@ export function VehicleForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="driverName">Driver Name (Optional)</Label>
+        <Label htmlFor="driverName">{t("vehicles.driverOptional")}</Label>
         <Input
           id="driverName"
           {...register("driverName")}
@@ -126,7 +130,7 @@ export function VehicleForm({
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="mileage">Mileage (km)</Label>
+          <Label htmlFor="mileage">{t("vehicles.mileageKm")}</Label>
           <Input
             id="mileage"
             type="number"
@@ -139,7 +143,9 @@ export function VehicleForm({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="fuelConsumption">Fuel Consumption (L/100km)</Label>
+          <Label htmlFor="fuelConsumption">
+            {t("vehicles.fuelConsumptionLabel")}
+          </Label>
           <Input
             id="fuelConsumption"
             type="number"
@@ -158,10 +164,10 @@ export function VehicleForm({
       <div className="flex justify-end gap-2 pt-4">
         <Button type="submit" disabled={isLoading}>
           {isLoading
-            ? "Saving..."
+            ? t("common.loading")
             : vehicle
-            ? "Update Vehicle"
-            : "Create Vehicle"}
+            ? t("vehicles.updateVehicle")
+            : t("vehicles.createVehicle")}
         </Button>
       </div>
     </form>
