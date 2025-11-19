@@ -15,7 +15,9 @@
     "next": "التالي",
     "previous": "السابق",
     "submit": "إرسال",
-    "close": "إغلاق"
+    "close": "إغلاق",
+    "exportCSV": "تصدير CSV",
+    "exportPDF": "تصدير PDF"
   },
   "auth": {
     "login": "تسجيل الدخول",

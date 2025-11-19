@@ -28,8 +28,9 @@ import {
 } from "@/hooks/useVehicles";
 import { useRole } from "@/hooks/useRole";
 import { useToast } from "@/components/ui/use-toast";
-import { Plus, Edit, Trash2 } from "lucide-react";
+import { Plus, Edit, Trash2, FileDown, FileSpreadsheet } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import { exportToCSV, exportToPDF } from "@/lib/export";
 import type { Vehicle } from "@/lib/types";
 import type { VehicleInput } from "@/lib/validation";
 import { useTranslations } from "next-intl";
@@ -139,12 +140,32 @@ export default function VehiclesPage() {
             </h1>
             <p className="text-muted-foreground">{t("dashboard.overview")}</p>
           </div>
-          {canCreate && (
-            <Button onClick={() => setIsCreateOpen(true)}>
-              <Plus className="mr-2 h-4 w-4" />
-              {t("vehicles.addVehicle")}
-            </Button>
-          )}
+          <div className="flex gap-2">
+            {data && data.length > 0 && (
+              <>
+                <Button
+                  variant="outline"
+                  onClick={() => exportToCSV(data, "vehicles-export")}
+                >
+                  <FileSpreadsheet className="mr-2 h-4 w-4" />
+                  {t("common.exportCSV")}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => exportToPDF(data, "vehicles-export")}
+                >
+                  <FileDown className="mr-2 h-4 w-4" />
+                  {t("common.exportPDF")}
+                </Button>
+              </>
+            )}
+            {canCreate && (
+              <Button onClick={() => setIsCreateOpen(true)}>
+                <Plus className="mr-2 h-4 w-4" />
+                {t("vehicles.addVehicle")}
+              </Button>
+            )}
+          </div>
         </div>
 
         <Card>

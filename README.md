@@ -39,6 +39,7 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
 - 🔐 Role-based permissions (Admin only for edit/delete)
 - 📋 Sortable and filterable vehicle list
 - 🔍 Dynamic vehicle detail pages with trip history
+- 📥 Export to PDF and CSV formats
 
 ### Analytics
 
@@ -467,11 +468,10 @@ See [docs/TECHNICAL.md](docs/TECHNICAL.md) for detailed technical documentation.
 
 ## 🔮 Future Improvements
 
-- [x] Multi-language support (English & Indonesian) ✅
+- [x] Multi-language support (English, Indonesian & Arabic with RTL) ✅
+- [x] Export to PDF/CSV ✅
 - [ ] Real-time updates with WebSockets
 - [ ] Advanced filtering and search
-- [ ] Export to PDF/Excel
-- [ ] Additional language support (Arabic, etc.)
 - [ ] Dark mode toggle
 - [ ] Email notifications
 - [ ] Advanced analytics with AI insights

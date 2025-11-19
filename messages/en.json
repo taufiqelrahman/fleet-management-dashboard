@@ -15,7 +15,9 @@
     "next": "Next",
     "previous": "Previous",
     "submit": "Submit",
-    "close": "Close"
+    "close": "Close",
+    "exportCSV": "Export CSV",
+    "exportPDF": "Export PDF"
   },
   "auth": {
     "login": "Login",

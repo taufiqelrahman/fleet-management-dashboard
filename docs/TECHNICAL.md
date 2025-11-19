@@ -601,6 +601,64 @@ export const rtlLocales = ["ar", "he"] as const;
 - **Lighthouse Score**: 95+ (Performance)
 - **Accessibility**: RTL support improves A11y for Arabic speakers
 
+## Data Export
+
+### Implementation
+
+Vehicle data can be exported in two formats: **CSV** and **PDF**.
+
+**Libraries Used:**
+
+- `jspdf` - PDF generation
+- `jspdf-autotable` - Table formatting in PDF
+- `papaparse` - CSV parsing and generation
+
+**Export Functions:**
+
+```typescript
+// lib/export.ts
+export function exportToCSV(vehicles: Vehicle[], filename?: string);
+export function exportToPDF(vehicles: Vehicle[], filename?: string);
+```
+
+**Features:**
+
+- ✅ Export complete vehicle list with all fields
+- ✅ Formatted tables in PDF with headers and styling
+- ✅ CSV compatible with Excel and Google Sheets
+- ✅ Automatic filename generation with timestamp
+- ✅ Multi-language support (button labels translated)
+
+**Usage in Components:**
+
+```tsx
+import { exportToCSV, exportToPDF } from "@/lib/export";
+
+// Export to CSV
+<Button onClick={() => exportToCSV(vehicles, "fleet-vehicles")}>
+  Export CSV
+</Button>
+
+// Export to PDF
+<Button onClick={() => exportToPDF(vehicles, "fleet-vehicles")}>
+  Export PDF
+</Button>
+```
+
+**PDF Customization:**
+
+- Company branding can be added to header
+- Timestamp automatically included
+- Table styling matches brand colors (blue headers)
+- Font size optimized for readability
+
+**CSV Features:**
+
+- All vehicle fields included
+- Date formatting applied
+- UTF-8 encoding for international characters
+- Compatible with Arabic RTL text
+
 ## Future Improvements
 
 ### Implemented ✅
@@ -612,6 +670,7 @@ export const rtlLocales = ["ar", "he"] as const;
 - [x] Conditional font loading (Inter/Cairo)
 - [x] RTL-aware UI components with tailwindcss-rtl
 - [x] Comprehensive translations (100+ keys across all pages)
+- [x] Export to PDF and CSV formats
 
 ### Planned
 
@@ -621,7 +680,8 @@ export const rtlLocales = ["ar", "he"] as const;
 - [ ] E2E tests with Playwright
 - [ ] Sentry error tracking
 - [ ] Real-time updates with WebSockets
-- [ ] RTL support for Arabic
+- [ ] Advanced PDF templates with company logo
+- [ ] Export with filters and date ranges
 
 ### Consider
 

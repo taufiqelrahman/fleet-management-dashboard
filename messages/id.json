@@ -15,7 +15,9 @@
     "next": "Selanjutnya",
     "previous": "Sebelumnya",
     "submit": "Kirim",
-    "close": "Tutup"
+    "close": "Tutup",
+    "exportCSV": "Ekspor CSV",
+    "exportPDF": "Ekspor PDF"
   },
   "auth": {
     "login": "Masuk",
