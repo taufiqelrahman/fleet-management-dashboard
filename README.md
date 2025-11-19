@@ -49,11 +49,14 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
 
 ### Internationalization (i18n)
 
-- 🌍 Multi-language support (English & Indonesian)
+- 🌍 Multi-language support (English, Indonesian & Arabic)
 - 🔄 Seamless language switching with locale-aware routing
-- 🎌 Visual language selector with flag indicators
-- 📝 Comprehensive translations for all UI elements
-- 🔗 Locale-prefixed URLs for SEO optimization
+- 🎌 Visual language selector with flag indicators (🇺🇸 🇮🇩 🇸🇦)
+- 📝 Comprehensive translations for all UI elements, forms, and charts
+- 🔗 Locale-prefixed URLs for SEO optimization (/en, /id, /ar)
+- ↔️ Full RTL (Right-to-Left) support for Arabic language
+- 🎨 Automatic font switching (Inter for LTR, Cairo for Arabic)
+- 📱 RTL-aware layout and components with tailwindcss-rtl
 
 ### Database
 
@@ -81,7 +84,8 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
 - **Charts**: [Recharts](https://recharts.org/)
 - **Database**: [Neon PostgreSQL](https://neon.tech/) + [Prisma ORM](https://www.prisma.io/)
 - **Data Fetching**: Next.js Server Actions
-- **Internationalization**: [next-intl](https://next-intl-docs.vercel.app/) (English & Indonesian)
+- **Internationalization**: [next-intl](https://next-intl-docs.vercel.app/) (English, Indonesian & Arabic with RTL)
+- **RTL Support**: [tailwindcss-rtl](https://github.com/20lives/tailwindcss-rtl) for Arabic layout
 
 ## 📁 Project Structure
 
@@ -129,7 +133,8 @@ fleet-management-dashboard/
 │   └── prisma.ts                 # Prisma client instance
 ├── messages/                     # i18n translation files
 │   ├── en.json                   # English translations
-│   └── id.json                   # Indonesian translations
+│   ├── id.json                   # Indonesian translations
+│   └── ar.json                   # Arabic translations
 ├── prisma/
 │   ├── schema.prisma             # Database schema
 │   └── seed.ts                   # Database seeder
@@ -218,7 +223,8 @@ pnpm dev
 8. Open your browser:
    - English: [http://localhost:3000/en/dashboard](http://localhost:3000/en/dashboard)
    - Indonesian: [http://localhost:3000/id/dashboard](http://localhost:3000/id/dashboard)
-   - Root (auto-redirects): [http://localhost:3000](http://localhost:3000)
+   - Arabic (RTL): [http://localhost:3000/ar/dashboard](http://localhost:3000/ar/dashboard)
+   - Root (auto-redirects to /en): [http://localhost:3000](http://localhost:3000)
 
 ### 🐳 Docker Deployment
 
@@ -276,12 +282,20 @@ The application supports two languages:
 - Access: `/id/*` routes
 - Example: `http://localhost:3000/id/dashboard`
 
+**Arabic (العربية) with RTL Layout**
+
+- Access: `/ar/*` routes
+- Example: `http://localhost:3000/ar/dashboard`
+- Automatic right-to-left layout
+- Cairo font for optimal Arabic typography
+
 **Switching Languages:**
 
-1. Click the language icon (🌐) in the sidebar
-2. Select your preferred language from the dropdown
+1. Click the language dropdown in the sidebar
+2. Select your preferred language (🇺🇸 English / 🇮🇩 Indonesia / 🇸🇦 العربية)
 3. The interface will immediately switch to the selected language
 4. URLs will update to reflect the chosen locale
+5. Layout direction will automatically adjust for Arabic (RTL)
 
 ### Demo Credentials
 

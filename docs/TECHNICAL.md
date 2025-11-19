@@ -372,55 +372,73 @@ npm run prisma:generate  # Regenerate Prisma client
 
 ### Implementation
 
-NextFleet uses **next-intl** for multi-language support with Next.js 15 App Router.
+NextFleet uses **next-intl** for multi-language support with Next.js 15 App Router and full RTL (Right-to-Left) support for Arabic.
 
 **Supported Languages:**
 
-- English (en) - Default
-- Indonesian (id)
+- English (en) - Default, LTR
+- Indonesian (id) - LTR
+- Arabic (ar) - RTL with special handling
 
 ### Architecture
 
 ```
 User Request
     ↓
-Middleware (locale detection)
+Middleware (locale detection + auth)
     ↓
-[locale]/layout.tsx (NextIntlClientProvider)
+[locale]/layout.tsx (NextIntlClientProvider + RTL detection)
+    ↓
+Conditional Font Loading (Inter for LTR, Cairo for Arabic)
+    ↓
+HTML dir attribute ("ltr" or "rtl")
     ↓
 Page Components (useTranslations hook)
     ↓
 messages/{locale}.json
+    ↓
+RTL CSS Rules (tailwindcss-rtl plugin)
 ```
 
 ### Key Files
 
 **Configuration:**
 
-- `i18n.ts` - Main configuration with locale definitions
-- `middleware.ts` - Handles locale routing + authentication
+- `i18n.ts` - Main configuration with locale definitions and RTL locales
+- `middleware.ts` - Handles locale routing (en|id|ar) + authentication
 - `next.config.mjs` - next-intl plugin integration
+- `tailwind.config.ts` - tailwindcss-rtl plugin for RTL support
 
 **Translation Files:**
 
-- `messages/en.json` - English translations
-- `messages/id.json` - Indonesian translations
+- `messages/en.json` - English translations (100+ keys)
+- `messages/id.json` - Indonesian translations (100+ keys)
+- `messages/ar.json` - Arabic translations with RTL-optimized text (100+ keys)
 
 **Components:**
 
-- `components/locale-switcher.tsx` - Language selector UI
-- `app/[locale]/layout.tsx` - Locale-aware layout wrapper
+- `components/locale-switcher.tsx` - Language selector UI with flags (🇺🇸 🇮🇩 🇸🇦)
+- `app/[locale]/layout.tsx` - Locale-aware layout with RTL detection and font switching
+- `app/globals.css` - RTL CSS rules and Arabic font optimizations
+
+**Fonts:**
+
+- `Inter` - Used for English and Indonesian (LTR languages)
+- `Cairo` - Used for Arabic for optimal typography and readability
 
 ### URL Structure
 
 All routes are prefixed with locale:
 
 ```
-/en/dashboard           → English dashboard
-/id/dashboard           → Indonesian dashboard
+/en/dashboard           → English dashboard (LTR)
+/id/dashboard           → Indonesian dashboard (LTR)
+/ar/dashboard           → Arabic dashboard (RTL)
 /en/login              → English login
 /id/login              → Indonesian login
+/ar/login              → Arabic login (RTL)
 /en/dashboard/vehicles → English vehicles page
+/ar/dashboard/vehicles → Arabic vehicles page (RTL layout)
 ```
 
 ### Usage Pattern
@@ -450,9 +468,10 @@ export default function MyPage() {
 
 **Adding New Translations:**
 
-1. Add keys to `messages/en.json` and `messages/id.json`
+1. Add keys to `messages/en.json`, `messages/id.json`, and `messages/ar.json`
 2. Use `t('key.path')` in components
 3. TypeScript will validate translation keys
+4. For RTL languages, ensure text direction is proper in Arabic translations
 
 ### Language Switching
 
@@ -479,53 +498,125 @@ Users can switch languages via:
 4. Redirect to `/[locale]/login` if unauthenticated
 5. Continue to requested route
 
+### RTL (Right-to-Left) Support
+
+**Implementation for Arabic:**
+
+1. **i18n Configuration:**
+
+```typescript
+// i18n.ts
+export const rtlLocales = ["ar"] as const;
+export const isRTL = (locale: string) => rtlLocales.includes(locale as any);
+```
+
+2. **Layout Detection:**
+
+```tsx
+// app/[locale]/layout.tsx
+const isRTL = rtlLocales.includes(locale);
+const fontClass = locale === "ar" ? cairo.className : inter.className;
+
+return (
+  <html lang={locale} dir={isRTL ? "rtl" : "ltr"} className={fontClass}>
+    {/* ... */}
+  </html>
+);
+```
+
+3. **CSS Configuration:**
+
+```css
+/* app/globals.css */
+[dir="rtl"] {
+  direction: rtl;
+}
+
+[dir="rtl"] .space-x-reverse > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+}
+```
+
+4. **Tailwind Plugin:**
+
+```typescript
+// tailwind.config.ts
+import rtl from "tailwindcss-rtl";
+
+plugins: [animate, rtl];
+```
+
+**RTL Features:**
+
+- ✅ Automatic layout flip for Arabic
+- ✅ Custom font (Cairo) for optimal Arabic typography
+- ✅ RTL-aware spacing and margins
+- ✅ Mirrored navigation and UI components
+- ✅ Proper text alignment and reading direction
+
 ### Adding More Languages
 
-To add a new language (e.g., Arabic):
+To add a new LTR language (e.g., Spanish):
 
 1. Update `i18n.ts`:
 
 ```typescript
-export const locales = ["en", "id", "ar"] as const;
+export const locales = ["en", "id", "ar", "es"] as const;
 ```
 
-2. Create `messages/ar.json` with all translations
+2. Create `messages/es.json` with all translations
 
 3. Add to locale switcher:
 
 ```typescript
-const locales = [
-  { code: "en", name: "English", flag: "🇺🇸" },
-  { code: "id", name: "Indonesia", flag: "🇮🇩" },
-  { code: "ar", name: "العربية", flag: "🇸🇦" },
-];
+{ code: "es", name: "Español", flag: "�🇸" }
 ```
+
+To add a new RTL language (e.g., Hebrew):
+
+1. Update `i18n.ts`:
+
+```typescript
+export const rtlLocales = ["ar", "he"] as const;
+```
+
+2. Create `messages/he.json`
+3. Font will auto-select (Cairo used for all RTL)
+4. Add to locale switcher with Hebrew flag
 
 ### Performance Impact
 
-- **Bundle Size**: +15KB (next-intl + translations)
-- **Runtime**: Minimal (messages loaded per locale)
-- **SEO**: Improved with locale-specific URLs
+- **Bundle Size**: +20KB (next-intl + 3 translation files + RTL plugin)
+- **Runtime**: Minimal (messages loaded per locale, not all at once)
+- **SEO**: Improved with locale-specific URLs and proper lang/dir attributes
 - **Caching**: Translation messages cached after first load
+- **RTL**: No performance penalty, pure CSS transforms
+- **Fonts**: Inter (~15KB) for LTR, Cairo (~18KB) for Arabic (loaded conditionally)
 
 ## Performance Metrics
 
 - **Initial Load**: < 2s (LCP)
 - **Time to Interactive**: < 3s
-- **JavaScript Bundle**: ~195KB (gzipped, includes i18n)
+- **JavaScript Bundle**: ~200KB (gzipped, includes i18n + RTL)
 - **Lighthouse Score**: 95+ (Performance)
+- **Accessibility**: RTL support improves A11y for Arabic speakers
 
 ## Future Improvements
 
 ### Implemented ✅
 
-- [x] Multi-language support (next-intl)
-- [x] Locale-aware routing
-- [x] Type-safe translations
+- [x] Multi-language support (English, Indonesian, Arabic)
+- [x] Locale-aware routing with [locale] dynamic segments
+- [x] Type-safe translations with next-intl
+- [x] Full RTL support for Arabic
+- [x] Conditional font loading (Inter/Cairo)
+- [x] RTL-aware UI components with tailwindcss-rtl
+- [x] Comprehensive translations (100+ keys across all pages)
 
 ### Planned
 
-- [ ] Additional languages (Arabic, Spanish, etc.)
+- [ ] Additional languages (Spanish, French, etc.)
+- [ ] Language preference persistence in user settings
 - [ ] Redis for multi-instance caching
 - [ ] E2E tests with Playwright
 - [ ] Sentry error tracking

@@ -50,7 +50,8 @@ pnpm dev
 
 - English: http://localhost:3000/en/dashboard
 - Indonesian: http://localhost:3000/id/dashboard
-- Auto-redirect: http://localhost:3000
+- Arabic (RTL): http://localhost:3000/ar/dashboard
+- Auto-redirect: http://localhost:3000 (defaults to /en)
 
 **Login with:**
 
@@ -142,16 +143,25 @@ Visit: https://console.neon.tech
 
 **Switching Languages:**
 
-1. Look for the language icon (🌐) in the sidebar
-2. Click to open language dropdown
+1. Look for the language dropdown in the sidebar
+2. Click to open language selector
 3. Select:
-   - 🇺🇸 English
-   - 🇮🇩 Indonesia
+   - 🇺🇸 English (Left-to-Right)
+   - 🇮🇩 Indonesia (Left-to-Right)
+   - 🇸🇦 العربية (Right-to-Left with RTL layout)
 
 **Direct URL Access:**
 
 - English: Add `/en/` to URL (e.g., `/en/dashboard`)
 - Indonesian: Add `/id/` to URL (e.g., `/id/dashboard`)
+- Arabic: Add `/ar/` to URL (e.g., `/ar/dashboard`)
+
+**RTL Support:**
+
+- Arabic language automatically enables right-to-left layout
+- UI components and navigation flip direction
+- Cairo font for optimal Arabic typography
+- All pages and forms fully support RTL
 
 ---
 
