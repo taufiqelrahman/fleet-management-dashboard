@@ -244,16 +244,39 @@ docker-compose up
 
 ### 🧪 Running Tests
 
+**Unit Tests (Jest):**
+
 ```bash
-# Run all tests
+# Run unit tests
 pnpm test
 
 # Run tests in watch mode
-pnpm run test:watch
+pnpm test:watch
 
 # Generate coverage report
-pnpm run test:coverage
+pnpm test:coverage
 ```
+
+**E2E Tests (Playwright):**
+
+```bash
+# Run E2E tests (headless)
+pnpm test:e2e
+
+# Run E2E tests with UI
+pnpm test:e2e:ui
+
+# Run E2E tests in headed mode
+pnpm test:e2e:headed
+
+# Debug E2E tests
+pnpm test:e2e:debug
+
+# View test report
+pnpm test:e2e:report
+```
+
+See [e2e/README.md](./e2e/README.md) for detailed E2E testing documentation.
 
 ### 📊 Available Scripts
 
@@ -380,6 +403,8 @@ export async function getVehicles() {
 
 ## 🧪 Testing
 
+**Unit Tests:**
+
 ```bash
 # Run unit tests
 pnpm test
@@ -390,6 +415,25 @@ pnpm test:watch
 # Type checking
 pnpm type-check
 ```
+
+**E2E Tests:**
+
+```bash
+# Run E2E tests
+pnpm test:e2e
+
+# Run with UI mode
+pnpm test:e2e:ui
+
+# Debug mode
+pnpm test:e2e:debug
+```
+
+**Test Coverage:**
+
+- Unit Tests: Core utilities and validation
+- E2E Tests: Authentication, CRUD operations, i18n, accessibility
+- See [e2e/README.md](./e2e/README.md) for E2E documentation
 
 ## 🔨 Build & Deployment
 
@@ -470,9 +514,11 @@ See [docs/TECHNICAL.md](docs/TECHNICAL.md) for detailed technical documentation.
 
 - [x] Multi-language support (English, Indonesian & Arabic with RTL) ✅
 - [x] Export to PDF/CSV ✅
+- [x] E2E testing with Playwright ✅
 - [ ] Real-time updates with WebSockets
 - [ ] Advanced filtering and search
 - [ ] Dark mode toggle
+- [ ] Visual regression testing
 - [ ] Email notifications
 - [ ] Advanced analytics with AI insights
 - [ ] Mobile app (React Native)

@@ -661,6 +661,83 @@ import { exportToCSV, exportToPDF } from "@/lib/export";
 
 ## Future Improvements
 
+## E2E Testing
+
+### Implementation
+
+Comprehensive end-to-end testing with **Playwright** covering all major user flows.
+
+**Test Coverage:**
+
+1. **Authentication** (`auth.spec.ts`)
+
+   - Login/logout flows
+   - Invalid credentials handling
+   - Protected route redirects
+
+2. **Dashboard** (`dashboard.spec.ts`)
+
+   - Statistics display
+   - Chart rendering
+   - Navigation between pages
+
+3. **Vehicles** (`vehicles.spec.ts`)
+
+   - CRUD operations
+   - Export to PDF/CSV
+   - Role-based access control
+
+4. **Analytics** (`analytics.spec.ts`)
+
+   - Chart data loading
+   - Multiple chart types
+
+5. **Internationalization** (`i18n.spec.ts`)
+
+   - Language switching (EN/ID/AR)
+   - RTL layout for Arabic
+   - Locale persistence
+   - Direct URL access
+
+6. **Accessibility** (`accessibility.spec.ts`)
+   - Axe-core violations check
+   - Keyboard navigation
+   - ARIA labels
+
+**Running Tests:**
+
+```bash
+# Headless mode
+pnpm test:e2e
+
+# Interactive UI mode
+pnpm test:e2e:ui
+
+# Debug mode
+pnpm test:e2e:debug
+
+# View report
+pnpm test:e2e:report
+```
+
+**Browsers Tested:**
+
+- ✅ Chromium (Desktop)
+- ✅ Firefox (Desktop)
+- ✅ WebKit/Safari (Desktop)
+- ✅ Mobile Chrome (Pixel 5)
+- ✅ Mobile Safari (iPhone 12)
+
+**Features:**
+
+- Automatic dev server startup
+- Screenshot on failure
+- Trace recording for debugging
+- Parallel test execution
+- Retry on CI (2 attempts)
+
+See [e2e/README.md](../e2e/README.md) for detailed documentation.
+
 ### Implemented ✅
 
 - [x] Multi-language support (English, Indonesian, Arabic)
@@ -671,17 +748,19 @@ import { exportToCSV, exportToPDF } from "@/lib/export";
 - [x] RTL-aware UI components with tailwindcss-rtl
 - [x] Comprehensive translations (100+ keys across all pages)
 - [x] Export to PDF and CSV formats
+- [x] E2E testing with Playwright (6 test suites, 5 browsers)
+- [x] Accessibility testing with Axe-core
 
 ### Planned
 
 - [ ] Additional languages (Spanish, French, etc.)
 - [ ] Language preference persistence in user settings
 - [ ] Redis for multi-instance caching
-- [ ] E2E tests with Playwright
 - [ ] Sentry error tracking
 - [ ] Real-time updates with WebSockets
 - [ ] Advanced PDF templates with company logo
 - [ ] Export with filters and date ranges
+- [ ] Visual regression testing
 
 ### Consider
 
