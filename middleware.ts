@@ -13,12 +13,15 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Handle auth routes - don't check authentication
-  if (pathname.match(/^\/(en|id)\/login/) || pathname.match(/^\/api\/auth/)) {
+  if (
+    pathname.match(/^\/(en|id|ar)\/login/) ||
+    pathname.match(/^\/api\/auth/)
+  ) {
     return intlMiddleware(request);
   }
 
   // Check if route requires authentication
-  const isDashboardRoute = pathname.match(/^\/(en|id)\/dashboard/);
+  const isDashboardRoute = pathname.match(/^\/(en|id|ar)\/dashboard/);
 
   if (isDashboardRoute) {
     const token = await getToken({

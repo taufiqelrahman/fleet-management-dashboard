@@ -1,7 +1,10 @@
 import { getRequestConfig } from "next-intl/server";
 
-export const locales = ["en", "id"] as const;
+export const locales = ["en", "id", "ar"] as const;
 export type Locale = (typeof locales)[number];
+
+// RTL languages
+export const rtlLocales = ["ar"] as const;
 
 export default getRequestConfig(async ({ requestLocale }) => {
   let locale = await requestLocale;

@@ -14,6 +14,7 @@ import { Languages } from "lucide-react";
 const locales = [
   { code: "en", name: "English", flag: "🇺🇸" },
   { code: "id", name: "Indonesia", flag: "🇮🇩" },
+  { code: "ar", name: "العربية", flag: "🇸🇦" },
 ];
 
 export function LocaleSwitcher() {
