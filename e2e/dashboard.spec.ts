@@ -46,11 +46,7 @@ test.describe("Dashboard Page", () => {
     // Reload to see loading state
     await page.reload();
 
-    // Should show loading indicators (skeleton or spinner)
-    const loadingIndicator = page.locator("text=Loading");
-    const isVisible = await loadingIndicator.isVisible().catch(() => false);
-
-    // Loading state may be too fast to catch, so we just check page loads
+    // Loading state may be too fast to catch, so we just check page loads successfully
     await expect(page.locator("h1")).toContainText("Dashboard");
   });
 });

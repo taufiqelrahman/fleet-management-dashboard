@@ -40,11 +40,17 @@ export async function switchLanguage(
   page: Page,
   language: "English" | "Indonesia" | "العربية"
 ) {
-  // Open language switcher dropdown
-  await page.click('button[role="combobox"]');
+  // Open language switcher dropdown (button with Languages icon)
+  await page.click('button:has([class*="lucide-languages"])');
+
+  // Wait for dropdown to open
+  await page.waitForTimeout(500);
 
   // Click the language option
-  await page.click(`text=${language}`);
+  await page.click(`[role="menuitem"]:has-text("${language}")`);
+
+  // Wait for navigation
+  await page.waitForTimeout(1000);
 }
 
 /**

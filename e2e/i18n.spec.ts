@@ -11,28 +11,34 @@ test.describe("Internationalization (i18n)", () => {
   });
 
   test("should switch to Indonesian language", async ({ page }) => {
-    // Click language switcher
-    await page.click('button:has-text("English")');
+    // Click language switcher button (has Languages icon)
+    await page.click('button:has([class*="lucide-languages"])');
+
+    // Wait for dropdown to open
+    await page.waitForTimeout(500);
 
     // Select Indonesian
-    await page.click("text=Indonesia");
+    await page.click('[role="menuitem"]:has-text("Indonesia")');
 
     // URL should change to /id
-    await expect(page).toHaveURL(/.*\/id\/dashboard/);
+    await expect(page).toHaveURL(/.*\/id\/dashboard/, { timeout: 3000 });
 
     // Check for Indonesian text
     await expect(page.locator("text=Dasbor")).toBeVisible();
   });
 
   test("should switch to Arabic language with RTL", async ({ page }) => {
-    // Click language switcher
-    await page.click('button:has-text("English")');
+    // Click language switcher button (has Languages icon)
+    await page.click('button:has([class*="lucide-languages"])');
+
+    // Wait for dropdown to open
+    await page.waitForTimeout(500);
 
     // Select Arabic
-    await page.click("text=العربية");
+    await page.click('[role="menuitem"]:has-text("العربية")');
 
     // URL should change to /ar
-    await expect(page).toHaveURL(/.*\/ar\/dashboard/);
+    await expect(page).toHaveURL(/.*\/ar\/dashboard/, { timeout: 3000 });
 
     // Check RTL direction
     const html = page.locator("html");
@@ -44,9 +50,10 @@ test.describe("Internationalization (i18n)", () => {
 
   test("should persist language across navigation", async ({ page }) => {
     // Switch to Indonesian
-    await page.click('button:has-text("English")');
-    await page.click("text=Indonesia");
-    await expect(page).toHaveURL(/.*\/id\/dashboard/);
+    await page.click('button:has([class*="lucide-languages"])');
+    await page.waitForTimeout(500);
+    await page.click('[role="menuitem"]:has-text("Indonesia")');
+    await expect(page).toHaveURL(/.*\/id\/dashboard/, { timeout: 3000 });
 
     // Navigate to vehicles
     await page.click('a:has-text("Kendaraan")');
@@ -58,8 +65,10 @@ test.describe("Internationalization (i18n)", () => {
 
   test("should translate all UI elements in Indonesian", async ({ page }) => {
     // Switch to Indonesian
-    await page.click('button:has-text("English")');
-    await page.click("text=Indonesia");
+    await page.click('button:has([class*="lucide-languages"])');
+    await page.waitForTimeout(500);
+    await page.click('[role="menuitem"]:has-text("Indonesia")');
+    await expect(page).toHaveURL(/.*\/id\/dashboard/, { timeout: 3000 });
 
     // Check translated elements
     await expect(page.locator("text=Total Kendaraan")).toBeVisible();
@@ -68,8 +77,10 @@ test.describe("Internationalization (i18n)", () => {
 
   test("should translate all UI elements in Arabic", async ({ page }) => {
     // Switch to Arabic
-    await page.click('button:has-text("English")');
-    await page.click("text=العربية");
+    await page.click('button:has([class*="lucide-languages"])');
+    await page.waitForTimeout(500);
+    await page.click('[role="menuitem"]:has-text("العربية")');
+    await expect(page).toHaveURL(/.*\/ar\/dashboard/, { timeout: 3000 });
 
     // Check translated elements
     await expect(page.locator("text=إجمالي المركبات")).toBeVisible();
