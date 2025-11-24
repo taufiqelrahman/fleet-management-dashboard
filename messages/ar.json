@@ -1,6 +1,6 @@
 {
   "common": {
-    "loading": "جارٍ التحميل...",
+    "loading": "جاري التحميل...",
     "error": "خطأ",
     "success": "نجح",
     "save": "حفظ",
@@ -16,6 +16,7 @@
     "previous": "السابق",
     "submit": "إرسال",
     "close": "إغلاق",
+    "notes": "ملاحظات",
     "exportCSV": "تصدير CSV",
     "exportPDF": "تصدير PDF"
   },
