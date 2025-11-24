@@ -235,6 +235,94 @@ export async function createShift(data: {
   }
 }
 
+// Update shift
+export async function updateShift(
+  shiftId: string,
+  data: {
+    shiftType?: ShiftType;
+    startTime?: Date;
+    endTime?: Date;
+    status?: ShiftStatus;
+    notes?: string;
+  }
+): Promise<ActionResponse<ShiftWithUser>> {
+  try {
+    const authResult = await getAuthenticatedUser();
+    if ("error" in authResult) {
+      return { success: false, message: authResult.error };
+    }
+
+    const shift = await prisma.shift.findFirst({
+      where: {
+        id: shiftId,
+        userId: authResult.user.id,
+      },
+    });
+
+    if (!shift) {
+      return {
+        success: false,
+        message: "Shift not found",
+      };
+    }
+
+    // Check for overlap if times are being updated
+    if (data.startTime || data.endTime) {
+      const startTime = data.startTime || shift.startTime;
+      const endTime = data.endTime || shift.endTime;
+
+      const overlappingShift = await prisma.shift.findFirst({
+        where: {
+          id: { not: shiftId },
+          userId: authResult.user.id,
+          status: { notIn: ["COMPLETED", "CANCELLED"] },
+          OR: [
+            {
+              startTime: { lte: startTime },
+              endTime: { gt: startTime },
+            },
+            {
+              startTime: { lt: endTime },
+              endTime: { gte: endTime },
+            },
+            {
+              startTime: { gte: startTime },
+              endTime: { lte: endTime },
+            },
+          ],
+        },
+      });
+
+      if (overlappingShift) {
+        return {
+          success: false,
+          message: "Shift overlaps with an existing shift",
+        };
+      }
+    }
+
+    const updatedShift = await prisma.shift.update({
+      where: { id: shiftId },
+      data,
+      include: { user: true },
+    });
+
+    revalidatePath("/[locale]/dashboard/schedules");
+
+    return {
+      success: true,
+      data: updatedShift,
+      message: "Shift updated successfully",
+    };
+  } catch (error) {
+    console.error("Update shift error:", error);
+    return {
+      success: false,
+      message: "Failed to update shift",
+    };
+  }
+}
+
 // Update shift status
 export async function updateShiftStatus(
   shiftId: string,
@@ -278,6 +366,49 @@ export async function updateShiftStatus(
     return {
       success: false,
       message: "Failed to update shift status",
+    };
+  }
+}
+
+// Delete shift
+export async function deleteShift(
+  shiftId: string
+): Promise<ActionResponse<void>> {
+  try {
+    const authResult = await getAuthenticatedUser();
+    if ("error" in authResult) {
+      return { success: false, message: authResult.error };
+    }
+
+    const shift = await prisma.shift.findFirst({
+      where: {
+        id: shiftId,
+        userId: authResult.user.id,
+      },
+    });
+
+    if (!shift) {
+      return {
+        success: false,
+        message: "Shift not found",
+      };
+    }
+
+    await prisma.shift.delete({
+      where: { id: shiftId },
+    });
+
+    revalidatePath("/[locale]/dashboard/schedules");
+
+    return {
+      success: true,
+      message: "Shift deleted successfully",
+    };
+  } catch (error) {
+    console.error("Delete shift error:", error);
+    return {
+      success: false,
+      message: "Failed to delete shift",
     };
   }
 }

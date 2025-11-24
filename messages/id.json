@@ -17,6 +17,8 @@
     "submit": "Kirim",
     "close": "Tutup",
     "notes": "Catatan",
+    "actions": "Aksi",
+    "confirmDelete": "Apakah Anda yakin ingin menghapus ini?",
     "exportCSV": "Ekspor CSV",
     "exportPDF": "Ekspor PDF"
   },

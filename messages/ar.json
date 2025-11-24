@@ -17,6 +17,8 @@
     "submit": "إرسال",
     "close": "إغلاق",
     "notes": "ملاحظات",
+    "actions": "إجراءات",
+    "confirmDelete": "هل أنت متأكد من رغبتك في حذف هذا؟",
     "exportCSV": "تصدير CSV",
     "exportPDF": "تصدير PDF"
   },

@@ -17,6 +17,8 @@
     "submit": "Submit",
     "close": "Close",
     "notes": "Notes",
+    "actions": "Actions",
+    "confirmDelete": "Are you sure you want to delete this?",
     "exportCSV": "Export CSV",
     "exportPDF": "Export PDF"
   },

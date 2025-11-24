@@ -2,13 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { Calendar, Clock, Plus, Users } from "lucide-react";
+import { Calendar, Clock, Plus, Users, Edit, Trash2 } from "lucide-react";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import {
   getTodayShifts,
   getUpcomingShifts,
   getAllShifts,
   createShift,
+  updateShift,
+  deleteShift,
 } from "@/actions/schedules";
 import { useToast } from "@/components/ui/use-toast";
 import { LoadingScreen, Spinner } from "@/components/ui/spinner";
@@ -64,6 +66,7 @@ function SchedulesPage() {
   const [shifts, setShifts] = useState<Shift[]>([]);
   const [todayShifts, setTodayShifts] = useState<Shift[]>([]);
   const [upcomingShifts, setUpcomingShifts] = useState<Shift[]>([]);
+  const [editingShift, setEditingShift] = useState<Shift | null>(null);
 
   useEffect(() => {
     loadShifts();
@@ -123,7 +126,29 @@ function SchedulesPage() {
     notes: "",
   });
 
-  const handleCreateShift = async () => {
+  const handleOpenEdit = (shift: Shift) => {
+    setEditingShift(shift);
+    setFormData({
+      shiftType: shift.shiftType,
+      startTime: new Date(shift.startTime).toISOString().slice(0, 16),
+      endTime: new Date(shift.endTime).toISOString().slice(0, 16),
+      notes: shift.notes || "",
+    });
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    setEditingShift(null);
+    setFormData({
+      shiftType: "" as ShiftType,
+      startTime: "",
+      endTime: "",
+      notes: "",
+    });
+  };
+
+  const handleSaveShift = async () => {
     if (!formData.shiftType || !formData.startTime || !formData.endTime) {
       toast({
         title: t("common.error"),
@@ -135,35 +160,83 @@ function SchedulesPage() {
 
     setIsLoading(true);
     try {
-      const result = await createShift({
-        shiftType: formData.shiftType,
-        startTime: new Date(formData.startTime),
-        endTime: new Date(formData.endTime),
-        notes: formData.notes || undefined,
-      });
+      const result = editingShift
+        ? await updateShift(editingShift.id, {
+            shiftType: formData.shiftType,
+            startTime: new Date(formData.startTime),
+            endTime: new Date(formData.endTime),
+            notes: formData.notes || undefined,
+          })
+        : await createShift({
+            shiftType: formData.shiftType,
+            startTime: new Date(formData.startTime),
+            endTime: new Date(formData.endTime),
+            notes: formData.notes || undefined,
+          });
 
-      if (result.success && result.data) {
+      if (result.success) {
         await loadShifts();
-        setIsDialogOpen(false);
-        setFormData({
-          shiftType: "" as ShiftType,
-          startTime: "",
-          endTime: "",
-          notes: "",
-        });
+        handleCloseDialog();
         toast({
           title: t("common.success"),
-          description: result.message || "Shift created successfully",
+          description:
+            result.message ||
+            (editingShift
+              ? "Shift updated successfully"
+              : "Shift created successfully"),
         });
       } else {
         toast({
           title: t("common.error"),
-          description: result.message || "Failed to create shift",
+          description:
+            result.message ||
+            (editingShift
+              ? "Failed to update shift"
+              : "Failed to create shift"),
           variant: "destructive",
         });
       }
     } catch (err) {
-      console.error("Failed to create shift:", err);
+      console.error("Failed to save shift:", err);
+      toast({
+        title: t("common.error"),
+        description: "An error occurred",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeleteShift = async (shiftId: string) => {
+    if (
+      !confirm(
+        t("common.confirmDelete") ||
+          "Are you sure you want to delete this shift?"
+      )
+    ) {
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const result = await deleteShift(shiftId);
+
+      if (result.success) {
+        await loadShifts();
+        toast({
+          title: t("common.success"),
+          description: result.message || "Shift deleted successfully",
+        });
+      } else {
+        toast({
+          title: t("common.error"),
+          description: result.message || "Failed to delete shift",
+          variant: "destructive",
+        });
+      }
+    } catch (err) {
+      console.error("Failed to delete shift:", err);
       toast({
         title: t("common.error"),
         description: "An error occurred",
@@ -227,7 +300,7 @@ function SchedulesPage() {
             {t("schedules.todayShifts")}: {todayShifts.length}
           </p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <Dialog open={isDialogOpen} onOpenChange={handleCloseDialog}>
           <DialogTrigger asChild>
             <Button size="lg">
               <Plus className="mr-2 h-4 w-4" />
@@ -236,7 +309,11 @@ function SchedulesPage() {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{t("schedules.createShift")}</DialogTitle>
+              <DialogTitle>
+                {editingShift
+                  ? t("schedules.editShift")
+                  : t("schedules.createShift")}
+              </DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div>
@@ -298,7 +375,7 @@ function SchedulesPage() {
                 />
               </div>
               <Button
-                onClick={handleCreateShift}
+                onClick={handleSaveShift}
                 className="w-full"
                 disabled={
                   !formData.shiftType ||
@@ -312,7 +389,11 @@ function SchedulesPage() {
                 ) : (
                   <Plus className="mr-2 h-4 w-4" />
                 )}
-                {isLoading ? t("common.loading") : t("schedules.createShift")}
+                {isLoading
+                  ? t("common.loading")
+                  : editingShift
+                  ? t("common.save")
+                  : t("schedules.createShift")}
               </Button>
             </div>
           </DialogContent>
@@ -425,6 +506,7 @@ function SchedulesPage() {
                 <TableHead>{t("schedules.endTime")}</TableHead>
                 <TableHead>{t("timesheets.duration")}</TableHead>
                 <TableHead>{t("schedules.status")}</TableHead>
+                <TableHead>{t("common.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -444,6 +526,26 @@ function SchedulesPage() {
                     {calculateDuration(shift.startTime, shift.endTime)}
                   </TableCell>
                   <TableCell>{getStatusBadge(shift.status)}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleOpenEdit(shift)}
+                        disabled={isLoading}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => handleDeleteShift(shift.id)}
+                        disabled={isLoading}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
