@@ -34,6 +34,7 @@ type AttendanceRecord = {
 function AttendancePage() {
   const t = useTranslations();
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [isMounted, setIsMounted] = useState(false);
   const [isClockedIn, setIsClockedIn] = useState(false);
   const [location, setLocation] = useState<string>("");
   const [notes, setNotes] = useState("");
@@ -43,6 +44,7 @@ function AttendancePage() {
   >([]);
 
   useEffect(() => {
+    setIsMounted(true);
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
@@ -158,7 +160,14 @@ function AttendancePage() {
       <div>
         <h1 className="text-3xl font-bold">{t("attendance.title")}</h1>
         <p className="text-muted-foreground">
-          {currentTime.toLocaleDateString()} {currentTime.toLocaleTimeString()}
+          {isMounted ? (
+            <>
+              {currentTime.toLocaleDateString()}{" "}
+              {currentTime.toLocaleTimeString()}
+            </>
+          ) : (
+            <span className="invisible">Loading...</span>
+          )}
         </p>
       </div>
 
@@ -175,7 +184,7 @@ function AttendancePage() {
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-muted-foreground" />
               <span className="text-sm">
-                {currentTime.toLocaleDateString()}
+                {isMounted ? currentTime.toLocaleDateString() : ""}
               </span>
             </div>
             <div className="flex items-center gap-2">
