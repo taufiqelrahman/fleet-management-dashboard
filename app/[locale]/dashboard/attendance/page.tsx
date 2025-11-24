@@ -60,10 +60,18 @@ function AttendancePage() {
             )}, ${position.coords.longitude.toFixed(6)}`
           );
         },
-        () => {
-          setLocation("Location unavailable");
+        (error) => {
+          console.log("Location error:", error.message);
+          setLocation("Location not available");
+        },
+        {
+          enableHighAccuracy: false,
+          timeout: 10000,
+          maximumAge: 300000,
         }
       );
+    } else {
+      setLocation("Location not supported");
     }
 
     // Mock data - replace with actual API calls
@@ -190,7 +198,7 @@ function AttendancePage() {
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4 text-muted-foreground" />
               <span className="text-sm">
-                {currentTime.toLocaleTimeString()}
+                {isMounted ? currentTime.toLocaleTimeString() : ""}
               </span>
             </div>
             <div className="flex items-center gap-2">
