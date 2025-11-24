@@ -16,7 +16,9 @@ type AttendanceWithUser = Prisma.AttendanceGetPayload<{
 }>;
 
 // Get today's attendance for current user
-export async function getTodayAttendance(): Promise<ActionResponse<AttendanceWithUser | null>> {
+export async function getTodayAttendance(): Promise<
+  ActionResponse<AttendanceWithUser | null>
+> {
   const authCheck = await checkAuth();
   if (!authCheck.authorized) {
     return { success: false, message: "Unauthorized" };
@@ -28,8 +30,8 @@ export async function getTodayAttendance(): Promise<ActionResponse<AttendanceWit
       return { success: false, message: "User not found" };
     }
 
-    const user = await prisma.user.findUnique({ 
-      where: { email: userEmail } 
+    const user = await prisma.user.findUnique({
+      where: { email: userEmail },
     });
 
     if (!user) {
@@ -39,15 +41,15 @@ export async function getTodayAttendance(): Promise<ActionResponse<AttendanceWit
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const attendance = await prisma.attendance.findFirst({ 
-      where: { 
-        userId: user.id, 
-        date: { gte: today } 
+    const attendance = await prisma.attendance.findFirst({
+      where: {
+        userId: user.id,
+        date: { gte: today },
       },
       include: { user: true },
-      orderBy: { createdAt: "desc" }
+      orderBy: { createdAt: "desc" },
     });
-    
+
     return {
       success: true,
       data: attendance,
@@ -62,7 +64,9 @@ export async function getTodayAttendance(): Promise<ActionResponse<AttendanceWit
 }
 
 // Get attendance history for current user
-export async function getAttendanceHistory(): Promise<ActionResponse<AttendanceWithUser[]>> {
+export async function getAttendanceHistory(): Promise<
+  ActionResponse<AttendanceWithUser[]>
+> {
   const authCheck = await checkAuth();
   if (!authCheck.authorized) {
     return { success: false, message: "Unauthorized" };
@@ -74,8 +78,8 @@ export async function getAttendanceHistory(): Promise<ActionResponse<AttendanceW
       return { success: false, message: "User not found" };
     }
 
-    const user = await prisma.user.findUnique({ 
-      where: { email: userEmail } 
+    const user = await prisma.user.findUnique({
+      where: { email: userEmail },
     });
 
     if (!user) {
@@ -86,9 +90,9 @@ export async function getAttendanceHistory(): Promise<ActionResponse<AttendanceW
       where: { userId: user.id },
       include: { user: true },
       orderBy: { date: "desc" },
-      take: 30
+      take: 30,
     });
-    
+
     return {
       success: true,
       data: attendances,
@@ -118,8 +122,8 @@ export async function clockIn(data: {
       return { success: false, message: "User not found" };
     }
 
-    const user = await prisma.user.findUnique({ 
-      where: { email: userEmail } 
+    const user = await prisma.user.findUnique({
+      where: { email: userEmail },
     });
 
     if (!user) {
@@ -160,9 +164,9 @@ export async function clockIn(data: {
       },
       include: { user: true },
     });
-    
+
     revalidatePath("/[locale]/dashboard/attendance");
-    
+
     return {
       success: true,
       data: attendance,
@@ -178,7 +182,9 @@ export async function clockIn(data: {
 }
 
 // Clock out
-export async function clockOut(attendanceId: string): Promise<ActionResponse<AttendanceWithUser>> {
+export async function clockOut(
+  attendanceId: string
+): Promise<ActionResponse<AttendanceWithUser>> {
   const authCheck = await checkAuth();
   if (!authCheck.authorized) {
     return { success: false, message: "Unauthorized" };
@@ -190,8 +196,8 @@ export async function clockOut(attendanceId: string): Promise<ActionResponse<Att
       return { success: false, message: "User not found" };
     }
 
-    const user = await prisma.user.findUnique({ 
-      where: { email: userEmail } 
+    const user = await prisma.user.findUnique({
+      where: { email: userEmail },
     });
 
     if (!user) {
@@ -221,9 +227,9 @@ export async function clockOut(attendanceId: string): Promise<ActionResponse<Att
       data: { clockOut: new Date() },
       include: { user: true },
     });
-    
+
     revalidatePath("/[locale]/dashboard/attendance");
-    
+
     return {
       success: true,
       data: updatedAttendance,
