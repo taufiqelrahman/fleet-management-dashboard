@@ -4,6 +4,13 @@ import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Calendar, Clock, MapPin } from "lucide-react";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
+import {
+  getTodayAttendance,
+  getAttendanceHistory,
+  clockIn,
+  clockOut,
+} from "@/actions/attendance";
+import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -33,11 +40,13 @@ type AttendanceRecord = {
 
 function AttendancePage() {
   const t = useTranslations();
+  const { toast } = useToast();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isMounted, setIsMounted] = useState(false);
   const [isClockedIn, setIsClockedIn] = useState(false);
   const [location, setLocation] = useState<string>("");
   const [notes, setNotes] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [todayRecord, setTodayRecord] = useState<AttendanceRecord | null>(null);
   const [attendanceHistory, setAttendanceHistory] = useState<
     AttendanceRecord[]
@@ -74,77 +83,147 @@ function AttendancePage() {
       setLocation("Location not supported");
     }
 
-    // Mock data - replace with actual API calls
-    const mockTodayRecord: AttendanceRecord = {
-      id: "1",
-      userId: "user1",
-      userName: "Current User",
-      date: new Date().toISOString().split("T")[0],
-      clockIn: "08:30:00",
-      clockOut: null,
-      status: "PRESENT",
-      location: "Office",
-      notes: null,
-    };
-
-    const mockHistory: AttendanceRecord[] = [
-      {
-        id: "2",
-        userId: "user1",
-        userName: "Current User",
-        date: "2024-11-23",
-        clockIn: "08:45:00",
-        clockOut: "17:30:00",
-        status: "LATE",
-        location: "Office",
-        notes: "Traffic delay",
-      },
-      {
-        id: "3",
-        userId: "user1",
-        userName: "Current User",
-        date: "2024-11-22",
-        clockIn: "08:20:00",
-        clockOut: "17:15:00",
-        status: "PRESENT",
-        location: "Office",
-        notes: null,
-      },
-    ];
-
-    setTodayRecord(mockTodayRecord);
-    setIsClockedIn(!!mockTodayRecord.clockIn && !mockTodayRecord.clockOut);
-    setAttendanceHistory(mockHistory);
+    // Load real data from database
+    loadAttendanceData();
   }, []);
 
-  const handleClockIn = () => {
-    const now = new Date();
-    const newRecord: AttendanceRecord = {
-      id: Date.now().toString(),
-      userId: "user1",
-      userName: "Current User",
-      date: now.toISOString().split("T")[0],
-      clockIn: now.toTimeString().split(" ")[0],
-      clockOut: null,
-      status: "PRESENT",
-      location,
-      notes,
-    };
-    setTodayRecord(newRecord);
-    setIsClockedIn(true);
-    setNotes("");
+  const loadAttendanceData = async () => {
+    try {
+      const [todayResult, historyResult] = await Promise.all([
+        getTodayAttendance(),
+        getAttendanceHistory(),
+      ]);
+
+      if (todayResult.success && todayResult.data) {
+        const record = todayResult.data;
+        setTodayRecord({
+          id: record.id,
+          userId: record.userId,
+          userName: record.user.name || record.user.email,
+          date: new Date(record.date).toISOString().split("T")[0],
+          clockIn: record.clockIn
+            ? new Date(record.clockIn).toLocaleTimeString()
+            : null,
+          clockOut: record.clockOut
+            ? new Date(record.clockOut).toLocaleTimeString()
+            : null,
+          status: record.status,
+          location: record.location,
+          notes: record.notes,
+        });
+        setIsClockedIn(!!record.clockIn && !record.clockOut);
+      }
+
+      if (historyResult.success && historyResult.data) {
+        setAttendanceHistory(
+          historyResult.data.map((record) => ({
+            id: record.id,
+            userId: record.userId,
+            userName: record.user.name || record.user.email,
+            date: new Date(record.date).toISOString().split("T")[0],
+            clockIn: record.clockIn
+              ? new Date(record.clockIn).toLocaleTimeString()
+              : null,
+            clockOut: record.clockOut
+              ? new Date(record.clockOut).toLocaleTimeString()
+              : null,
+            status: record.status,
+            location: record.location,
+            notes: record.notes,
+          }))
+        );
+      }
+    } catch (error) {
+      console.error("Failed to load attendance data:", error);
+    }
   };
 
-  const handleClockOut = () => {
-    if (todayRecord) {
-      const now = new Date();
-      const updatedRecord = {
-        ...todayRecord,
-        clockOut: now.toTimeString().split(" ")[0],
-      };
-      setTodayRecord(updatedRecord);
-      setIsClockedIn(false);
-      setAttendanceHistory([updatedRecord, ...attendanceHistory]);
+  const handleClockIn = async () => {
+    setIsLoading(true);
+    try {
+      const result = await clockIn({ location, notes });
+
+      if (result.success && result.data) {
+        const record = result.data;
+        setTodayRecord({
+          id: record.id,
+          userId: record.userId,
+          userName: record.user.name || record.user.email,
+          date: new Date(record.date).toISOString().split("T")[0],
+          clockIn: new Date(record.clockIn).toLocaleTimeString(),
+          clockOut: null,
+          status: record.status,
+          location: record.location,
+          notes: record.notes,
+        });
+        setIsClockedIn(true);
+        setNotes("");
+        toast({
+          title: t("common.success"),
+          description: result.message || "Clocked in successfully",
+        });
+      } else {
+        toast({
+          title: t("common.error"),
+          description: result.message || "Failed to clock in",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: t("common.error"),
+        description: "An error occurred",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleClockOut = async () => {
+    if (!todayRecord) return;
+
+    setIsLoading(true);
+    try {
+      const result = await clockOut(todayRecord.id);
+
+      if (result.success && result.data) {
+        const record = result.data;
+        const updatedRecord = {
+          id: record.id,
+          userId: record.userId,
+          userName: record.user.name || record.user.email,
+          date: new Date(record.date).toISOString().split("T")[0],
+          clockIn: record.clockIn
+            ? new Date(record.clockIn).toLocaleTimeString()
+            : null,
+          clockOut: new Date(record.clockOut!).toLocaleTimeString(),
+          status: record.status,
+          location: record.location,
+          notes: record.notes,
+        };
+        setTodayRecord(updatedRecord);
+        setIsClockedIn(false);
+        setAttendanceHistory([updatedRecord, ...attendanceHistory]);
+        toast({
+          title: t("common.success"),
+          description: result.message || "Clocked out successfully",
+        });
+      } else {
+        toast({
+          title: t("common.error"),
+          description: result.message || "Failed to clock out",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: t("common.error"),
+        description: "An error occurred",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -251,9 +330,14 @@ function AttendancePage() {
 
           <div className="flex gap-2">
             {!isClockedIn ? (
-              <Button onClick={handleClockIn} className="flex-1" size="lg">
+              <Button
+                onClick={handleClockIn}
+                className="flex-1"
+                size="lg"
+                disabled={isLoading}
+              >
                 <Clock className="mr-2 h-4 w-4" />
-                {t("attendance.clockIn")}
+                {isLoading ? t("common.loading") : t("attendance.clockIn")}
               </Button>
             ) : (
               <Button
@@ -261,9 +345,10 @@ function AttendancePage() {
                 variant="destructive"
                 className="flex-1"
                 size="lg"
+                disabled={isLoading}
               >
                 <Clock className="mr-2 h-4 w-4" />
-                {t("attendance.clockOut")}
+                {isLoading ? t("common.loading") : t("attendance.clockOut")}
               </Button>
             )}
           </div>

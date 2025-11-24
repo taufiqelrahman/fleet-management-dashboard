@@ -103,14 +103,37 @@ Successfully implemented a comprehensive Attendance + Timesheet system for the F
 - `clockIn({ location, notes })` - Create new attendance with GPS & auto-late detection
 - `clockOut(attendanceId)` - Update attendance with clock out time
 
-**Features:**
+**Timesheet Actions (`actions/timesheets.ts`):**
 
-- Helper function `getAuthenticatedUser()` for code efficiency
-- Automatic late status detection (after 9 AM)
-- GPS location capture for verification
-- Duplicate check for same-day clock-ins
-- Type-safe with Prisma client
-- Path revalidation for instant UI updates
+- `getActiveTimesheets()` - Fetch ongoing activities (no end time)
+- `getTimesheetHistory()` - Get last 50 completed activities
+- `startTimesheet({ activityType, vehicleId, location, description })` - Start activity tracking
+- `endTimesheet(timesheetId)` - End activity with auto duration calculation
+
+**Schedule Actions (`actions/schedules.ts`):**
+
+- `getTodayShifts()` - Get today's scheduled shifts
+- `getUpcomingShifts()` - Get next 7 days shifts
+- `getAllShifts()` - Get all shifts history (50 records)
+- `createShift({ shiftType, startTime, endTime, notes })` - Create new shift with overlap validation
+- `updateShiftStatus(shiftId, status)` - Update shift status
+
+**Common Features:**
+
+- Helper function `getAuthenticatedUser()` for code efficiency across all actions
+- Type-safe with Prisma client and TypeScript enums
+- Path revalidation for instant UI updates (`revalidatePath`)
+- Comprehensive error handling with ActionResponse type
+- User authentication and authorization checks
+- Toast notifications for user feedback (success/error)
+- Console logging for debugging
+- Loading states on all buttons
+
+**Validation Rules:**
+
+- **Attendance**: One clock-in per day, must clock-in before clock-out
+- **Timesheet**: Only one active timesheet allowed, must end before starting new
+- **Schedule**: No overlapping shifts, end time must be after start time
 
 ### 5. Navigation Updates
 
@@ -142,6 +165,62 @@ Successfully implemented a comprehensive Attendance + Timesheet system for the F
 - Added `types/attendance.ts` to types section
 - Updated messages structure with all 3 languages
 
+## Implementation Status
+
+✅ **Fully Implemented & Integrated:**
+
+1. **Attendance System**
+
+   - Clock in/out with GPS location
+   - Today's attendance display
+   - 30-day history with status badges
+   - Auto-late detection (after 9 AM)
+   - Hydration-safe time rendering
+
+2. **Timesheet System**
+
+   - Start/end activity tracking
+   - 7 activity types (Driving, Maintenance, etc.)
+   - Vehicle assignment
+   - Duration auto-calculation
+   - Active & completed timesheets view
+
+3. **Schedule System**
+   - Create shifts with 4 types (Morning, Afternoon, Night, Flexible)
+   - Overlap validation
+   - Today's shifts display
+   - Upcoming shifts (7 days)
+   - All shifts history
+   - Status management
+
+## Database Setup
+
+### Seed Data
+
+Run seed to populate test data:
+
+```bash
+pnpm prisma db seed
+```
+
+**Created Records:**
+
+- 2 Users (Admin & Operator)
+- 6 Vehicles (various types)
+- 9 Trips (distributed over 6 months)
+- 4 Attendance records (today & yesterday)
+- 4 Timesheet records (3 completed + 1 active)
+- 5 Shift records (various dates & statuses)
+
+**Test Credentials:**
+
+- Admin: `admin@nextfleet.com` / `password123`
+  - No active timesheet (can start new activities)
+  - Has today's attendance
+- Operator: `operator@nextfleet.com` / `password123`
+  - Has 1 active cleaning timesheet (must end first)
+  - Has today's attendance (already clocked out)
+
 ## Technical Implementation
 
 ### Database Relations
@@ -160,10 +239,73 @@ Vehicle {
 
 ### State Management
 
-- Server Actions for database operations (`actions/attendance.ts`)
-- Real-time data fetching from PostgreSQL via Prisma
-- Client-side state using React useState for UI interactions
-- Optimized with helper functions to reduce code duplication
+- **Server Actions**: Database operations via `actions/attendance.ts`, `actions/timesheets.ts`, `actions/schedules.ts`
+- **Real-time Data**: PostgreSQL queries via Prisma with automatic type generation
+- **Client State**: React useState for UI interactions and form management
+- **Loading States**: isLoading state for better UX during async operations
+- **Toast Notifications**: Success/error feedback using shadcn/ui toast
+- **Data Refresh**: Automatic data reload after mutations (create, update)
+- **Code Optimization**: Shared helper functions reduce duplication by ~60 lines per file
+
+## Troubleshooting
+
+### Common Issues
+
+**1. "Failed to start timesheet" Error**
+
+- **Cause**: User already has an active timesheet
+- **Solution**: End the current active timesheet first
+- **Prevention**: Start Activity button is disabled when active timesheet exists
+- **Check**: Active Timesheets card shows current activities
+
+**2. Hydration Mismatch (Time Display)**
+
+- **Cause**: Server renders different time than client
+- **Solution**: Use `isMounted` state check before rendering time
+- **Fixed**: All time displays now use conditional rendering with `isMounted`
+
+**3. Schedules Page Render Error**
+
+- **Cause**: Duplicate filter logic conflicting with API data
+- **Solution**: Removed duplicate `todayShifts`/`upcomingShifts` filters
+- **Fixed**: Data comes directly from separate API calls
+
+**4. Empty Data on Pages**
+
+- **Cause**: Database not seeded
+- **Solution**: Run `pnpm prisma db seed`
+- **Verify**: Check database has records for User, Attendance, Timesheet, Shift
+
+**5. Type Errors with ActivityType/ShiftType**
+
+- **Cause**: String not cast to enum type
+- **Solution**: Use `as ActivityType` or `as ShiftType` when creating records
+- **Example**: `activityType: data.activityType as ActivityType`
+
+### Debug Tips
+
+**Enable Console Logging:**
+
+- Check browser console for detailed error messages
+- Server actions log results: `console.log("Start timesheet result:", result)`
+- Error objects logged: `console.error("Failed to start timesheet:", result)`
+
+**Check Database:**
+
+```bash
+# Open Prisma Studio to view data
+pnpm prisma studio
+
+# Check specific tables
+pnpm prisma studio --browser none
+```
+
+**Reset Database:**
+
+```bash
+# Reset and re-seed (use with caution!)
+pnpm prisma migrate reset
+```
 
 ### UI/UX Features
 

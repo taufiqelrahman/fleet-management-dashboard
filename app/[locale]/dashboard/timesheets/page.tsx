@@ -1,9 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Clock, Play, Square, Car } from "lucide-react";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
+import {
+  getActiveTimesheets,
+  getTimesheetHistory,
+  startTimesheet,
+  endTimesheet,
+} from "@/actions/timesheets";
+import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -58,50 +65,13 @@ type Timesheet = {
 
 function TimesheetsPage() {
   const t = useTranslations();
+  const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [activeTimesheets, setActiveTimesheets] = useState<Timesheet[]>([
-    {
-      id: "1",
-      userId: "user1",
-      userName: "John Doe",
-      vehicleId: "v1",
-      vehicleName: "Toyota Camry",
-      activityType: "DRIVING",
-      startTime: "2024-11-24T08:00:00",
-      endTime: null,
-      duration: null,
-      description: "Route delivery",
-      location: "Downtown",
-    },
-  ]);
-  const [completedTimesheets, setCompletedTimesheets] = useState<Timesheet[]>([
-    {
-      id: "2",
-      userId: "user1",
-      userName: "John Doe",
-      vehicleId: "v2",
-      vehicleName: "Honda Civic",
-      activityType: "MAINTENANCE",
-      startTime: "2024-11-23T14:00:00",
-      endTime: "2024-11-23T16:30:00",
-      duration: 2.5,
-      description: "Oil change and tire rotation",
-      location: "Service Center",
-    },
-    {
-      id: "3",
-      userId: "user1",
-      userName: "John Doe",
-      vehicleId: "v3",
-      vehicleName: "Ford Transit",
-      activityType: "FUELING",
-      startTime: "2024-11-23T10:15:00",
-      endTime: "2024-11-23T10:30:00",
-      duration: 0.25,
-      description: "Refuel",
-      location: "Gas Station A",
-    },
-  ]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [activeTimesheets, setActiveTimesheets] = useState<Timesheet[]>([]);
+  const [completedTimesheets, setCompletedTimesheets] = useState<Timesheet[]>(
+    []
+  );
 
   const [formData, setFormData] = useState({
     vehicleId: "",
@@ -110,47 +80,180 @@ function TimesheetsPage() {
     location: "",
   });
 
-  const handleStartActivity = () => {
-    const newTimesheet: Timesheet = {
-      id: Date.now().toString(),
-      userId: "user1",
-      userName: "Current User",
-      vehicleId: formData.vehicleId || null,
-      vehicleName: formData.vehicleId ? "Selected Vehicle" : null,
-      activityType: formData.activityType,
-      startTime: new Date().toISOString(),
-      endTime: null,
-      duration: null,
-      description: formData.description,
-      location: formData.location,
-    };
+  useEffect(() => {
+    loadTimesheets();
+  }, []);
 
-    setActiveTimesheets([...activeTimesheets, newTimesheet]);
-    setIsDialogOpen(false);
-    setFormData({
-      vehicleId: "",
-      activityType: "" as ActivityType,
-      description: "",
-      location: "",
-    });
+  const loadTimesheets = async () => {
+    try {
+      const [activeResult, historyResult] = await Promise.all([
+        getActiveTimesheets(),
+        getTimesheetHistory(),
+      ]);
+
+      if (activeResult.success && activeResult.data) {
+        setActiveTimesheets(
+          activeResult.data.map((record) => ({
+            id: record.id,
+            userId: record.userId,
+            userName: record.user.name || record.user.email,
+            vehicleId: record.vehicleId,
+            vehicleName: record.vehicle?.name || null,
+            activityType: record.activityType,
+            startTime: new Date(record.startTime).toISOString(),
+            endTime: null,
+            duration: null,
+            description: record.description,
+            location: record.location,
+          }))
+        );
+      }
+
+      if (historyResult.success && historyResult.data) {
+        setCompletedTimesheets(
+          historyResult.data.map((record) => ({
+            id: record.id,
+            userId: record.userId,
+            userName: record.user.name || record.user.email,
+            vehicleId: record.vehicleId,
+            vehicleName: record.vehicle?.name || null,
+            activityType: record.activityType,
+            startTime: new Date(record.startTime).toISOString(),
+            endTime: record.endTime
+              ? new Date(record.endTime).toISOString()
+              : null,
+            duration: record.duration ? record.duration / 60 : null,
+            description: record.description,
+            location: record.location,
+          }))
+        );
+      }
+    } catch (error) {
+      console.error("Failed to load timesheets:", error);
+    }
   };
 
-  const handleEndActivity = (id: string) => {
-    const timesheet = activeTimesheets.find((t) => t.id === id);
-    if (timesheet) {
-      const endTime = new Date().toISOString();
-      const start = new Date(timesheet.startTime);
-      const end = new Date(endTime);
-      const duration = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+  const handleStartActivity = async () => {
+    // Double check for active timesheets (UI should prevent this)
+    if (activeTimesheets.length > 0) {
+      toast({
+        title: t("common.error"),
+        description:
+          "You already have an active timesheet. Please end it first.",
+        variant: "destructive",
+      });
+      return;
+    }
 
-      const completedTimesheet: Timesheet = {
-        ...timesheet,
-        endTime,
-        duration: parseFloat(duration.toFixed(2)),
-      };
+    if (!formData.activityType) {
+      toast({
+        title: t("common.error"),
+        description: "Please select an activity type",
+        variant: "destructive",
+      });
+      return;
+    }
 
-      setCompletedTimesheets([completedTimesheet, ...completedTimesheets]);
-      setActiveTimesheets(activeTimesheets.filter((t) => t.id !== id));
+    setIsLoading(true);
+    try {
+      const result = await startTimesheet({
+        activityType: formData.activityType,
+        vehicleId: formData.vehicleId || undefined,
+        location: formData.location,
+        description: formData.description,
+      });
+
+      console.log("Start timesheet result:", result);
+
+      if (result.success && result.data) {
+        const record = result.data;
+        const newTimesheet: Timesheet = {
+          id: record.id,
+          userId: record.userId,
+          userName: record.user.name || record.user.email,
+          vehicleId: record.vehicleId,
+          vehicleName: record.vehicle?.name || null,
+          activityType: record.activityType,
+          startTime: new Date(record.startTime).toISOString(),
+          endTime: null,
+          duration: null,
+          description: record.description,
+          location: record.location,
+        };
+        setActiveTimesheets([...activeTimesheets, newTimesheet]);
+        setIsDialogOpen(false);
+        setFormData({
+          vehicleId: "",
+          activityType: "" as ActivityType,
+          description: "",
+          location: "",
+        });
+        toast({
+          title: t("common.success"),
+          description: result.message || "Activity started",
+        });
+      } else {
+        console.error("Failed to start timesheet:", result);
+        toast({
+          title: t("common.error"),
+          description: result.message || "Failed to start activity",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Exception starting timesheet:", error);
+      toast({
+        title: t("common.error"),
+        description:
+          error instanceof Error ? error.message : "An error occurred",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleEndActivity = async (id: string) => {
+    setIsLoading(true);
+    try {
+      const result = await endTimesheet(id);
+
+      if (result.success && result.data) {
+        const record = result.data;
+        const completedTimesheet: Timesheet = {
+          id: record.id,
+          userId: record.userId,
+          userName: record.user.name || record.user.email,
+          vehicleId: record.vehicleId,
+          vehicleName: record.vehicle?.name || null,
+          activityType: record.activityType,
+          startTime: new Date(record.startTime).toISOString(),
+          endTime: new Date(record.endTime!).toISOString(),
+          duration: record.duration ? record.duration / 60 : null,
+          description: record.description,
+          location: record.location,
+        };
+        setCompletedTimesheets([completedTimesheet, ...completedTimesheets]);
+        setActiveTimesheets(activeTimesheets.filter((t) => t.id !== id));
+        toast({
+          title: t("common.success"),
+          description: result.message || "Activity ended",
+        });
+      } else {
+        toast({
+          title: t("common.error"),
+          description: result.message || "Failed to end activity",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: t("common.error"),
+        description: "An error occurred",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -202,7 +305,15 @@ function TimesheetsPage() {
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button size="lg">
+            <Button
+              size="lg"
+              disabled={activeTimesheets.length > 0}
+              title={
+                activeTimesheets.length > 0
+                  ? "Please end your active timesheet first"
+                  : ""
+              }
+            >
               <Play className="mr-2 h-4 w-4" />
               {t("timesheets.startActivity")}
             </Button>
@@ -285,10 +396,12 @@ function TimesheetsPage() {
               <Button
                 onClick={handleStartActivity}
                 className="w-full"
-                disabled={!formData.activityType}
+                disabled={!formData.activityType || isLoading}
               >
                 <Play className="mr-2 h-4 w-4" />
-                {t("timesheets.startActivity")}
+                {isLoading
+                  ? t("common.loading")
+                  : t("timesheets.startActivity")}
               </Button>
             </div>
           </DialogContent>

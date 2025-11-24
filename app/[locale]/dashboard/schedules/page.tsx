@@ -1,9 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Calendar, Clock, Plus, Users } from "lucide-react";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
+import {
+  getTodayShifts,
+  getUpcomingShifts,
+  getAllShifts,
+  createShift,
+} from "@/actions/schedules";
+import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -49,39 +56,51 @@ type Shift = {
 
 function SchedulesPage() {
   const t = useTranslations();
+  const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [shifts, setShifts] = useState<Shift[]>([
-    {
-      id: "1",
-      userId: "user1",
-      userName: "John Doe",
-      shiftType: "MORNING",
-      startTime: "2024-11-25T08:00:00",
-      endTime: "2024-11-25T16:00:00",
-      status: "SCHEDULED",
-      notes: "Regular morning shift",
-    },
-    {
-      id: "2",
-      userId: "user2",
-      userName: "Jane Smith",
-      shiftType: "AFTERNOON",
-      startTime: "2024-11-25T16:00:00",
-      endTime: "2024-11-25T24:00:00",
-      status: "SCHEDULED",
-      notes: null,
-    },
-    {
-      id: "3",
-      userId: "user1",
-      userName: "John Doe",
-      shiftType: "MORNING",
-      startTime: "2024-11-24T08:00:00",
-      endTime: "2024-11-24T16:00:00",
-      status: "COMPLETED",
-      notes: null,
-    },
-  ]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [shifts, setShifts] = useState<Shift[]>([]);
+  const [todayShifts, setTodayShifts] = useState<Shift[]>([]);
+  const [upcomingShifts, setUpcomingShifts] = useState<Shift[]>([]);
+
+  useEffect(() => {
+    loadShifts();
+  }, []);
+
+  const loadShifts = async () => {
+    try {
+      const [todayResult, upcomingResult, allResult] = await Promise.all([
+        getTodayShifts(),
+        getUpcomingShifts(),
+        getAllShifts(),
+      ]);
+
+      const mapShift = (record: any): Shift => ({
+        id: record.id,
+        userId: record.userId,
+        userName: record.user.name || record.user.email,
+        shiftType: record.shiftType,
+        startTime: new Date(record.startTime).toISOString(),
+        endTime: new Date(record.endTime).toISOString(),
+        status: record.status,
+        notes: record.notes,
+      });
+
+      if (todayResult.success && todayResult.data) {
+        setTodayShifts(todayResult.data.map(mapShift));
+      }
+
+      if (upcomingResult.success && upcomingResult.data) {
+        setUpcomingShifts(upcomingResult.data.map(mapShift));
+      }
+
+      if (allResult.success && allResult.data) {
+        setShifts(allResult.data.map(mapShift));
+      }
+    } catch (error) {
+      console.error("Failed to load shifts:", error);
+    }
+  };
 
   const [formData, setFormData] = useState({
     shiftType: "" as ShiftType,
@@ -90,26 +109,54 @@ function SchedulesPage() {
     notes: "",
   });
 
-  const handleCreateShift = () => {
-    const newShift: Shift = {
-      id: Date.now().toString(),
-      userId: "user1",
-      userName: "Current User",
-      shiftType: formData.shiftType,
-      startTime: formData.startTime,
-      endTime: formData.endTime,
-      status: "SCHEDULED",
-      notes: formData.notes || null,
-    };
+  const handleCreateShift = async () => {
+    if (!formData.shiftType || !formData.startTime || !formData.endTime) {
+      toast({
+        title: t("common.error"),
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    setShifts([...shifts, newShift]);
-    setIsDialogOpen(false);
-    setFormData({
-      shiftType: "" as ShiftType,
-      startTime: "",
-      endTime: "",
-      notes: "",
-    });
+    setIsLoading(true);
+    try {
+      const result = await createShift({
+        shiftType: formData.shiftType,
+        startTime: new Date(formData.startTime),
+        endTime: new Date(formData.endTime),
+        notes: formData.notes || undefined,
+      });
+
+      if (result.success && result.data) {
+        await loadShifts();
+        setIsDialogOpen(false);
+        setFormData({
+          shiftType: "" as ShiftType,
+          startTime: "",
+          endTime: "",
+          notes: "",
+        });
+        toast({
+          title: t("common.success"),
+          description: result.message || "Shift created successfully",
+        });
+      } else {
+        toast({
+          title: t("common.error"),
+          description: result.message || "Failed to create shift",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: t("common.error"),
+        description: "An error occurred",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getShiftTypeBadge = (type: ShiftType) => {
@@ -151,22 +198,6 @@ function SchedulesPage() {
     const hours = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60);
     return `${hours.toFixed(1)}h`;
   };
-
-  const todayShifts = shifts.filter((shift) => {
-    const shiftDate = new Date(shift.startTime).toDateString();
-    const today = new Date().toDateString();
-    return (
-      shiftDate === today &&
-      shift.status !== "COMPLETED" &&
-      shift.status !== "CANCELLED"
-    );
-  });
-
-  const upcomingShifts = shifts.filter((shift) => {
-    const shiftDate = new Date(shift.startTime);
-    const today = new Date();
-    return shiftDate > today && shift.status === "SCHEDULED";
-  });
 
   return (
     <div className="space-y-6">
