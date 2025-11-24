@@ -48,6 +48,31 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
 - 👤 Driver performance metrics
 - ⚡ Real-time data fetching with Server Actions
 
+### Attendance & Timesheet System
+
+- ⏰ **Attendance Tracking**
+
+  - Real-time clock in/out functionality
+  - GPS location capture for attendance verification
+  - Attendance history with status tracking (Present, Absent, Late, Half Day, On Leave)
+  - Working hours calculation
+  - Attendance rate metrics
+
+- 📋 **Timesheet Management**
+
+  - Activity logging system with multiple types (Driving, Maintenance, Inspection, Fueling, Cleaning, Parking)
+  - Start/stop timer for ongoing activities
+  - Vehicle assignment per activity
+  - Duration tracking and calculation
+  - Active and completed timesheet views
+
+- 📅 **Schedule Management**
+  - Shift planning (Morning, Afternoon, Night, Flexible)
+  - Shift status tracking (Scheduled, Ongoing, Completed, Cancelled)
+  - Today's and upcoming shifts overview
+  - User assignment to shifts
+  - Duration and timing management
+
 ### Internationalization (i18n)
 
 - 🌍 Multi-language support (English, Indonesian & Arabic)
@@ -65,6 +90,13 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
 - 🔄 Prisma ORM for type-safe database access
 - 🌿 Database branching support
 - 📦 Connection pooling built-in
+- 📋 **Database Models**:
+  - `User` - Authentication and user management
+  - `Vehicle` - Fleet vehicle information and tracking
+  - `Trip` - Vehicle trip history and logs
+  - `Attendance` - Employee clock in/out records
+  - `Timesheet` - Activity time tracking with vehicle assignment
+  - `Shift` - Work schedule management
 
 ### Error Handling
 
@@ -93,11 +125,14 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
 ```
 fleet-management-dashboard/
 ├── app/                          # Next.js App Router
-│   ├── [locale]/                 # Locale-based routing (en, id)
+│   ├── [locale]/                 # Locale-based routing (en, id, ar)
 │   │   ├── dashboard/            # Dashboard pages
 │   │   │   ├── vehicles/         # Vehicle management
 │   │   │   │   └── [id]/         # Vehicle detail page
 │   │   │   ├── analytics/        # Analytics page
+│   │   │   ├── attendance/       # Attendance tracking
+│   │   │   ├── timesheets/       # Timesheet management
+│   │   │   ├── schedules/        # Shift scheduling
 │   │   │   ├── page.tsx          # Main dashboard
 │   │   │   ├── loading.tsx       # Loading state
 │   │   │   └── error.tsx         # Error boundary
@@ -125,6 +160,13 @@ fleet-management-dashboard/
 │   ├── useVehicles.ts            # Vehicle data hooks
 │   ├── useAnalytics.ts           # Analytics data hooks
 │   └── useRole.ts                # Role-based access hook
+├── types/
+│   ├── index.ts                  # Common types
+│   └── attendance.ts             # Attendance, Timesheet, Shift types
+├── messages/                     # i18n translation files
+│   ├── en.json                   # English translations
+│   ├── id.json                   # Indonesian translations
+│   └── ar.json                   # Arabic translations
 ├── lib/
 │   ├── auth-check.ts             # Authentication helpers
 │   ├── auth.ts                   # NextAuth configuration

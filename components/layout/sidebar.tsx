@@ -3,7 +3,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Car, BarChart3, LogOut } from "lucide-react";
+import {
+  LayoutDashboard,
+  Car,
+  BarChart3,
+  Clock,
+  ClipboardList,
+  Calendar,
+  LogOut,
+} from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { User } from "@/lib/types";
@@ -31,6 +39,21 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
       title: t("nav.analytics"),
       href: `/${locale}/dashboard/analytics`,
       icon: BarChart3,
+    },
+    {
+      title: t("nav.attendance"),
+      href: `/${locale}/dashboard/attendance`,
+      icon: Clock,
+    },
+    {
+      title: t("nav.timesheets"),
+      href: `/${locale}/dashboard/timesheets`,
+      icon: ClipboardList,
+    },
+    {
+      title: t("nav.schedules"),
+      href: `/${locale}/dashboard/schedules`,
+      icon: Calendar,
     },
   ];
 

@@ -7,6 +7,9 @@ async function main() {
   console.log("🌱 Starting database seed...");
 
   // Clear existing data
+  await prisma.shift.deleteMany();
+  await prisma.timesheet.deleteMany();
+  await prisma.attendance.deleteMany();
   await prisma.trip.deleteMany();
   await prisma.vehicle.deleteMany();
   await prisma.user.deleteMany();
@@ -276,6 +279,184 @@ async function main() {
 
   console.log("✅ Created", trips.length, "trips");
   console.log("📅 All trips are distributed within the last 6 months");
+
+  // Create attendance records
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  const attendances = await Promise.all([
+    // Admin - today (already clocked in)
+    prisma.attendance.create({
+      data: {
+        userId: admin.id,
+        date: today,
+        clockIn: new Date(today.getTime() + 8 * 60 * 60 * 1000), // 8 AM
+        status: "PRESENT",
+        location: "Office HQ",
+        notes: "Regular attendance",
+      },
+    }),
+    // Operator - today (already clocked out)
+    prisma.attendance.create({
+      data: {
+        userId: operator.id,
+        date: today,
+        clockIn: new Date(today.getTime() + 9.5 * 60 * 60 * 1000), // 9:30 AM
+        clockOut: new Date(today.getTime() + 17 * 60 * 60 * 1000), // 5 PM
+        status: "LATE",
+        location: "Office HQ",
+        notes: "Traffic jam",
+      },
+    }),
+    // Admin - yesterday
+    prisma.attendance.create({
+      data: {
+        userId: admin.id,
+        date: yesterday,
+        clockIn: new Date(yesterday.getTime() + 8.25 * 60 * 60 * 1000), // 8:15 AM
+        clockOut: new Date(yesterday.getTime() + 17.5 * 60 * 60 * 1000), // 5:30 PM
+        status: "PRESENT",
+        location: "Office HQ",
+      },
+    }),
+    // Operator - yesterday
+    prisma.attendance.create({
+      data: {
+        userId: operator.id,
+        date: yesterday,
+        clockIn: new Date(yesterday.getTime() + 8 * 60 * 60 * 1000), // 8 AM
+        clockOut: new Date(yesterday.getTime() + 16 * 60 * 60 * 1000), // 4 PM
+        status: "PRESENT",
+        location: "Office HQ",
+      },
+    }),
+  ]);
+
+  console.log("✅ Created", attendances.length, "attendance records");
+
+  // Create timesheets
+  const timesheets = await Promise.all([
+    // Operator - completed driving activity
+    prisma.timesheet.create({
+      data: {
+        userId: operator.id,
+        vehicleId: vehicles[0].id,
+        activityType: "DRIVING",
+        startTime: new Date(yesterday.getTime() + 9 * 60 * 60 * 1000),
+        endTime: new Date(yesterday.getTime() + 13 * 60 * 60 * 1000),
+        duration: 240, // 4 hours in minutes
+        description: "Delivery route to customer locations",
+        location: "Jakarta - Bekasi",
+      },
+    }),
+    // Admin - completed maintenance activity
+    prisma.timesheet.create({
+      data: {
+        userId: admin.id,
+        vehicleId: vehicles[2].id,
+        activityType: "MAINTENANCE",
+        startTime: new Date(yesterday.getTime() + 10 * 60 * 60 * 1000),
+        endTime: new Date(yesterday.getTime() + 12 * 60 * 60 * 1000),
+        duration: 120, // 2 hours in minutes
+        description: "Oil change and tire rotation",
+        location: "Service Center A",
+      },
+    }),
+    // Operator - completed fueling activity
+    prisma.timesheet.create({
+      data: {
+        userId: operator.id,
+        vehicleId: vehicles[1].id,
+        activityType: "FUELING",
+        startTime: new Date(yesterday.getTime() + 14 * 60 * 60 * 1000),
+        endTime: new Date(yesterday.getTime() + 14.25 * 60 * 60 * 1000),
+        duration: 15, // 15 minutes
+        description: "Full tank refuel",
+        location: "Pertamina Station Sudirman",
+      },
+    }),
+    // Operator - active cleaning (not completed yet)
+    prisma.timesheet.create({
+      data: {
+        userId: operator.id,
+        vehicleId: vehicles[3].id,
+        activityType: "CLEANING",
+        startTime: new Date(today.getTime() + 15 * 60 * 60 * 1000),
+        description: "Vehicle cleaning and wash",
+        location: "Office Parking",
+      },
+    }),
+  ]);
+
+  console.log("✅ Created", timesheets.length, "timesheet records");
+
+  // Create shifts
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const dayAfterTomorrow = new Date(today);
+  dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+
+  const shifts = await Promise.all([
+    // Admin - today morning shift (ongoing)
+    prisma.shift.create({
+      data: {
+        userId: admin.id,
+        shiftType: "MORNING",
+        startTime: new Date(today.getTime() + 8 * 60 * 60 * 1000),
+        endTime: new Date(today.getTime() + 16 * 60 * 60 * 1000),
+        status: "ONGOING",
+        notes: "Regular morning shift",
+      },
+    }),
+    // Operator - today afternoon shift (scheduled)
+    prisma.shift.create({
+      data: {
+        userId: operator.id,
+        shiftType: "AFTERNOON",
+        startTime: new Date(today.getTime() + 14 * 60 * 60 * 1000),
+        endTime: new Date(today.getTime() + 22 * 60 * 60 * 1000),
+        status: "SCHEDULED",
+        notes: "Afternoon coverage",
+      },
+    }),
+    // Admin - tomorrow morning shift
+    prisma.shift.create({
+      data: {
+        userId: admin.id,
+        shiftType: "MORNING",
+        startTime: new Date(tomorrow.getTime() + 8 * 60 * 60 * 1000),
+        endTime: new Date(tomorrow.getTime() + 16 * 60 * 60 * 1000),
+        status: "SCHEDULED",
+      },
+    }),
+    // Operator - tomorrow night shift
+    prisma.shift.create({
+      data: {
+        userId: operator.id,
+        shiftType: "NIGHT",
+        startTime: new Date(tomorrow.getTime() + 22 * 60 * 60 * 1000),
+        endTime: new Date(dayAfterTomorrow.getTime() + 6 * 60 * 60 * 1000),
+        status: "SCHEDULED",
+        notes: "Night security shift",
+      },
+    }),
+    // Admin - yesterday completed shift
+    prisma.shift.create({
+      data: {
+        userId: admin.id,
+        shiftType: "MORNING",
+        startTime: new Date(yesterday.getTime() + 8 * 60 * 60 * 1000),
+        endTime: new Date(yesterday.getTime() + 16 * 60 * 60 * 1000),
+        status: "COMPLETED",
+      },
+    }),
+  ]);
+
+  console.log("✅ Created", shifts.length, "shift records");
 
   console.log("🎉 Database seeded successfully!");
 }

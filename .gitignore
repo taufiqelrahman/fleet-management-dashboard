@@ -44,3 +44,8 @@ next-env.d.ts
 !.vscode/launch.json
 !.vscode/extensions.json
 .idea/
+
+playwright-report
+test-results
+
+todos.md
