@@ -105,10 +105,10 @@ function AttendancePage() {
           userName: record.user.name || record.user.email,
           date: new Date(record.date).toISOString().split("T")[0],
           clockIn: record.clockIn
-            ? new Date(record.clockIn).toLocaleTimeString()
+            ? new Date(record.clockIn).toISOString()
             : null,
           clockOut: record.clockOut
-            ? new Date(record.clockOut).toLocaleTimeString()
+            ? new Date(record.clockOut).toISOString()
             : null,
           status: record.status,
           location: record.location,
@@ -125,10 +125,10 @@ function AttendancePage() {
             userName: record.user.name || record.user.email,
             date: new Date(record.date).toISOString().split("T")[0],
             clockIn: record.clockIn
-              ? new Date(record.clockIn).toLocaleTimeString()
+              ? new Date(record.clockIn).toISOString()
               : null,
             clockOut: record.clockOut
-              ? new Date(record.clockOut).toLocaleTimeString()
+              ? new Date(record.clockOut).toISOString()
               : null,
             status: record.status,
             location: record.location,
@@ -155,7 +155,7 @@ function AttendancePage() {
           userId: record.userId,
           userName: record.user.name || record.user.email,
           date: new Date(record.date).toISOString().split("T")[0],
-          clockIn: new Date(record.clockIn).toLocaleTimeString(),
+          clockIn: new Date(record.clockIn).toISOString(),
           clockOut: null,
           status: record.status,
           location: record.location,
@@ -200,9 +200,9 @@ function AttendancePage() {
           userName: record.user.name || record.user.email,
           date: new Date(record.date).toISOString().split("T")[0],
           clockIn: record.clockIn
-            ? new Date(record.clockIn).toLocaleTimeString()
+            ? new Date(record.clockIn).toISOString()
             : null,
-          clockOut: new Date(record.clockOut!).toLocaleTimeString(),
+          clockOut: new Date(record.clockOut!).toISOString(),
           status: record.status,
           location: record.location,
           notes: record.notes,
@@ -245,6 +245,11 @@ function AttendancePage() {
         {t(`attendance.${status.toLowerCase()}`)}
       </Badge>
     );
+  };
+
+  const formatTime = (isoString: string | null) => {
+    if (!isoString || !isMounted) return "-";
+    return new Date(isoString).toLocaleTimeString();
   };
 
   if (isInitialLoading) {
@@ -310,7 +315,9 @@ function AttendancePage() {
                   <span className="text-sm font-medium">
                     {t("attendance.clockInTime")}:
                   </span>
-                  <span className="text-sm">{todayRecord.clockIn}</span>
+                  <span className="text-sm">
+                    {formatTime(todayRecord.clockIn)}
+                  </span>
                 </div>
               )}
               {todayRecord.clockOut && (
@@ -318,7 +325,9 @@ function AttendancePage() {
                   <span className="text-sm font-medium">
                     {t("attendance.clockOutTime")}:
                   </span>
-                  <span className="text-sm">{todayRecord.clockOut}</span>
+                  <span className="text-sm">
+                    {formatTime(todayRecord.clockOut)}
+                  </span>
                 </div>
               )}
             </div>
@@ -394,8 +403,8 @@ function AttendancePage() {
                 const hours =
                   record.clockIn && record.clockOut
                     ? (
-                        (new Date(`2000-01-01 ${record.clockOut}`).getTime() -
-                          new Date(`2000-01-01 ${record.clockIn}`).getTime()) /
+                        (new Date(record.clockOut).getTime() -
+                          new Date(record.clockIn).getTime()) /
                         (1000 * 60 * 60)
                       ).toFixed(1)
                     : "-";
@@ -403,8 +412,8 @@ function AttendancePage() {
                 return (
                   <TableRow key={record.id}>
                     <TableCell>{record.date}</TableCell>
-                    <TableCell>{record.clockIn || "-"}</TableCell>
-                    <TableCell>{record.clockOut || "-"}</TableCell>
+                    <TableCell>{formatTime(record.clockIn)}</TableCell>
+                    <TableCell>{formatTime(record.clockOut)}</TableCell>
                     <TableCell>{hours}h</TableCell>
                     <TableCell>{getStatusBadge(record.status)}</TableCell>
                     <TableCell className="text-sm text-muted-foreground">

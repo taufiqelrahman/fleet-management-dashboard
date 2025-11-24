@@ -78,7 +78,16 @@ function SchedulesPage() {
         getAllShifts(),
       ]);
 
-      const mapShift = (record: any): Shift => ({
+      const mapShift = (record: {
+        id: string;
+        userId: string;
+        user: { name: string | null; email: string };
+        shiftType: ShiftType;
+        startTime: Date;
+        endTime: Date;
+        status: ShiftStatus;
+        notes: string | null;
+      }): Shift => ({
         id: record.id,
         userId: record.userId,
         userName: record.user.name || record.user.email,
@@ -153,7 +162,8 @@ function SchedulesPage() {
           variant: "destructive",
         });
       }
-    } catch (error) {
+    } catch (err) {
+      console.error("Failed to create shift:", err);
       toast({
         title: t("common.error"),
         description: "An error occurred",
