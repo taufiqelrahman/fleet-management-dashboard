@@ -11,6 +11,7 @@ import {
   endTimesheet,
 } from "@/actions/timesheets";
 import { useToast } from "@/components/ui/use-toast";
+import { LoadingScreen, Spinner } from "@/components/ui/spinner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -68,6 +69,7 @@ function TimesheetsPage() {
   const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [activeTimesheets, setActiveTimesheets] = useState<Timesheet[]>([]);
   const [completedTimesheets, setCompletedTimesheets] = useState<Timesheet[]>(
     []
@@ -85,6 +87,7 @@ function TimesheetsPage() {
   }, []);
 
   const loadTimesheets = async () => {
+    setIsInitialLoading(true);
     try {
       const [activeResult, historyResult] = await Promise.all([
         getActiveTimesheets(),
@@ -130,6 +133,8 @@ function TimesheetsPage() {
       }
     } catch (error) {
       console.error("Failed to load timesheets:", error);
+    } finally {
+      setIsInitialLoading(false);
     }
   };
 
@@ -293,6 +298,10 @@ function TimesheetsPage() {
     return formatDuration(hours);
   };
 
+  if (isInitialLoading) {
+    return <LoadingScreen message={t("common.loading")} />;
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -398,7 +407,11 @@ function TimesheetsPage() {
                 className="w-full"
                 disabled={!formData.activityType || isLoading}
               >
-                <Play className="mr-2 h-4 w-4" />
+                {isLoading ? (
+                  <Spinner size="sm" className="mr-2" />
+                ) : (
+                  <Play className="mr-2 h-4 w-4" />
+                )}
                 {isLoading
                   ? t("common.loading")
                   : t("timesheets.startActivity")}
@@ -447,8 +460,13 @@ function TimesheetsPage() {
                     variant="destructive"
                     size="sm"
                     onClick={() => handleEndActivity(timesheet.id)}
+                    disabled={isLoading}
                   >
-                    <Square className="mr-2 h-4 w-4" />
+                    {isLoading ? (
+                      <Spinner size="sm" className="mr-2" />
+                    ) : (
+                      <Square className="mr-2 h-4 w-4" />
+                    )}
                     {t("timesheets.endActivity")}
                   </Button>
                 </div>

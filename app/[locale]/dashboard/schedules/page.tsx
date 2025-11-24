@@ -11,6 +11,7 @@ import {
   createShift,
 } from "@/actions/schedules";
 import { useToast } from "@/components/ui/use-toast";
+import { LoadingScreen, Spinner } from "@/components/ui/spinner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -59,6 +60,7 @@ function SchedulesPage() {
   const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [shifts, setShifts] = useState<Shift[]>([]);
   const [todayShifts, setTodayShifts] = useState<Shift[]>([]);
   const [upcomingShifts, setUpcomingShifts] = useState<Shift[]>([]);
@@ -68,6 +70,7 @@ function SchedulesPage() {
   }, []);
 
   const loadShifts = async () => {
+    setIsInitialLoading(true);
     try {
       const [todayResult, upcomingResult, allResult] = await Promise.all([
         getTodayShifts(),
@@ -99,6 +102,8 @@ function SchedulesPage() {
       }
     } catch (error) {
       console.error("Failed to load shifts:", error);
+    } finally {
+      setIsInitialLoading(false);
     }
   };
 
@@ -199,6 +204,10 @@ function SchedulesPage() {
     return `${hours.toFixed(1)}h`;
   };
 
+  if (isInitialLoading) {
+    return <LoadingScreen message={t("common.loading")} />;
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -284,11 +293,16 @@ function SchedulesPage() {
                 disabled={
                   !formData.shiftType ||
                   !formData.startTime ||
-                  !formData.endTime
+                  !formData.endTime ||
+                  isLoading
                 }
               >
-                <Plus className="mr-2 h-4 w-4" />
-                {t("schedules.createShift")}
+                {isLoading ? (
+                  <Spinner size="sm" className="mr-2" />
+                ) : (
+                  <Plus className="mr-2 h-4 w-4" />
+                )}
+                {isLoading ? t("common.loading") : t("schedules.createShift")}
               </Button>
             </div>
           </DialogContent>

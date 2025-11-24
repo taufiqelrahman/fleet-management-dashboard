@@ -11,6 +11,7 @@ import {
   clockOut,
 } from "@/actions/attendance";
 import { useToast } from "@/components/ui/use-toast";
+import { LoadingScreen, Spinner } from "@/components/ui/spinner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -47,6 +48,7 @@ function AttendancePage() {
   const [location, setLocation] = useState<string>("");
   const [notes, setNotes] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [todayRecord, setTodayRecord] = useState<AttendanceRecord | null>(null);
   const [attendanceHistory, setAttendanceHistory] = useState<
     AttendanceRecord[]
@@ -88,6 +90,7 @@ function AttendancePage() {
   }, []);
 
   const loadAttendanceData = async () => {
+    setIsInitialLoading(true);
     try {
       const [todayResult, historyResult] = await Promise.all([
         getTodayAttendance(),
@@ -135,6 +138,8 @@ function AttendancePage() {
       }
     } catch (error) {
       console.error("Failed to load attendance data:", error);
+    } finally {
+      setIsInitialLoading(false);
     }
   };
 
@@ -242,6 +247,10 @@ function AttendancePage() {
     );
   };
 
+  if (isInitialLoading) {
+    return <LoadingScreen message={t("common.loading")} />;
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -336,7 +345,11 @@ function AttendancePage() {
                 size="lg"
                 disabled={isLoading}
               >
-                <Clock className="mr-2 h-4 w-4" />
+                {isLoading ? (
+                  <Spinner size="sm" className="mr-2" />
+                ) : (
+                  <Clock className="mr-2 h-4 w-4" />
+                )}
                 {isLoading ? t("common.loading") : t("attendance.clockIn")}
               </Button>
             ) : (
@@ -347,7 +360,11 @@ function AttendancePage() {
                 size="lg"
                 disabled={isLoading}
               >
-                <Clock className="mr-2 h-4 w-4" />
+                {isLoading ? (
+                  <Spinner size="sm" className="mr-2" />
+                ) : (
+                  <Clock className="mr-2 h-4 w-4" />
+                )}
                 {isLoading ? t("common.loading") : t("attendance.clockOut")}
               </Button>
             )}

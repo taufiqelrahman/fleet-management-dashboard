@@ -50,7 +50,7 @@ Successfully implemented a comprehensive Attendance + Timesheet system for the F
 
 - Real-time clock display with date/time
 - GPS location capture for attendance verification
-- Clock In/Out buttons with status tracking
+- Clock In/Out buttons with status tracking and loading spinners
 - Notes field for recording reasons
 - Today's attendance card showing current status
 - Attendance history table with:
@@ -58,6 +58,7 @@ Successfully implemented a comprehensive Attendance + Timesheet system for the F
   - Working hours calculation
   - Status badges (color-coded)
   - Location information
+- Full-screen loading animation during initial data fetch
 
 #### Timesheets Page (`/dashboard/timesheets`)
 
@@ -68,15 +69,17 @@ Successfully implemented a comprehensive Attendance + Timesheet system for the F
   - Vehicle assignment
   - Location input
   - Description field
+  - Loading spinner in submit button
 - Active timesheets card showing:
   - Ongoing activities with elapsed time
   - Activity type badges
   - Vehicle information
-  - End Activity button
+  - End Activity button with loading spinner
 - Completed timesheets table with:
   - Activity type, vehicle, times, duration
   - Description and location
   - Color-coded activity badges
+- Full-screen loading animation during initial data fetch
 
 #### Schedules Page (`/dashboard/schedules`)
 
@@ -86,6 +89,7 @@ Successfully implemented a comprehensive Attendance + Timesheet system for the F
   - Shift type selection (4 types)
   - Start/end datetime pickers
   - Notes field
+  - Loading spinner in submit button
 - Today's shifts card showing:
   - Current day's scheduled shifts
   - Shift type and status badges
@@ -93,6 +97,7 @@ Successfully implemented a comprehensive Attendance + Timesheet system for the F
   - Duration calculation
 - Upcoming shifts section
 - All shifts table with full history
+- Full-screen loading animation during initial data fetch
 
 ### 4. Server Actions (Database Integration)
 
@@ -143,6 +148,13 @@ Successfully implemented a comprehensive Attendance + Timesheet system for the F
 - 📋 Timesheets (ClipboardList icon)
 - 📅 Schedules (Calendar icon)
 
+**UI Components:**
+
+- `Spinner` - Animated loading indicator with 3 sizes (sm, md, lg)
+- `LoadingScreen` - Full-screen loading state with message
+- `Badge` - Status indicators with 4 variants
+- `Textarea` - Multi-line text input
+
 **Icons from lucide-react:**
 
 - Clock, ClipboardList, Calendar for navigation
@@ -176,6 +188,7 @@ Successfully implemented a comprehensive Attendance + Timesheet system for the F
    - 30-day history with status badges
    - Auto-late detection (after 9 AM)
    - Hydration-safe time rendering
+   - Loading animations (page load + button actions)
 
 2. **Timesheet System**
 
@@ -184,6 +197,8 @@ Successfully implemented a comprehensive Attendance + Timesheet system for the F
    - Vehicle assignment
    - Duration auto-calculation
    - Active & completed timesheets view
+   - Validation: Prevents multiple active timesheets
+   - Loading animations (page load + button actions)
 
 3. **Schedule System**
    - Create shifts with 4 types (Morning, Afternoon, Night, Flexible)
@@ -192,6 +207,7 @@ Successfully implemented a comprehensive Attendance + Timesheet system for the F
    - Upcoming shifts (7 days)
    - All shifts history
    - Status management
+   - Loading animations (page load + button actions)
 
 ## Database Setup
 
