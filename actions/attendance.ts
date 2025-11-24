@@ -15,27 +15,37 @@ type AttendanceWithUser = Prisma.AttendanceGetPayload<{
   include: { user: true };
 }>;
 
+// Helper function to get authenticated user
+async function getAuthenticatedUser() {
+  const authCheck = await checkAuth();
+  if (!authCheck.authorized) {
+    return { error: "Unauthorized" };
+  }
+
+  const userEmail = authCheck.session.user?.email;
+  if (!userEmail) {
+    return { error: "User email not found" };
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { email: userEmail },
+  });
+
+  if (!user) {
+    return { error: "User not found" };
+  }
+
+  return { user };
+}
+
 // Get today's attendance for current user
 export async function getTodayAttendance(): Promise<
   ActionResponse<AttendanceWithUser | null>
 > {
-  const authCheck = await checkAuth();
-  if (!authCheck.authorized) {
-    return { success: false, message: "Unauthorized" };
-  }
-
   try {
-    const userEmail = authCheck.session.user?.email;
-    if (!userEmail) {
-      return { success: false, message: "User not found" };
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { email: userEmail },
-    });
-
-    if (!user) {
-      return { success: false, message: "User not found" };
+    const authResult = await getAuthenticatedUser();
+    if ("error" in authResult) {
+      return { success: false, message: authResult.error };
     }
 
     const today = new Date();
@@ -43,7 +53,7 @@ export async function getTodayAttendance(): Promise<
 
     const attendance = await prisma.attendance.findFirst({
       where: {
-        userId: user.id,
+        userId: authResult.user.id,
         date: { gte: today },
       },
       include: { user: true },
@@ -67,27 +77,14 @@ export async function getTodayAttendance(): Promise<
 export async function getAttendanceHistory(): Promise<
   ActionResponse<AttendanceWithUser[]>
 > {
-  const authCheck = await checkAuth();
-  if (!authCheck.authorized) {
-    return { success: false, message: "Unauthorized" };
-  }
-
   try {
-    const userEmail = authCheck.session.user?.email;
-    if (!userEmail) {
-      return { success: false, message: "User not found" };
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { email: userEmail },
-    });
-
-    if (!user) {
-      return { success: false, message: "User not found" };
+    const authResult = await getAuthenticatedUser();
+    if ("error" in authResult) {
+      return { success: false, message: authResult.error };
     }
 
     const attendances = await prisma.attendance.findMany({
-      where: { userId: user.id },
+      where: { userId: authResult.user.id },
       include: { user: true },
       orderBy: { date: "desc" },
       take: 30,
@@ -111,23 +108,10 @@ export async function clockIn(data: {
   location?: string;
   notes?: string;
 }): Promise<ActionResponse<AttendanceWithUser>> {
-  const authCheck = await checkAuth();
-  if (!authCheck.authorized) {
-    return { success: false, message: "Unauthorized" };
-  }
-
   try {
-    const userEmail = authCheck.session.user?.email;
-    if (!userEmail) {
-      return { success: false, message: "User not found" };
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { email: userEmail },
-    });
-
-    if (!user) {
-      return { success: false, message: "User not found" };
+    const authResult = await getAuthenticatedUser();
+    if ("error" in authResult) {
+      return { success: false, message: authResult.error };
     }
 
     const now = new Date();
@@ -137,7 +121,7 @@ export async function clockIn(data: {
     // Check if already clocked in today
     const existingAttendance = await prisma.attendance.findFirst({
       where: {
-        userId: user.id,
+        userId: authResult.user.id,
         date: { gte: today },
       },
     });
@@ -155,7 +139,7 @@ export async function clockIn(data: {
 
     const attendance = await prisma.attendance.create({
       data: {
-        userId: user.id,
+        userId: authResult.user.id,
         date: today,
         clockIn: now,
         status,
@@ -185,30 +169,20 @@ export async function clockIn(data: {
 export async function clockOut(
   attendanceId: string
 ): Promise<ActionResponse<AttendanceWithUser>> {
-  const authCheck = await checkAuth();
-  if (!authCheck.authorized) {
-    return { success: false, message: "Unauthorized" };
-  }
-
   try {
-    const userEmail = authCheck.session.user?.email;
-    if (!userEmail) {
-      return { success: false, message: "User not found" };
+    const authResult = await getAuthenticatedUser();
+    if ("error" in authResult) {
+      return { success: false, message: authResult.error };
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email: userEmail },
+    const attendance = await prisma.attendance.findFirst({
+      where: {
+        id: attendanceId,
+        userId: authResult.user.id,
+      },
     });
 
-    if (!user) {
-      return { success: false, message: "User not found" };
-    }
-
-    const attendance = await prisma.attendance.findUnique({
-      where: { id: attendanceId },
-    });
-
-    if (!attendance || attendance.userId !== user.id) {
+    if (!attendance) {
       return {
         success: false,
         message: "Attendance record not found",

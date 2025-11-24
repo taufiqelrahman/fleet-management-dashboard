@@ -94,7 +94,25 @@ Successfully implemented a comprehensive Attendance + Timesheet system for the F
 - Upcoming shifts section
 - All shifts table with full history
 
-### 4. Navigation Updates
+### 4. Server Actions (Database Integration)
+
+**Attendance Actions (`actions/attendance.ts`):**
+
+- `getTodayAttendance()` - Fetch current user's today attendance
+- `getAttendanceHistory()` - Get last 30 attendance records
+- `clockIn({ location, notes })` - Create new attendance with GPS & auto-late detection
+- `clockOut(attendanceId)` - Update attendance with clock out time
+
+**Features:**
+
+- Helper function `getAuthenticatedUser()` for code efficiency
+- Automatic late status detection (after 9 AM)
+- GPS location capture for verification
+- Duplicate check for same-day clock-ins
+- Type-safe with Prisma client
+- Path revalidation for instant UI updates
+
+### 5. Navigation Updates
 
 **Sidebar Menu Items Added:**
 
@@ -142,9 +160,10 @@ Vehicle {
 
 ### State Management
 
-- Client-side state using React useState
-- Mock data for demonstration
-- Ready for API integration
+- Server Actions for database operations (`actions/attendance.ts`)
+- Real-time data fetching from PostgreSQL via Prisma
+- Client-side state using React useState for UI interactions
+- Optimized with helper functions to reduce code duplication
 
 ### UI/UX Features
 
