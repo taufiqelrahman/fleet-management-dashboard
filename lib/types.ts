@@ -1,4 +1,4 @@
-export type Role = "ADMIN" | "OPERATOR";
+export type Role = "ADMIN" | "OPERATOR" | "EMPLOYEE" | "SUPERVISOR" | "HR";
 
 export type VehicleStatus = "ACTIVE" | "INACTIVE" | "MAINTENANCE";
 
@@ -23,6 +23,8 @@ export interface Vehicle {
   nextMaintenance?: Date | string;
   mileage: number;
   fuelConsumption: number;
+  latitude?: number | null;
+  longitude?: number | null;
   createdAt: Date | string;
   updatedAt: Date | string;
 }

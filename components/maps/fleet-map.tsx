@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useTranslations } from "next-intl";
 import { Truck, Car, Package, Filter, X } from "lucide-react";
+import type { Vehicle, VehicleStatus, VehicleType } from "@/lib/types";
 
 // Fix for default marker icon in Leaflet
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,21 +56,6 @@ const createCustomIcon = (status: string) => {
     popupAnchor: [0, -12],
   });
 };
-
-type VehicleStatus = "ACTIVE" | "INACTIVE" | "MAINTENANCE";
-type VehicleType = "SEDAN" | "SUV" | "TRUCK" | "VAN";
-
-interface Vehicle {
-  id: string;
-  name: string;
-  type: VehicleType;
-  licensePlate: string;
-  status: VehicleStatus;
-  driverName: string | null;
-  latitude: number | null;
-  longitude: number | null;
-  mileage: number;
-}
 
 interface FleetMapProps {
   vehicles: Vehicle[];

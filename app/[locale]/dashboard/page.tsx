@@ -11,21 +11,7 @@ import { getVehicles } from "@/actions/vehicles";
 import { Car, Activity, Gauge, Wrench, MapPin } from "lucide-react";
 import { formatNumber } from "@/lib/utils";
 import { useTranslations } from "next-intl";
-
-type VehicleStatus = "ACTIVE" | "INACTIVE" | "MAINTENANCE";
-type VehicleType = "SEDAN" | "SUV" | "TRUCK" | "VAN";
-
-interface Vehicle {
-  id: string;
-  name: string;
-  type: VehicleType;
-  licensePlate: string;
-  status: VehicleStatus;
-  driverName: string | null;
-  latitude: number | null;
-  longitude: number | null;
-  mileage: number;
-}
+import type { Vehicle } from "@/lib/types";
 
 function DashboardStats() {
   const t = useTranslations();
