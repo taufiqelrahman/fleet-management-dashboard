@@ -78,7 +78,6 @@
     "brand": "العلامة التجارية",
     "model": "الطراز",
     "year": "السنة",
-    "status": "الحالة",
     "fuelType": "نوع الوقود",
     "mileage": "المسافة المقطوعة",
     "lastMaintenance": "آخر صيانة",
@@ -90,10 +89,19 @@
     "startDate": "تاريخ البداية",
     "endDate": "تاريخ النهاية",
     "distance": "المسافة",
-    "fuelUsed": "الوقود المستهلك",
-    "active": "نشط",
-    "inactive": "غير نشط",
-    "maintenance": "صيانة",
+    "fuelUsed": "الوقود المستخدم",
+    "licensePlate": "رقم اللوحة",
+    "status": {
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "maintenance": "صيانة"
+    },
+    "type": {
+      "sedan": "سيدان",
+      "suv": "دفع رباعي",
+      "truck": "شاحنة",
+      "van": "فان"
+    },
     "gasoline": "بنزين",
     "diesel": "ديزل",
     "electric": "كهربائي",
@@ -141,11 +149,6 @@
     "serverError": "حدث خطأ في الخادم",
     "networkError": "حدث خطأ في الشبكة",
     "tryAgain": "يرجى المحاولة مرة أخرى"
-  },
-  "roles": {
-    "admin": "مدير",
-    "operator": "مشغل",
-    "viewer": "زائر"
   },
   "attendance": {
     "title": "الحضور",
@@ -220,5 +223,21 @@
     "todayShifts": "ورديات اليوم",
     "weekView": "عرض الأسبوع",
     "monthView": "عرض الشهر"
+  },
+  "map": {
+    "fleetLocation": "موقع الأسطول",
+    "loading": "جاري تحميل الخريطة...",
+    "vehicleLocation": "موقع المركبة",
+    "viewOnMap": "عرض على الخريطة",
+    "noLocation": "بيانات الموقع غير متوفرة",
+    "searchVehicle": "البحث بالاسم أو اللوحة أو السائق...",
+    "filterByStatus": "تصفية حسب الحالة",
+    "filterByType": "تصفية حسب النوع",
+    "allStatus": "جميع الحالات",
+    "allTypes": "جميع الأنواع",
+    "showing": "عرض",
+    "of": "من",
+    "vehicles": "مركبات",
+    "clearFilters": "مسح الفلاتر"
   }
 }

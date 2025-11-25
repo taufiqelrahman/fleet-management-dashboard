@@ -71,7 +71,7 @@ async function main() {
   console.log("  - Supervisor:", supervisor.email);
   console.log("  - HR:", hr.email);
 
-  // Create vehicles
+  // Create vehicles with realistic Jakarta coordinates
   const vehicles = await Promise.all([
     prisma.vehicle.create({
       data: {
@@ -85,6 +85,8 @@ async function main() {
         nextMaintenance: new Date("2025-01-15"),
         mileage: 45200,
         fuelConsumption: 8.5,
+        latitude: -6.2088,
+        longitude: 106.8456, // Central Jakarta (Monas area)
       },
     }),
     prisma.vehicle.create({
@@ -99,6 +101,8 @@ async function main() {
         nextMaintenance: new Date("2024-12-20"),
         mileage: 62800,
         fuelConsumption: 12.3,
+        latitude: -6.1751,
+        longitude: 106.8272, // North Jakarta
       },
     }),
     prisma.vehicle.create({
@@ -113,6 +117,8 @@ async function main() {
         nextMaintenance: new Date("2024-11-20"),
         mileage: 98500,
         fuelConsumption: 18.7,
+        latitude: -6.2615,
+        longitude: 106.781, // West Jakarta (workshop)
       },
     }),
     prisma.vehicle.create({
@@ -127,6 +133,8 @@ async function main() {
         nextMaintenance: new Date("2024-12-10"),
         mileage: 34100,
         fuelConsumption: 11.2,
+        latitude: -6.2297,
+        longitude: 106.9234, // East Jakarta
       },
     }),
     prisma.vehicle.create({
@@ -141,6 +149,8 @@ async function main() {
         nextMaintenance: new Date("2024-11-25"),
         mileage: 28900,
         fuelConsumption: 7.8,
+        latitude: -6.3012,
+        longitude: 106.8136, // South Jakarta (parking lot)
       },
     }),
     prisma.vehicle.create({
@@ -155,6 +165,8 @@ async function main() {
         nextMaintenance: new Date("2025-01-05"),
         mileage: 51200,
         fuelConsumption: 13.1,
+        latitude: -6.1944,
+        longitude: 106.8229, // Near Port (Tanjung Priok)
       },
     }),
   ]);

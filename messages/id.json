@@ -78,7 +78,6 @@
     "brand": "Merek",
     "model": "Model",
     "year": "Tahun",
-    "status": "Status",
     "fuelType": "Jenis Bahan Bakar",
     "mileage": "Jarak Tempuh",
     "lastMaintenance": "Perawatan Terakhir",
@@ -91,9 +90,21 @@
     "endDate": "Tanggal Selesai",
     "distance": "Jarak",
     "fuelUsed": "BBM Terpakai",
+    "licensePlate": "Plat Nomor",
     "active": "Aktif",
     "inactive": "Tidak Aktif",
     "maintenance": "Perawatan",
+    "status": {
+      "active": "Aktif",
+      "inactive": "Tidak Aktif",
+      "maintenance": "Perawatan"
+    },
+    "type": {
+      "sedan": "Sedan",
+      "suv": "SUV",
+      "truck": "Truk",
+      "van": "Van"
+    },
     "gasoline": "Bensin",
     "diesel": "Diesel",
     "electric": "Listrik",
@@ -141,11 +152,6 @@
     "serverError": "Terjadi kesalahan server",
     "networkError": "Terjadi kesalahan jaringan",
     "tryAgain": "Silakan coba lagi"
-  },
-  "roles": {
-    "admin": "Administrator",
-    "operator": "Operator",
-    "viewer": "Pengunjung"
   },
   "attendance": {
     "title": "Kehadiran",
@@ -220,5 +226,21 @@
     "todayShifts": "Shift Hari Ini",
     "weekView": "Tampilan Minggu",
     "monthView": "Tampilan Bulan"
+  },
+  "map": {
+    "fleetLocation": "Lokasi Armada",
+    "loading": "Memuat peta...",
+    "vehicleLocation": "Lokasi Kendaraan",
+    "viewOnMap": "Lihat di Peta",
+    "noLocation": "Data lokasi tidak tersedia",
+    "searchVehicle": "Cari berdasarkan nama, plat, atau driver...",
+    "filterByStatus": "Filter berdasarkan status",
+    "filterByType": "Filter berdasarkan tipe",
+    "allStatus": "Semua Status",
+    "allTypes": "Semua Tipe",
+    "showing": "Menampilkan",
+    "of": "dari",
+    "vehicles": "kendaraan",
+    "clearFilters": "Hapus Filter"
   }
 }

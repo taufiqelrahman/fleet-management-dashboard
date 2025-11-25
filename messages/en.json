@@ -78,7 +78,6 @@
     "brand": "Brand",
     "model": "Model",
     "year": "Year",
-    "status": "Status",
     "fuelType": "Fuel Type",
     "mileage": "Mileage",
     "lastMaintenance": "Last Maintenance",
@@ -91,9 +90,18 @@
     "endDate": "End Date",
     "distance": "Distance",
     "fuelUsed": "Fuel Used",
-    "active": "Active",
-    "inactive": "Inactive",
-    "maintenance": "Maintenance",
+    "licensePlate": "License Plate",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "maintenance": "Maintenance"
+    },
+    "type": {
+      "sedan": "Sedan",
+      "suv": "SUV",
+      "truck": "Truck",
+      "van": "Van"
+    },
     "gasoline": "Gasoline",
     "diesel": "Diesel",
     "electric": "Electric",
@@ -141,11 +149,6 @@
     "serverError": "Server error occurred",
     "networkError": "Network error occurred",
     "tryAgain": "Please try again"
-  },
-  "roles": {
-    "admin": "Admin",
-    "operator": "Operator",
-    "viewer": "Viewer"
   },
   "attendance": {
     "title": "Attendance",
@@ -220,5 +223,21 @@
     "todayShifts": "Today's Shifts",
     "weekView": "Week View",
     "monthView": "Month View"
+  },
+  "map": {
+    "fleetLocation": "Fleet Location",
+    "loading": "Loading map...",
+    "vehicleLocation": "Vehicle Location",
+    "viewOnMap": "View on Map",
+    "noLocation": "Location data not available",
+    "searchVehicle": "Search by name, plate, or driver...",
+    "filterByStatus": "Filter by status",
+    "filterByType": "Filter by type",
+    "allStatus": "All Status",
+    "allTypes": "All Types",
+    "showing": "Showing",
+    "of": "of",
+    "vehicles": "vehicles",
+    "clearFilters": "Clear Filters"
   }
 }
