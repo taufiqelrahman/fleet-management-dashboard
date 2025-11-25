@@ -14,8 +14,14 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
 ### Authentication & Authorization
 
 - 🔐 Secure authentication using NextAuth.js
-- 👥 Role-based access control (Admin & Operator)
+- 👥 **Role-based access control** with 5 distinct roles:
+  - **Admin**: Full system access and configuration
+  - **Operator**: Vehicle and trip management
+  - **Employee**: Personal attendance and timesheet tracking
+  - **Supervisor**: Team oversight and approval authority
+  - **HR**: Employee management and payroll administration
 - 🔒 Protected routes with middleware
+- 🎯 Granular permission system for fine-grained access control
 - 📧 Credentials-based login
 
 ### Dashboard
@@ -340,19 +346,54 @@ The application supports two languages:
 4. URLs will update to reflect the chosen locale
 5. Layout direction will automatically adjust for Arabic (RTL)
 
-### Demo Credentials
+### 👥 Demo Credentials & Role Permissions
 
 **Admin Account:**
 
 - Email: `admin@nextfleet.com`
 - Password: `password123`
-- Permissions: Full CRUD access
+- Permissions: Full system access, configuration, and user management
 
 **Operator Account:**
 
 - Email: `operator@nextfleet.com`
 - Password: `password123`
-- Permissions: Read-only access
+- Permissions: Vehicle and trip management, own attendance/timesheet
+
+**Employee Account:**
+
+- Email: `employee@nextfleet.com`
+- Password: `password123`
+- Permissions: Personal attendance tracking, timesheet, schedule view, own payroll
+
+**Supervisor Account:**
+
+- Email: `supervisor@nextfleet.com`
+- Password: `password123`
+- Permissions: Team oversight, attendance/timesheet approval, schedule management, reports
+
+**HR Account:**
+
+- Email: `hr@nextfleet.com`
+- Password: `password123`
+- Permissions: Employee management, attendance oversight, payroll generation, full HR operations
+
+### 🎯 Role-Based Permissions Matrix
+
+| Feature            | Admin   | Operator       | Employee | Supervisor      | HR          |
+| ------------------ | ------- | -------------- | -------- | --------------- | ----------- |
+| Vehicle Management | ✅ Full | ✅ Create/View | ❌       | 👁️ View         | ❌          |
+| Trip Management    | ✅ Full | ✅ Create/Edit | ❌       | 👁️ View         | ❌          |
+| Own Attendance     | ✅      | ✅             | ✅       | ✅              | ✅          |
+| Team Attendance    | ✅      | ❌             | ❌       | 👁️ View/Approve | ✅ Full     |
+| Own Timesheet      | ✅      | ✅             | ✅       | ✅              | ✅          |
+| Team Timesheet     | ✅      | ❌             | ❌       | 👁️ View/Approve | ✅ Full     |
+| Own Schedule       | ✅      | ✅             | 👁️ View  | ✅              | ✅          |
+| Team Schedule      | ✅      | ❌             | ❌       | ✅ Manage       | ✅ Manage   |
+| Analytics/Reports  | ✅      | 👁️ View        | ❌       | ✅ View         | ✅ View     |
+| Payroll            | ✅ Full | 👁️ Own         | 👁️ Own   | 👁️ Own          | ✅ Generate |
+| User Management    | ✅      | ❌             | ❌       | ❌              | 👁️ View     |
+| Settings           | ✅      | ❌             | ❌       | ❌              | ❌          |
 
 ## 🏗 Architecture
 

@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { User } from "@/lib/types";
 import { useTranslations, useLocale } from "next-intl";
 import { LocaleSwitcher } from "@/components/locale-switcher";
@@ -101,11 +102,28 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
             <p className="text-sm font-medium truncate">
               {session?.user?.name}
             </p>
-            <p className="text-xs text-muted-foreground truncate">
-              {(session?.user as User)?.role
-                ? t(`roles.${(session?.user as User).role.toLowerCase()}`)
-                : t("roles.viewer")}
-            </p>
+            <div className="flex items-center gap-2">
+              <Badge
+                variant="outline"
+                className={cn(
+                  "text-xs",
+                  (session?.user as User)?.role === "ADMIN" &&
+                    "bg-red-500/10 text-red-700 border-red-300",
+                  (session?.user as User)?.role === "SUPERVISOR" &&
+                    "bg-blue-500/10 text-blue-700 border-blue-300",
+                  (session?.user as User)?.role === "HR" &&
+                    "bg-purple-500/10 text-purple-700 border-purple-300",
+                  (session?.user as User)?.role === "OPERATOR" &&
+                    "bg-green-500/10 text-green-700 border-green-300",
+                  (session?.user as User)?.role === "EMPLOYEE" &&
+                    "bg-gray-500/10 text-gray-700 border-gray-300"
+                )}
+              >
+                {(session?.user as User)?.role
+                  ? t(`roles.${(session?.user as User).role.toLowerCase()}`)
+                  : t("roles.viewer")}
+              </Badge>
+            </div>
           </div>
         </div>
         <div className="flex gap-2 mb-2">

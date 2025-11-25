@@ -33,6 +33,14 @@
     "loginDescription": "Masukkan kredensial Anda untuk mengakses dashboard",
     "invalidCredentials": "Email atau kata sandi tidak valid"
   },
+  "roles": {
+    "admin": "Administrator",
+    "operator": "Operator",
+    "employee": "Karyawan",
+    "supervisor": "Supervisor",
+    "hr": "Manajer SDM",
+    "viewer": "Pemirsa"
+  },
   "nav": {
     "dashboard": "Dasbor",
     "vehicles": "Kendaraan",

@@ -54,6 +54,9 @@ model Trip {
 enum Role {
   ADMIN
   OPERATOR
+  EMPLOYEE
+  SUPERVISOR
+  HR
 }
 
 enum VehicleType {

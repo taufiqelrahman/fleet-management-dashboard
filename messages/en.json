@@ -33,6 +33,14 @@
     "loginDescription": "Enter your credentials to access the dashboard",
     "invalidCredentials": "Invalid email or password"
   },
+  "roles": {
+    "admin": "Administrator",
+    "operator": "Operator",
+    "employee": "Employee",
+    "supervisor": "Supervisor",
+    "hr": "HR Manager",
+    "viewer": "Viewer"
+  },
   "nav": {
     "dashboard": "Dashboard",
     "vehicles": "Vehicles",

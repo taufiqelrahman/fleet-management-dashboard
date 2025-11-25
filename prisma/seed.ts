@@ -16,14 +16,13 @@ async function main() {
 
   console.log("✅ Cleared existing data");
 
-  // Create users
-  const adminPassword = await bcrypt.hash("password123", 10);
-  const operatorPassword = await bcrypt.hash("password123", 10);
+  // Create users with different roles
+  const password = await bcrypt.hash("password123", 10);
 
   const admin = await prisma.user.create({
     data: {
       email: "admin@nextfleet.com",
-      password: adminPassword,
+      password,
       name: "Admin NextFleet",
       role: "ADMIN",
     },
@@ -32,13 +31,45 @@ async function main() {
   const operator = await prisma.user.create({
     data: {
       email: "operator@nextfleet.com",
-      password: operatorPassword,
+      password,
       name: "Operator NextFleet",
       role: "OPERATOR",
     },
   });
 
-  console.log("✅ Created users:", admin.email, operator.email);
+  const employee = await prisma.user.create({
+    data: {
+      email: "employee@nextfleet.com",
+      password,
+      name: "Employee John Doe",
+      role: "EMPLOYEE",
+    },
+  });
+
+  const supervisor = await prisma.user.create({
+    data: {
+      email: "supervisor@nextfleet.com",
+      password,
+      name: "Supervisor Jane Smith",
+      role: "SUPERVISOR",
+    },
+  });
+
+  const hr = await prisma.user.create({
+    data: {
+      email: "hr@nextfleet.com",
+      password,
+      name: "HR Manager Sarah Lee",
+      role: "HR",
+    },
+  });
+
+  console.log("✅ Created users:");
+  console.log("  - Admin:", admin.email);
+  console.log("  - Operator:", operator.email);
+  console.log("  - Employee:", employee.email);
+  console.log("  - Supervisor:", supervisor.email);
+  console.log("  - HR:", hr.email);
 
   // Create vehicles
   const vehicles = await Promise.all([
