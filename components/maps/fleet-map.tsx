@@ -4,10 +4,19 @@ import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { useTranslations } from "next-intl";
-import { Truck, Car, Package } from "lucide-react";
+import { Truck, Car, Package, Filter, X } from "lucide-react";
 
 // Fix for default marker icon in Leaflet
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -91,20 +100,56 @@ function FitBounds({ vehicles }: { vehicles: Vehicle[] }) {
 export function FleetMap({ vehicles }: FleetMapProps) {
   const t = useTranslations();
   const [isMounted, setIsMounted] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [typeFilter, setTypeFilter] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
+  // Filter vehicles based on selected filters
+  const filteredVehicles = vehicles.filter((vehicle) => {
+    const matchesStatus =
+      statusFilter === "all" || vehicle.status === statusFilter;
+    const matchesType = typeFilter === "all" || vehicle.type === typeFilter;
+    const matchesSearch =
+      searchQuery === "" ||
+      vehicle.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      vehicle.licensePlate.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      vehicle.driverName?.toLowerCase().includes(searchQuery.toLowerCase());
+
+    return matchesStatus && matchesType && matchesSearch;
+  });
+
+  const clearFilters = () => {
+    setStatusFilter("all");
+    setTypeFilter("all");
+    setSearchQuery("");
+  };
+
+  const hasActiveFilters =
+    statusFilter !== "all" || typeFilter !== "all" || searchQuery !== "";
+
   if (!isMounted) {
     return (
-      <Card className="w-full h-[500px] flex items-center justify-center">
-        <p className="text-muted-foreground">{t("map.loading")}</p>
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Filter className="h-5 w-5" />
+            {t("map.fleetLocation")}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[500px] flex items-center justify-center">
+            <p className="text-muted-foreground">{t("map.loading")}</p>
+          </div>
+        </CardContent>
       </Card>
     );
   }
 
-  const validVehicles = vehicles.filter(
+  const validVehicles = filteredVehicles.filter(
     (v) => v.latitude !== null && v.longitude !== null
   );
 
@@ -136,54 +181,127 @@ export function FleetMap({ vehicles }: FleetMapProps) {
   };
 
   return (
-    <Card className="w-full h-[500px] overflow-hidden">
-      <MapContainer
-        center={defaultCenter}
-        zoom={12}
-        style={{ height: "100%", width: "100%" }}
-        scrollWheelZoom={true}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <FitBounds vehicles={validVehicles} />
-        {validVehicles.map((vehicle) => (
-          <Marker
-            key={vehicle.id}
-            position={[vehicle.latitude!, vehicle.longitude!]}
-            icon={createCustomIcon(vehicle.status)}
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Filter className="h-5 w-5" />
+          {t("map.fleetLocation")}
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {/* Filters */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+          <Input
+            placeholder={t("map.searchVehicle")}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="md:col-span-2"
+          />
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger>
+              <SelectValue placeholder={t("map.filterByStatus")} />
+            </SelectTrigger>
+            <SelectContent className="z-[9999]">
+              <SelectItem value="all">{t("map.allStatus")}</SelectItem>
+              <SelectItem value="ACTIVE">
+                {t("vehicles.status.active")}
+              </SelectItem>
+              <SelectItem value="MAINTENANCE">
+                {t("vehicles.status.maintenance")}
+              </SelectItem>
+              <SelectItem value="INACTIVE">
+                {t("vehicles.status.inactive")}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={typeFilter} onValueChange={setTypeFilter}>
+            <SelectTrigger>
+              <SelectValue placeholder={t("map.filterByType")} />
+            </SelectTrigger>
+            <SelectContent className="z-[9999]">
+              <SelectItem value="all">{t("map.allTypes")}</SelectItem>
+              <SelectItem value="SEDAN">{t("vehicles.type.sedan")}</SelectItem>
+              <SelectItem value="SUV">{t("vehicles.type.suv")}</SelectItem>
+              <SelectItem value="TRUCK">{t("vehicles.type.truck")}</SelectItem>
+              <SelectItem value="VAN">{t("vehicles.type.van")}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Filter summary and clear button */}
+        {hasActiveFilters && (
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-muted-foreground">
+              {t("map.showing")} {validVehicles.length} {t("map.of")}{" "}
+              {vehicles.length} {t("map.vehicles")}
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearFilters}
+              className="h-8"
+            >
+              <X className="h-3 w-3 mr-1" />
+              {t("map.clearFilters")}
+            </Button>
+          </div>
+        )}
+
+        {/* Map */}
+        <div className="h-[500px] overflow-hidden rounded-md">
+          <MapContainer
+            center={defaultCenter}
+            zoom={12}
+            style={{ height: "100%", width: "100%" }}
+            scrollWheelZoom={true}
           >
-            <Popup>
-              <div className="min-w-[200px] space-y-2">
-                <div className="flex items-center gap-2">
-                  {getVehicleIcon(vehicle.type)}
-                  <h3 className="font-semibold">{vehicle.name}</h3>
-                </div>
-                <div className="space-y-1 text-sm">
-                  <p>
-                    <span className="font-medium">
-                      {t("vehicles.licensePlate")}:
-                    </span>{" "}
-                    {vehicle.licensePlate}
-                  </p>
-                  <p>
-                    <span className="font-medium">{t("vehicles.driver")}:</span>{" "}
-                    {vehicle.driverName || "-"}
-                  </p>
-                  <p>
-                    <span className="font-medium">
-                      {t("vehicles.mileage")}:
-                    </span>{" "}
-                    {vehicle.mileage.toLocaleString()} km
-                  </p>
-                  <div className="pt-1">{getStatusBadge(vehicle.status)}</div>
-                </div>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
-      </MapContainer>
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <FitBounds vehicles={validVehicles} />
+            {validVehicles.map((vehicle) => (
+              <Marker
+                key={vehicle.id}
+                position={[vehicle.latitude!, vehicle.longitude!]}
+                icon={createCustomIcon(vehicle.status)}
+              >
+                <Popup>
+                  <div className="min-w-[200px] space-y-2">
+                    <div className="flex items-center gap-2">
+                      {getVehicleIcon(vehicle.type)}
+                      <h3 className="font-semibold">{vehicle.name}</h3>
+                    </div>
+                    <div className="space-y-1 text-sm">
+                      <p>
+                        <span className="font-medium">
+                          {t("vehicles.licensePlate")}:
+                        </span>{" "}
+                        {vehicle.licensePlate}
+                      </p>
+                      <p>
+                        <span className="font-medium">
+                          {t("vehicles.driver")}:
+                        </span>{" "}
+                        {vehicle.driverName || "-"}
+                      </p>
+                      <p>
+                        <span className="font-medium">
+                          {t("vehicles.mileage")}:
+                        </span>{" "}
+                        {vehicle.mileage.toLocaleString()} km
+                      </p>
+                      <div className="pt-1">
+                        {getStatusBadge(vehicle.status)}
+                      </div>
+                    </div>
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
+          </MapContainer>
+        </div>
+      </CardContent>
     </Card>
   );
 }

@@ -2,21 +2,22 @@
 
 ## Overview
 
-Interactive map showing real-time vehicle locations on dashboard using Leaflet.
+Interactive map with real-time vehicle tracking and advanced filtering.
 
 ## Features
 
 - **Color-coded markers**: 🟢 Active, 🔴 Maintenance, ⚫ Inactive
-- **Interactive popups**: Vehicle details on click
-- **Auto-zoom**: Fits all vehicles in view
-- **Multi-language**: EN, ID, AR support
+- **Smart filters**: Search by name/plate/driver, filter by status/type
+- **Interactive popups**: Click for vehicle details
+- **Auto-zoom**: Fits all visible vehicles
+- **Multi-language**: EN, ID, AR
 
 ## Implementation
 
 **Stack**: Leaflet + react-leaflet  
 **Location**: `components/maps/fleet-map.tsx`  
-**Database**: Added `latitude`, `longitude` to Vehicle model  
-**Demo Data**: 6 vehicles in Jakarta area
+**Database**: `latitude`, `longitude` fields in Vehicle model  
+**Demo**: 6 vehicles across Jakarta
 
 ## Files Modified
 
@@ -27,14 +28,23 @@ Interactive map showing real-time vehicle locations on dashboard using Leaflet.
 
 ## Usage
 
-Navigate to `/dashboard` - map appears below analytics charts. Click markers for details.
+**Location**: `/dashboard` (below analytics charts)
 
-## Future Enhancements
+**Filters**:
 
-- WebSocket for real-time updates
-- Route history with polylines
-- Geofencing & alerts
-- Vehicle clustering
+- Search bar: Filter by vehicle name, license plate, or driver
+- Status dropdown: Active / Maintenance / Inactive
+- Type dropdown: Sedan / SUV / Truck / Van
+- Clear button: Reset all filters
+
+**Interactions**: Click markers for vehicle details popup
+
+## Future Ideas
+
+- Real-time GPS updates via WebSocket
+- Route history polylines
+- Geofencing alerts
+- Marker clustering for large fleets
 
 ## Demo Coordinates (Jakarta)
 
