@@ -209,7 +209,19 @@ function AttendancePage() {
         };
         setTodayRecord(updatedRecord);
         setIsClockedIn(false);
-        setAttendanceHistory([updatedRecord, ...attendanceHistory]);
+
+        // Update existing record in history or add if not present
+        const existingIndex = attendanceHistory.findIndex(
+          (r) => r.id === updatedRecord.id
+        );
+        if (existingIndex >= 0) {
+          const newHistory = [...attendanceHistory];
+          newHistory[existingIndex] = updatedRecord;
+          setAttendanceHistory(newHistory);
+        } else {
+          setAttendanceHistory([updatedRecord, ...attendanceHistory]);
+        }
+
         toast({
           title: t("common.success"),
           description: result.message || "Clocked out successfully",
