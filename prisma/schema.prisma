@@ -32,6 +32,8 @@ model Vehicle {
   nextMaintenance DateTime?
   mileage         Float            @default(0)
   fuelConsumption Float            @default(0)
+  latitude        Float?
+  longitude       Float?
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   trips           Trip[]

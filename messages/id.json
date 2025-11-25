@@ -91,9 +91,15 @@
     "endDate": "Tanggal Selesai",
     "distance": "Jarak",
     "fuelUsed": "BBM Terpakai",
+    "licensePlate": "Plat Nomor",
     "active": "Aktif",
     "inactive": "Tidak Aktif",
     "maintenance": "Perawatan",
+    "status": {
+      "active": "Aktif",
+      "inactive": "Tidak Aktif",
+      "maintenance": "Perawatan"
+    },
     "gasoline": "Bensin",
     "diesel": "Diesel",
     "electric": "Listrik",
@@ -220,5 +226,12 @@
     "todayShifts": "Shift Hari Ini",
     "weekView": "Tampilan Minggu",
     "monthView": "Tampilan Bulan"
+  },
+  "map": {
+    "fleetLocation": "Lokasi Armada",
+    "loading": "Memuat peta...",
+    "vehicleLocation": "Lokasi Kendaraan",
+    "viewOnMap": "Lihat di Peta",
+    "noLocation": "Data lokasi tidak tersedia"
   }
 }

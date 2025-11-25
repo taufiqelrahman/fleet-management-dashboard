@@ -1,14 +1,31 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MonthlyMileageChart } from "@/components/charts/monthly-mileage-chart";
 import { VehicleStatusChart } from "@/components/charts/vehicle-status-chart";
+import { FleetMap } from "@/components/maps/fleet-map";
 import { useDashboardData } from "@/hooks/useAnalytics";
-import { Car, Activity, Gauge, Wrench } from "lucide-react";
+import { getVehicles } from "@/actions/vehicles";
+import { Car, Activity, Gauge, Wrench, MapPin } from "lucide-react";
 import { formatNumber } from "@/lib/utils";
 import { useTranslations } from "next-intl";
+
+type VehicleStatus = "ACTIVE" | "INACTIVE" | "MAINTENANCE";
+type VehicleType = "SEDAN" | "SUV" | "TRUCK" | "VAN";
+
+interface Vehicle {
+  id: string;
+  name: string;
+  type: VehicleType;
+  licensePlate: string;
+  status: VehicleStatus;
+  driverName: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  mileage: number;
+}
 
 function DashboardStats() {
   const t = useTranslations();
@@ -106,6 +123,56 @@ function DashboardStats() {
   );
 }
 
+function FleetMapSection() {
+  const t = useTranslations();
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadVehicles() {
+      try {
+        const result = await getVehicles();
+        if (result.success && result.data) {
+          setVehicles(result.data as Vehicle[]);
+        }
+      } catch (error) {
+        console.error("Failed to load vehicles:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadVehicles();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <MapPin className="h-5 w-5" />
+            {t("map.fleetLocation")}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[500px] flex items-center justify-center">
+            <p className="text-muted-foreground">{t("map.loading")}</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="mt-4">
+      <div className="flex items-center gap-2 mb-4">
+        <MapPin className="h-5 w-5" />
+        <h2 className="text-xl font-semibold">{t("map.fleetLocation")}</h2>
+      </div>
+      <FleetMap vehicles={vehicles} />
+    </div>
+  );
+}
+
 function DashboardCharts() {
   const t = useTranslations();
   const { data } = useDashboardData();
@@ -151,6 +218,7 @@ export default function DashboardPage() {
         <Suspense fallback={<div>{t("common.loading")}</div>}>
           <DashboardStats />
           <DashboardCharts />
+          <FleetMapSection />
         </Suspense>
       </div>
     </DashboardLayout>

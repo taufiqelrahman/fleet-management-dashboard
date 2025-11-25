@@ -91,9 +91,15 @@
     "endDate": "End Date",
     "distance": "Distance",
     "fuelUsed": "Fuel Used",
+    "licensePlate": "License Plate",
     "active": "Active",
     "inactive": "Inactive",
     "maintenance": "Maintenance",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "maintenance": "Maintenance"
+    },
     "gasoline": "Gasoline",
     "diesel": "Diesel",
     "electric": "Electric",
@@ -220,5 +226,12 @@
     "todayShifts": "Today's Shifts",
     "weekView": "Week View",
     "monthView": "Month View"
+  },
+  "map": {
+    "fleetLocation": "Fleet Location",
+    "loading": "Loading map...",
+    "vehicleLocation": "Vehicle Location",
+    "viewOnMap": "View on Map",
+    "noLocation": "Location data not available"
   }
 }

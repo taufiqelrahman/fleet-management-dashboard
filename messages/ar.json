@@ -91,9 +91,15 @@
     "endDate": "تاريخ النهاية",
     "distance": "المسافة",
     "fuelUsed": "الوقود المستهلك",
+    "licensePlate": "رقم اللوحة",
     "active": "نشط",
     "inactive": "غير نشط",
     "maintenance": "صيانة",
+    "status": {
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "maintenance": "صيانة"
+    },
     "gasoline": "بنزين",
     "diesel": "ديزل",
     "electric": "كهربائي",
@@ -220,5 +226,12 @@
     "todayShifts": "ورديات اليوم",
     "weekView": "عرض الأسبوع",
     "monthView": "عرض الشهر"
+  },
+  "map": {
+    "fleetLocation": "موقع الأسطول",
+    "loading": "جاري تحميل الخريطة...",
+    "vehicleLocation": "موقع المركبة",
+    "viewOnMap": "عرض على الخريطة",
+    "noLocation": "بيانات الموقع غير متوفرة"
   }
 }
