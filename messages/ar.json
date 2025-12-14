@@ -46,9 +46,20 @@
     "vehicles": "المركبات",
     "analytics": "التحليلات",
     "attendance": "الحضور",
-    "timesheets": "سجلات الوقت",
+    "timesheets": "جداول الوقت",
     "schedules": "الجداول",
     "settings": "الإعدادات"
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "markAllRead": "تحديد الكل كمقروء",
+    "noNotifications": "لا توجد إشعارات",
+    "maintenanceReminder": "تذكير صيانة",
+    "clockIn": "تسجيل الدخول",
+    "clockOut": "تسجيل الخروج",
+    "vehicleStatusChange": "تغيير حالة المركبة",
+    "shiftReminder": "تذكير الوردية",
+    "system": "إشعار النظام"
   },
   "dashboard": {
     "title": "لوحة التحكم",

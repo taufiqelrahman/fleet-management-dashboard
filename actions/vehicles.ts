@@ -179,6 +179,30 @@ export async function updateVehicle(
       },
     });
 
+    // Check if status changed to MAINTENANCE and send notification
+    const oldVehicle = await prisma.vehicle.findUnique({ where: { id } });
+    if (
+      oldVehicle &&
+      oldVehicle.status !== "MAINTENANCE" &&
+      updates.status === "MAINTENANCE"
+    ) {
+      // Get all admins and operators to notify
+      const usersToNotify = await prisma.user.findMany({
+        where: { role: { in: ["ADMIN", "OPERATOR"] } },
+        select: { id: true },
+      });
+
+      // Create notifications for vehicle status change
+      await prisma.notification.createMany({
+        data: usersToNotify.map((user) => ({
+          userId: user.id,
+          type: "VEHICLE_STATUS_CHANGE",
+          title: "Vehicle Status Changed",
+          message: `${updatedVehicle.name} (${updatedVehicle.licensePlate}) is now in maintenance`,
+        })),
+      });
+    }
+
     // Revalidate relevant paths
     revalidatePath("/dashboard");
     revalidatePath("/dashboard/vehicles");

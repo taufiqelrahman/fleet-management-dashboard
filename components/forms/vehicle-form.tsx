@@ -107,8 +107,12 @@ export function VehicleForm({
             <SelectValue placeholder={t("forms.selectOption")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="ACTIVE">{t("vehicles.active")}</SelectItem>
-            <SelectItem value="INACTIVE">{t("vehicles.inactive")}</SelectItem>
+            <SelectItem value="ACTIVE">
+              {t("vehicles.status.active")}
+            </SelectItem>
+            <SelectItem value="INACTIVE">
+              {t("vehicles.status.inactive")}
+            </SelectItem>
             <SelectItem value="MAINTENANCE">
               {t("vehicles.maintenance")}
             </SelectItem>

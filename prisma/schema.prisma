@@ -8,16 +8,17 @@ generator client {
 }
 
 model User {
-  id          String       @id @default(cuid())
-  email       String       @unique
-  password    String
-  name        String?
-  role        Role         @default(OPERATOR)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  attendances Attendance[]
-  timesheets  Timesheet[]
-  shifts      Shift[]
+  id            String         @id @default(cuid())
+  email         String         @unique
+  password      String
+  name          String?
+  role          Role           @default(OPERATOR)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  attendances   Attendance[]
+  timesheets    Timesheet[]
+  shifts        Shift[]
+  notifications Notification[]
 }
 
 model Vehicle {
@@ -124,6 +125,19 @@ model Shift {
   @@index([userId, startTime])
 }
 
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      NotificationType
+  title     String
+  message   String
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  @@index([userId, isRead, createdAt])
+}
+
 enum AttendanceStatus {
   PRESENT
   ABSENT
@@ -154,4 +168,13 @@ enum ShiftStatus {
   ONGOING
   COMPLETED
   CANCELLED
+}
+
+enum NotificationType {
+  MAINTENANCE_REMINDER
+  CLOCK_IN
+  CLOCK_OUT
+  VEHICLE_STATUS_CHANGE
+  SHIFT_REMINDER
+  SYSTEM
 }

@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { User } from "@/lib/types";
 import { useTranslations, useLocale } from "next-intl";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { NotificationCenter } from "./notification-center";
 
 export function Sidebar({ mobile = false }: { mobile?: boolean }) {
   const t = useTranslations();
@@ -136,6 +137,7 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
             {t("auth.logout")}
           </Button>
           <LocaleSwitcher />
+          {!mobile && <NotificationCenter />}
         </div>
       </div>
     </aside>

@@ -50,6 +50,17 @@
     "schedules": "Schedules",
     "settings": "Settings"
   },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "noNotifications": "No notifications",
+    "maintenanceReminder": "Maintenance Reminder",
+    "clockIn": "Clock In",
+    "clockOut": "Clock Out",
+    "vehicleStatusChange": "Vehicle Status Changed",
+    "shiftReminder": "Shift Reminder",
+    "system": "System Notification"
+  },
   "dashboard": {
     "title": "Dashboard",
     "overview": "Overview and quick stats",

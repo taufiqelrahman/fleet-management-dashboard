@@ -149,6 +149,18 @@ export async function clockIn(data: {
       include: { user: true },
     });
 
+    // Create notification for clock-in
+    await prisma.notification.create({
+      data: {
+        userId: authResult.user.id,
+        type: "CLOCK_IN",
+        title: "Clock In Successful",
+        message: `You clocked in at ${now.toLocaleTimeString()}${
+          status === "LATE" ? " (Late)" : ""
+        }`,
+      },
+    });
+
     revalidatePath("/[locale]/dashboard/attendance");
 
     return {
@@ -200,6 +212,16 @@ export async function clockOut(
       where: { id: attendanceId },
       data: { clockOut: new Date() },
       include: { user: true },
+    });
+
+    // Create notification for clock-out
+    await prisma.notification.create({
+      data: {
+        userId: authResult.user.id,
+        type: "CLOCK_OUT",
+        title: "Clock Out Successful",
+        message: `You clocked out at ${new Date().toLocaleTimeString()}`,
+      },
     });
 
     revalidatePath("/[locale]/dashboard/attendance");

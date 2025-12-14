@@ -33,12 +33,12 @@ export function VehicleStatusChart({ data }: VehicleStatusChartProps) {
         <Bar
           dataKey="activeVehicles"
           fill="#10b981"
-          name={t("vehicles.active")}
+          name={t("vehicles.status.active")}
         />
         <Bar
           dataKey="inactiveVehicles"
           fill="#ef4444"
-          name={t("vehicles.inactive")}
+          name={t("vehicles.status.inactive")}
         />
       </BarChart>
     </ResponsiveContainer>

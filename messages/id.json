@@ -50,6 +50,17 @@
     "schedules": "Jadwal",
     "settings": "Pengaturan"
   },
+  "notifications": {
+    "title": "Notifikasi",
+    "markAllRead": "Tandai semua dibaca",
+    "noNotifications": "Tidak ada notifikasi",
+    "maintenanceReminder": "Pengingat Perawatan",
+    "clockIn": "Masuk",
+    "clockOut": "Keluar",
+    "vehicleStatusChange": "Status Kendaraan Berubah",
+    "shiftReminder": "Pengingat Shift",
+    "system": "Notifikasi Sistem"
+  },
   "dashboard": {
     "title": "Dasbor",
     "overview": "Ringkasan",
