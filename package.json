@@ -43,7 +43,7 @@
     "jspdf-autotable": "^5.0.2",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.303.0",
-    "next": "^15.0.0",
+    "next": "^16.0.10",
     "next-auth": "^4.24.5",
     "next-intl": "^4.5.3",
     "node-cache": "^5.1.2",

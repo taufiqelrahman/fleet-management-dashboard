@@ -1,13 +1,13 @@
 # NextFleet - Fleet Management Dashboard
 
 <div align="center">
-  <h3>Enterprise-grade Fleet Management System built with Next.js 15</h3>
+  <h3>Enterprise-grade Fleet Management System built with Next.js 16</h3>
   <p>A modern, type-safe dashboard for managing vehicle fleets with real-time analytics and role-based access control</p>
 </div>
 
 ## 🚀 Overview
 
-NextFleet is a comprehensive fleet management dashboard designed to showcase enterprise-grade frontend development practices. Built with Next.js 15 (App Router), it demonstrates clean architecture, TypeScript best practices, and professional UI/UX design suitable for remote work in MENA/GCC regions.
+NextFleet is a comprehensive fleet management dashboard designed to showcase enterprise-grade frontend development practices. Built with Next.js 16 (App Router), it demonstrates clean architecture, TypeScript best practices, and professional UI/UX design suitable for remote work in MENA/GCC regions.
 
 ## ✨ Features
 
@@ -143,9 +143,9 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
 - 🔄 Fallback UI components
 - 📝 User-friendly error messages
 
-## 🛠 Tech Stack
+## 🛠️ Tech Stack
 
-- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **UI Components**: [ShadCN/UI](https://ui.shadcn.com/)

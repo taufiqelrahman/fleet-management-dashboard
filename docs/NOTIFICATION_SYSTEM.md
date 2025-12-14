@@ -2,7 +2,16 @@
 
 ## Overview
 
-Real-time notification system that keeps users informed about important events within the fleet management system. Built with TanStack Query for real-time polling and Prisma for data persistence.
+Real-time notification system that keeps users informed about important events within the fleet management system. Built with TanStack Query for real-time polling and Prisma for data persistence on Next.js 16.
+
+**Technology Stack:**
+
+- Next.js 16 (App Router) with Server Actions
+- TanStack Query v5 for state management & polling
+- Prisma 6 for database operations
+- PostgreSQL (Neon) for data storage
+- ShadCN/UI components (Bell, Badge, DropdownMenu, ScrollArea)
+- date-fns for timestamp formatting
 
 ## Features
 
