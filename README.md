@@ -248,8 +248,8 @@ fleet-management-dashboard/
 
 ### Prerequisites
 
-- Node.js >= 18.0.0
-- pnpm >= 8.0.0 (recommended) or npm >= 9.0.0
+- Node.js >= 24.11.1
+- pnpm >= 10.0.0 (recommended) or npm >= 10.0.0
 - Docker (optional, for containerization)
 
 ### Installation

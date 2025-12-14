@@ -5,6 +5,24 @@ All notable changes to NextFleet will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Version](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-12-14
+
+### Changed
+
+- **[MAJOR]** Upgraded Node.js from v18 to v24.11.1 for improved performance and latest features
+  - Updated Dockerfile to use `node:24-alpine` across all stages
+  - Updated CI/CD workflows to use Node.js 24.11.1
+  - Updated `.nvmrc` to enforce Node.js 24.11.1
+  - Updated `package.json` engine requirement to `>=24.11.1`
+  - Updated README.md prerequisites to Node.js 24.11.1
+  - Performance improvements with V8 12.4+ engine
+  - Better ESM and TypeScript support
+  - Enhanced memory management
+
+### Fixed
+
+- Fixed CSS parsing error by moving `@import` statements above `@tailwind` directives
+
 ## [1.1.0] - 2025-12-14
 
 ### Security
