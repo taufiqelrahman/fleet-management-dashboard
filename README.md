@@ -79,6 +79,37 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
   - User assignment to shifts
   - Duration and timing management
 
+### Real-time Notifications
+
+- 🔔 **Notification Center**
+
+  - Bell icon with unread badge counter
+  - Real-time notification updates (30-second polling)
+  - Notification types: Clock In/Out, Maintenance Reminders, Vehicle Status Changes, Shift Reminders
+  - Mark as read (individual & bulk)
+  - Delete notifications
+  - Scrollable notification history with timestamps
+
+- ⚡ **Auto-generated Notifications**
+  - Clock-in/out confirmations with timestamps
+  - Vehicle status change alerts for Admin & Operators
+  - Maintenance reminder notifications
+  - Multi-language notification content (EN/ID/AR)
+
+### Fleet Map Integration
+
+- 🗺️ **Interactive Map View**
+  - Leaflet-based interactive map with vehicle markers
+  - Real-time vehicle location tracking (6 vehicles in Jakarta)
+  - Color-coded status markers (Green: Active, Red: Maintenance, Gray: Inactive)
+  - Interactive popups with vehicle details
+  - Search filter by vehicle name, license plate, or driver
+  - Status filter dropdown (All/Active/Maintenance/Inactive)
+  - Type filter dropdown (All/Sedan/SUV/Truck/Van)
+  - Filter summary with vehicle count display
+  - Clear filters functionality
+  - Auto-fit bounds for visible vehicles
+
 ### Internationalization (i18n)
 
 - 🌍 Multi-language support (English, Indonesian & Arabic)
@@ -103,6 +134,7 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
   - `Attendance` - Employee clock in/out records
   - `Timesheet` - Activity time tracking with vehicle assignment
   - `Shift` - Work schedule management
+  - `Notification` - Real-time user notifications
 
 ### Error Handling
 
@@ -121,6 +153,7 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
 - **Authentication**: [NextAuth.js](https://next-auth.js.org/)
 - **Form Validation**: [Zod](https://zod.dev/) + [React Hook Form](https://react-hook-form.com/)
 - **Charts**: [Recharts](https://recharts.org/)
+- **Maps**: [Leaflet](https://leafletjs.com/) + [React Leaflet](https://react-leaflet.js.org/)
 - **Database**: [Neon PostgreSQL](https://neon.tech/) + [Prisma ORM](https://www.prisma.io/)
 - **Data Fetching**: Next.js Server Actions
 - **Internationalization**: [next-intl](https://next-intl-docs.vercel.app/) (English, Indonesian & Arabic with RTL)
@@ -152,19 +185,26 @@ fleet-management-dashboard/
 │   └── globals.css               # Global styles
 ├── actions/                      # Server Actions
 │   ├── vehicles.ts               # Vehicle CRUD operations
-│   └── analytics.ts              # Analytics data operations
+│   ├── analytics.ts              # Analytics data operations
+│   ├── attendance.ts             # Attendance operations
+│   ├── timesheets.ts             # Timesheet operations
+│   ├── schedules.ts              # Schedule operations
+│   └── notifications.ts          # Notification operations
 ├── components/
 │   ├── ui/                       # ShadCN UI components
 │   ├── charts/                   # Recharts components
 │   ├── forms/                    # Form components
+│   ├── maps/                     # Map components (FleetMap)
 │   ├── locale-switcher.tsx       # Language switcher component
 │   └── layout/                   # Layout components
-│       ├── sidebar.tsx           # Navigation sidebar (with locale switcher)
-│       ├── navbar.tsx            # Mobile navbar
+│       ├── sidebar.tsx           # Navigation sidebar (with locale & notifications)
+│       ├── navbar.tsx            # Mobile navbar (with notifications)
+│       ├── notification-center.tsx # Notification dropdown
 │       └── dashboard-layout.tsx  # Dashboard wrapper
 ├── hooks/
 │   ├── useVehicles.ts            # Vehicle data hooks
 │   ├── useAnalytics.ts           # Analytics data hooks
+│   ├── useNotifications.ts       # Notification hooks (TanStack Query)
 │   └── useRole.ts                # Role-based access hook
 ├── types/
 │   ├── index.ts                  # Common types
@@ -188,12 +228,11 @@ fleet-management-dashboard/
 │   ├── schema.prisma             # Database schema
 │   └── seed.ts                   # Database seeder
 ├── docs/                         # Documentation
-│   └── TECHNICAL.md              # Architecture & technical details
-├── __tests__/                    # Unit tests
-│   ├── utils.test.ts             # Utility tests
-│   └── validation.test.ts        # Validation tests
-├── middleware.ts                 # Route protection
-├── tailwind.config.ts            # Tailwind configuration
+│   ├── TECHNICAL.md              # Architecture & technical details
+│   ├── RBAC_SYSTEM.md            # Role-based access control guide
+│   ├── ATTENDANCE_SYSTEM.md      # Attendance & timesheet guide
+│   ├── MAP_INTEGRATION.md        # Fleet map integration guide
+│   └── RBAC_IMPLEMENTATION.md    # RBAC implementation summary
 ├── __tests__/                    # Unit tests
 │   ├── utils.test.ts             # Utility tests
 │   └── validation.test.ts        # Validation tests
