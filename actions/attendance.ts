@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { checkAuth } from "@/lib/auth-check";
 import { prisma } from "@/lib/prisma";
+import { sendPushNotification } from "@/lib/push-notifications";
 import { Prisma } from "@prisma/client";
 
 type ActionResponse<T = unknown> = {
@@ -161,6 +162,19 @@ export async function clockIn(data: {
       },
     });
 
+    // Send push notification
+    await sendPushNotification(authResult.user.id, {
+      title: "Clock In Successful",
+      body: `You clocked in at ${now.toLocaleTimeString()}${
+        status === "LATE" ? " (Late)" : ""
+      }`,
+      icon: "/icon-192x192.png",
+      data: {
+        url: "/en/dashboard/attendance",
+        type: "CLOCK_IN",
+      },
+    });
+
     revalidatePath("/[locale]/dashboard/attendance");
 
     return {
@@ -221,6 +235,17 @@ export async function clockOut(
         type: "CLOCK_OUT",
         title: "Clock Out Successful",
         message: `You clocked out at ${new Date().toLocaleTimeString()}`,
+      },
+    });
+
+    // Send push notification
+    await sendPushNotification(authResult.user.id, {
+      title: "Clock Out Successful",
+      body: `You clocked out at ${new Date().toLocaleTimeString()}`,
+      icon: "/icon-192x192.png",
+      data: {
+        url: "/en/dashboard/attendance",
+        type: "CLOCK_OUT",
       },
     });
 
