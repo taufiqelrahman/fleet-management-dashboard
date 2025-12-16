@@ -73,16 +73,16 @@ function AttendancePage() {
         },
         (error) => {
           console.log("Location error:", error.message);
-          setLocation("Location not available");
+          setLocation("");
         },
         {
           enableHighAccuracy: false,
-          timeout: 10000,
-          maximumAge: 300000,
+          timeout: 5000,
+          maximumAge: 0,
         }
       );
     } else {
-      setLocation("Location not supported");
+      setLocation("");
     }
 
     // Load real data from database
@@ -146,7 +146,10 @@ function AttendancePage() {
   const handleClockIn = async () => {
     setIsLoading(true);
     try {
-      const result = await clockIn({ location, notes });
+      const result = await clockIn({
+        location: location !== "Location not available" ? location : undefined,
+        notes,
+      });
 
       if (result.success && result.data) {
         const record = result.data;
@@ -174,7 +177,7 @@ function AttendancePage() {
           variant: "destructive",
         });
       }
-    } catch (error) {
+    } catch {
       toast({
         title: t("common.error"),
         description: "An error occurred",
@@ -233,7 +236,7 @@ function AttendancePage() {
           variant: "destructive",
         });
       }
-    } catch (error) {
+    } catch {
       toast({
         title: t("common.error"),
         description: "An error occurred",
