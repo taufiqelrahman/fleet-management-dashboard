@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { checkAuth, checkAdminAuth } from "@/lib/auth-check";
+import { sendPushByRole } from "@/lib/push-notifications";
 import { Prisma } from "@prisma/client";
 import type { Vehicle, VehicleWithTrips } from "@/lib/types";
 
@@ -200,6 +201,18 @@ export async function updateVehicle(
           title: "Vehicle Status Changed",
           message: `${updatedVehicle.name} (${updatedVehicle.licensePlate}) is now in maintenance`,
         })),
+      });
+
+      // Send push notification to admins and operators
+      await sendPushByRole(["ADMIN", "OPERATOR"], {
+        title: "Vehicle Maintenance Alert",
+        body: `${updatedVehicle.name} (${updatedVehicle.licensePlate}) is now in maintenance`,
+        icon: "/icon-192x192.png",
+        data: {
+          url: `/en/dashboard/vehicles/${id}`,
+          vehicleId: id,
+          type: "VEHICLE_STATUS_CHANGE",
+        },
       });
     }
 
