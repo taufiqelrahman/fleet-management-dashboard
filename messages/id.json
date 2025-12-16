@@ -253,5 +253,17 @@
     "of": "dari",
     "vehicles": "kendaraan",
     "clearFilters": "Hapus Filter"
+  },
+  "notifications": {
+    "enable": "Aktifkan Notifikasi",
+    "disable": "Nonaktifkan Notifikasi",
+    "enabled": "Notifikasi Diaktifkan",
+    "disabled": "Notifikasi Dinonaktifkan",
+    "enabledDesc": "Anda akan menerima notifikasi push untuk update penting",
+    "disabledDesc": "Anda tidak akan menerima notifikasi push",
+    "permissionDenied": "Izin Ditolak",
+    "permissionDeniedDesc": "Izinkan notifikasi di pengaturan browser untuk mengaktifkan fitur ini",
+    "subscribeError": "Gagal mengaktifkan notifikasi. Silakan coba lagi.",
+    "unsubscribeError": "Gagal menonaktifkan notifikasi. Silakan coba lagi."
   }
 }

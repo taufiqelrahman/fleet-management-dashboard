@@ -8,17 +8,18 @@ generator client {
 }
 
 model User {
-  id            String         @id @default(cuid())
-  email         String         @unique
-  password      String
-  name          String?
-  role          Role           @default(OPERATOR)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  attendances   Attendance[]
-  timesheets    Timesheet[]
-  shifts        Shift[]
-  notifications Notification[]
+  id               String             @id @default(cuid())
+  email            String             @unique
+  password         String
+  name             String?
+  role             Role               @default(OPERATOR)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  attendances      Attendance[]
+  timesheets       Timesheet[]
+  shifts           Shift[]
+  notifications    Notification[]
+  pushSubscriptions PushSubscription[]
 }
 
 model Vehicle {
@@ -136,6 +137,20 @@ model Notification {
   createdAt DateTime         @default(now())
 
   @@index([userId, isRead, createdAt])
+}
+
+model PushSubscription {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint   String   @unique
+  p256dh     String
+  auth       String
+  userAgent  String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId])
 }
 
 enum AttendanceStatus {

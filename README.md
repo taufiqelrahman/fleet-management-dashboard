@@ -91,10 +91,19 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
   - Scrollable notification history with timestamps
 
 - ⚡ **Auto-generated Notifications**
+
   - Clock-in/out confirmations with timestamps
   - Vehicle status change alerts for Admin & Operators
   - Maintenance reminder notifications
   - Multi-language notification content (EN/ID/AR)
+
+- 🔔 **Web Push Notifications**
+  - Browser push notifications for real-time alerts
+  - VAPID-authenticated secure push delivery
+  - Notification permission management UI
+  - Background service worker for offline notification handling
+  - Auto-cleanup of expired subscriptions
+  - Role-based notification targeting
 
 ### Fleet Map Integration
 
@@ -156,6 +165,7 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
 - **Maps**: [Leaflet](https://leafletjs.com/) + [React Leaflet](https://react-leaflet.js.org/)
 - **Database**: [Neon PostgreSQL](https://neon.tech/) + [Prisma ORM](https://www.prisma.io/)
 - **Data Fetching**: Next.js Server Actions
+- **Push Notifications**: [web-push](https://github.com/web-push-libs/web-push) with VAPID authentication
 - **Internationalization**: [next-intl](https://next-intl-docs.vercel.app/) (English, Indonesian & Arabic with RTL)
 - **RTL Support**: [tailwindcss-rtl](https://github.com/20lives/tailwindcss-rtl) for Arabic layout
 
@@ -178,7 +188,8 @@ fleet-management-dashboard/
 │   │   ├── login/                # Login page
 │   │   └── layout.tsx            # Locale layout with i18n provider
 │   ├── api/                      # API Routes
-│   │   └── auth/[...nextauth]/   # NextAuth configuration
+│   │   ├── auth/[...nextauth]/   # NextAuth configuration
+│   │   └── push/subscribe/       # Push notification subscription endpoint
 │   ├── layout.tsx                # Root layout
 │   ├── page.tsx                  # Root redirect
 │   ├── providers.tsx             # Provider setup
@@ -196,6 +207,7 @@ fleet-management-dashboard/
 │   ├── forms/                    # Form components
 │   ├── maps/                     # Map components (FleetMap)
 │   ├── locale-switcher.tsx       # Language switcher component
+│   ├── push-notification-toggle.tsx # Push notification toggle component
 │   └── layout/                   # Layout components
 │       ├── sidebar.tsx           # Navigation sidebar (with locale & notifications)
 │       ├── navbar.tsx            # Mobile navbar (with notifications)
@@ -219,7 +231,10 @@ fleet-management-dashboard/
 │   ├── validation.ts             # Zod schemas
 │   ├── types.ts                  # TypeScript types
 │   ├── utils.ts                  # Utility functions
+│   ├── push-notifications.ts     # Push notification helpers
 │   └── prisma.ts                 # Prisma client instance
+├── public/
+│   └── service-worker.js         # Service worker for push notifications
 ├── messages/                     # i18n translation files
 │   ├── en.json                   # English translations
 │   ├── id.json                   # Indonesian translations
@@ -285,6 +300,19 @@ cp .env.local.example .env.local
 DATABASE_URL="postgresql://username:password@ep-xxx-xxx.region.aws.neon.tech/dbname?sslmode=require"
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="your-secret-key-change-this-in-production"
+```
+
+d. Generate VAPID keys for Web Push notifications:
+
+```bash
+pnpm exec web-push generate-vapid-keys
+```
+
+e. Add the generated VAPID keys to `.env.local`:
+
+```env
+NEXT_PUBLIC_VAPID_PUBLIC_KEY="your-public-vapid-key-here"
+VAPID_PRIVATE_KEY="your-private-vapid-key-here"
 ```
 
 > 📖 See detailed setup guide: [docs/neon-setup.md](./docs/neon-setup.md)

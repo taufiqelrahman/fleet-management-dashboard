@@ -5,6 +5,23 @@ All notable changes to NextFleet will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Version](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2025-12-14
+
+### Added
+
+- **Web Push Notifications**
+  - Browser push notification support using Web Push API
+  - VAPID-authenticated secure push delivery
+  - PushSubscription database model for managing user subscriptions
+  - `/api/push/subscribe` endpoint for subscribing/unsubscribing to push notifications
+  - `lib/push-notifications.ts` helper library with functions for sending push notifications
+  - Service worker (`public/service-worker.js`) for background push notification handling
+  - `PushNotificationToggle` component in navbar/sidebar for managing notification permissions
+  - Auto-cleanup of expired push subscriptions (410/404 error handling)
+  - Role-based notification targeting (send by user roles)
+  - Support for notification icons, badges, and custom vibration patterns
+  - Multi-language support for push notification translations (EN/ID/AR)
+
 ## [1.2.0] - 2025-12-14
 
 ### Changed

@@ -12,6 +12,7 @@ import {
 import { Sidebar } from "./sidebar";
 import { NotificationCenter } from "./notification-center";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { PushNotificationToggle } from "@/components/push-notification-toggle";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
@@ -34,7 +35,10 @@ export function Navbar() {
         </Sheet>
         <h1 className="ml-4 text-xl font-bold">NextFleet</h1>
       </div>
-      <NotificationCenter />
+      <div className="flex items-center gap-2">
+        <PushNotificationToggle />
+        <NotificationCenter />
+      </div>
     </header>
   );
 }

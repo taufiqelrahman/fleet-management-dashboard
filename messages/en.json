@@ -250,5 +250,17 @@
     "of": "of",
     "vehicles": "vehicles",
     "clearFilters": "Clear Filters"
+  },
+  "notifications": {
+    "enable": "Enable Notifications",
+    "disable": "Disable Notifications",
+    "enabled": "Notifications Enabled",
+    "disabled": "Notifications Disabled",
+    "enabledDesc": "You will receive push notifications for important updates",
+    "disabledDesc": "You will not receive push notifications",
+    "permissionDenied": "Permission Denied",
+    "permissionDeniedDesc": "Please allow notifications in your browser settings to enable this feature",
+    "subscribeError": "Failed to enable notifications. Please try again.",
+    "unsubscribeError": "Failed to disable notifications. Please try again."
   }
 }
