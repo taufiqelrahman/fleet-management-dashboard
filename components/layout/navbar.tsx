@@ -13,13 +13,15 @@ import { Sidebar } from "./sidebar";
 import { NotificationCenter } from "./notification-center";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { PushNotificationToggle } from "@/components/push-notification-toggle";
+import { LocaleSwitcher } from "@/components/locale-switcher";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="h-16 border-b bg-card flex items-center justify-between px-6 md:hidden">
-      <div className="flex items-center">
+    <header className="h-16 border-b bg-card flex items-center justify-between px-6">
+      {/* Mobile Menu Button */}
+      <div className="flex items-center md:hidden">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon">
@@ -35,7 +37,13 @@ export function Navbar() {
         </Sheet>
         <h1 className="ml-4 text-xl font-bold">NextFleet</h1>
       </div>
+
+      {/* Desktop - Empty Space */}
+      <div className="hidden md:block" />
+
+      {/* Right Side Actions */}
       <div className="flex items-center gap-2">
+        <LocaleSwitcher />
         <PushNotificationToggle />
         <NotificationCenter />
       </div>
