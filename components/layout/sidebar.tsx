@@ -73,7 +73,7 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
   // Mobile sidebar - always expanded with additional controls
   if (mobile) {
     return (
-      <aside className="flex w-64 flex-col border-r bg-card h-full">
+      <aside className="flex w-64 flex-col border-r bg-card h-full z-10">
         <div className="p-6">
           <h1 className="text-2xl font-bold text-primary">NextFleet</h1>
           <p className="text-sm text-muted-foreground">Fleet Management</p>
@@ -157,7 +157,7 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
   return (
     <aside
       className={cn(
-        "flex-col border-r bg-card transition-all duration-300 hidden md:flex",
+        "flex-col border-r bg-card transition-all duration-300 hidden md:flex z-10",
         collapsed ? "w-16" : "w-64"
       )}
     >

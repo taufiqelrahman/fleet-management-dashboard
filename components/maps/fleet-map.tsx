@@ -234,12 +234,13 @@ export function FleetMap({ vehicles }: FleetMapProps) {
         )}
 
         {/* Map */}
-        <div className="h-[500px] overflow-hidden rounded-md">
+        <div className="h-[500px] overflow-hidden rounded-md relative z-0">
           <MapContainer
             center={defaultCenter}
             zoom={12}
             style={{ height: "100%", width: "100%" }}
             scrollWheelZoom={true}
+            className="z-0"
           >
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
