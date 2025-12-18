@@ -10,9 +10,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Sidebar } from "./sidebar";
-import { NotificationCenter } from "./notification-center";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { PushNotificationToggle } from "@/components/push-notification-toggle";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 
 export function Navbar() {
@@ -41,11 +39,9 @@ export function Navbar() {
       {/* Desktop - Empty Space */}
       <div className="hidden md:block" />
 
-      {/* Right Side Actions */}
-      <div className="flex items-center gap-2">
+      {/* Right Side Actions - Desktop Only */}
+      <div className="hidden md:flex items-center gap-2">
         <LocaleSwitcher />
-        <PushNotificationToggle />
-        <NotificationCenter />
       </div>
     </header>
   );

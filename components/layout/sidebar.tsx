@@ -226,10 +226,10 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
       </nav>
 
       {/* User Section */}
-      <div className="p-4 border-t">
+      <div className="p-4 border-t space-y-3">
         {!collapsed ? (
           <>
-            <div className="flex items-center gap-3 px-3 py-2 mb-3">
+            <div className="flex items-center gap-3 px-3 py-2">
               <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-semibold flex-shrink-0">
                 {session?.user?.name?.charAt(0) || "U"}
               </div>
@@ -259,6 +259,10 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
                 </Badge>
               </div>
             </div>
+            <div className="flex gap-2 px-3">
+              <PushNotificationToggle />
+              <NotificationCenter />
+            </div>
             <Button
               variant="outline"
               className="w-full justify-start gap-2"
@@ -270,21 +274,27 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
           </>
         ) : (
           <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="w-full"
-                  onClick={() => signOut({ callbackUrl: `/${locale}/login` })}
-                >
-                  <LogOut className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                <p>{t("auth.logout")}</p>
-              </TooltipContent>
-            </Tooltip>
+            <div className="space-y-2">
+              <div className="flex gap-1 justify-center">
+                <PushNotificationToggle />
+                <NotificationCenter />
+              </div>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="w-full"
+                    onClick={() => signOut({ callbackUrl: `/${locale}/login` })}
+                  >
+                    <LogOut className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  <p>{t("auth.logout")}</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
           </TooltipProvider>
         )}
       </div>
