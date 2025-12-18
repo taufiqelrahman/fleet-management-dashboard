@@ -136,7 +136,7 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
 
           <div className="flex gap-2 px-3">
             <LocaleSwitcher />
-            <PushNotificationToggle />
+            <PushNotificationToggle iconOnly />
             <NotificationCenter />
           </div>
 
