@@ -1,12 +1,18 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Bell, BellOff } from "lucide-react";
+import { BellRing, BellOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useTranslations } from "next-intl";
 
-export function PushNotificationToggle() {
+interface PushNotificationToggleProps {
+  iconOnly?: boolean;
+}
+
+export function PushNotificationToggle({
+  iconOnly = false,
+}: PushNotificationToggleProps) {
   const t = useTranslations();
   const { toast } = useToast();
   const [isSupported, setIsSupported] = useState(false);
@@ -188,20 +194,20 @@ export function PushNotificationToggle() {
   return (
     <Button
       variant="outline"
-      size="sm"
+      size={iconOnly ? "icon" : "sm"}
       onClick={isSubscribed ? unsubscribeFromPush : subscribeToPush}
       disabled={isLoading}
-      className="gap-2"
+      className={iconOnly ? "" : "gap-2"}
     >
       {isSubscribed ? (
         <>
           <BellOff className="h-4 w-4" />
-          {t("notifications.disable")}
+          {!iconOnly && t("notifications.disable")}
         </>
       ) : (
         <>
-          <Bell className="h-4 w-4" />
-          {t("notifications.enable")}
+          <BellRing className="h-4 w-4" />
+          {!iconOnly && t("notifications.enable")}
         </>
       )}
     </Button>

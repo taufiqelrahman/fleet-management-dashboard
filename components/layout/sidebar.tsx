@@ -275,8 +275,8 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
         ) : (
           <TooltipProvider>
             <div className="space-y-2">
-              <div className="flex gap-1 justify-center">
-                <PushNotificationToggle />
+              <div className="flex flex-col gap-1 items-center">
+                <PushNotificationToggle iconOnly />
                 <NotificationCenter />
               </div>
               <Tooltip>
