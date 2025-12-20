@@ -9,7 +9,7 @@ const intlMiddleware = createIntlMiddleware({
   localePrefix: "always",
 });
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Handle auth routes - don't check authentication
