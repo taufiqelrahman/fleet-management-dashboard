@@ -1,17 +1,38 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MonthlyMileageChart } from "@/components/charts/monthly-mileage-chart";
 import { VehicleStatusChart } from "@/components/charts/vehicle-status-chart";
-import { FleetMap } from "@/components/maps/fleet-map";
 import { useDashboardData } from "@/hooks/useAnalytics";
 import { getVehicles } from "@/actions/vehicles";
 import { Car, Activity, Gauge, Wrench, MapPin } from "lucide-react";
 import { formatNumber } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import type { Vehicle } from "@/lib/types";
+
+// Dynamically import FleetMap to avoid SSR issues with Leaflet
+const FleetMap = dynamic(
+  () => import("@/components/maps/fleet-map").then((mod) => mod.FleetMap),
+  {
+    ssr: false,
+    loading: () => (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <MapPin className="h-5 w-5" />
+            Loading Map...
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[500px] bg-muted animate-pulse rounded-lg" />
+        </CardContent>
+      </Card>
+    ),
+  }
+);
 
 function DashboardStats() {
   const t = useTranslations();
