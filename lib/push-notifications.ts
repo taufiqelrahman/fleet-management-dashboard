@@ -3,15 +3,25 @@ import { prisma } from "@/lib/prisma";
 
 // Configure VAPID keys
 const vapidKeys = {
-  publicKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
-  privateKey: process.env.VAPID_PRIVATE_KEY!,
+  publicKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || "",
+  privateKey: process.env.VAPID_PRIVATE_KEY || "",
 };
 
-webpush.setVapidDetails(
-  "mailto:admin@nextfleet.com",
-  vapidKeys.publicKey,
-  vapidKeys.privateKey
-);
+// Only set VAPID details if keys are properly configured
+if (vapidKeys.publicKey && vapidKeys.privateKey) {
+  try {
+    webpush.setVapidDetails(
+      "mailto:admin@nextfleet.com",
+      vapidKeys.publicKey,
+      vapidKeys.privateKey
+    );
+  } catch (error) {
+    console.warn(
+      "Failed to set VAPID details. Push notifications will not work:",
+      error
+    );
+  }
+}
 
 interface PushPayload {
   title: string;
