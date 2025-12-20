@@ -5,8 +5,7 @@ export const metadata: Metadata = {
   title: "NextFleet - Fleet Management Dashboard",
   description: "Enterprise-grade fleet management system built with Next.js 15",
   icons: {
-    icon: "/icon",
-    apple: "/apple-icon",
+    icon: "/favicon.svg",
   },
 };
 
