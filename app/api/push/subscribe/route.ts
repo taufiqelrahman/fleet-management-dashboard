@@ -36,31 +36,30 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if subscription already exists
+    const userAgent = request.headers.get("user-agent") || "";
+
     const existingSubscription = await prisma.pushSubscription.findUnique({
       where: { endpoint },
     });
 
     if (existingSubscription) {
-      // Update existing subscription
       await prisma.pushSubscription.update({
         where: { endpoint },
         data: {
           userId,
           p256dh: keys.p256dh,
           auth: keys.auth,
-          userAgent: request.headers.get("user-agent") || undefined,
+          userAgent,
         },
       });
     } else {
-      // Create new subscription
       await prisma.pushSubscription.create({
         data: {
           userId,
           endpoint,
           p256dh: keys.p256dh,
           auth: keys.auth,
-          userAgent: request.headers.get("user-agent") || undefined,
+          userAgent,
         },
       });
     }

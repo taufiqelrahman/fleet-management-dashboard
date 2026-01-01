@@ -260,5 +260,27 @@
     "of": "من",
     "vehicles": "مركبات",
     "clearFilters": "مسح الفلاتر"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "description": "إدارة إعدادات وتفضيلات حسابك",
+    "loginSessions": "جلسات تسجيل الدخول النشطة",
+    "devices": {
+      "noDevices": "لا توجد أجهزة نشطة",
+      "error": "خطأ",
+      "success": "نجح",
+      "fetchError": "فشل تحميل الأجهزة",
+      "removeConfirm": "هل أنت متأكد من تسجيل الخروج من هذا الجهاز؟",
+      "removeSuccess": "تم تسجيل الخروج من الجهاز بنجاح",
+      "removeError": "فشل تسجيل الخروج من الجهاز",
+      "updateError": "فشل تحديث الجهاز",
+      "trustSuccess": "تم تحديد الجهاز كموثوق",
+      "untrustSuccess": "تم إزالة الثقة من الجهاز",
+      "trusted": "موثوق",
+      "trust": "وضع علامة موثوق",
+      "untrust": "إزالة الثقة",
+      "lastActive": "آخر نشاط",
+      "lastLogin": "آخر تسجيل دخول"
+    }
   }
 }

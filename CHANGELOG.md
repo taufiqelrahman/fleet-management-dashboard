@@ -5,6 +5,55 @@ All notable changes to NextFleet will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Version](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-01-01
+
+### Added
+
+- **Login Session Management** 🖥️
+
+  - Device tracking and management for active login sessions
+  - `Device` database model with fields: deviceType, browser, OS, location, lastLoginAt, isTrusted
+  - Device fingerprinting for unique device identification
+  - Automatic device registration on user login via `useDeviceRegistration` hook
+  - `/api/devices` endpoint for GET (list devices) and POST (register device)
+  - `/api/devices/[id]` endpoint for PATCH (update) and DELETE (remove device)
+  - Settings page (`/dashboard/settings`) with device management UI
+  - Device information display: browser, OS version, device type, location, last active
+  - Mark devices as "Trusted" for enhanced security monitoring
+  - Remote logout capability from any device
+  - Visual indicators for trusted vs untrusted devices
+  - Device manager component with card-based UI
+  - Integration with DashboardLayout for consistent sidebar navigation
+  - Multi-language support for device management (EN/ID/AR)
+
+- **Security Features**
+  - Device trust management system
+  - Session activity monitoring with last login timestamps
+  - Unauthorized access detection capability
+  - IP address and location tracking for login sessions
+  - Security-focused Settings page for centralized management
+
+### Added (Library)
+
+- `lib/device-utils.ts` - Device fingerprinting, user agent parsing, display name generation
+- `hooks/useDeviceRegistration.ts` - Auto-register device on authentication
+- `components/device-manager.tsx` - UI for managing active login sessions
+- `__tests__/device-utils.test.ts` - Unit tests for device utilities
+
+### Database
+
+- Added `Device` model to Prisma schema
+- Migration: `20260101000001_add_login_session_device`
+- Added indexes for deviceFingerprint and userId lookups
+- Foreign key relationship: Device → User (CASCADE on delete)
+
+### Documentation
+
+- Updated README.md with Login Session Management features
+- Added Security & Session Management section
+- Updated project structure documentation
+- Added Device model to database models list
+
 ## [1.3.0] - 2025-12-14
 
 ### Added

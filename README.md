@@ -23,6 +23,13 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
 - 🔒 Protected routes with middleware
 - 🎯 Granular permission system for fine-grained access control
 - 📧 Credentials-based login
+- 🖥️ **Login Session Management**
+  - Track all active login sessions across devices
+  - Device fingerprinting for unique identification
+  - View device details (browser, OS, location, last active)
+  - Mark devices as trusted for enhanced security
+  - Remote logout from any device
+  - Automatic device registration on login
 
 ### Dashboard
 
@@ -105,6 +112,23 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
   - Auto-cleanup of expired subscriptions
   - Role-based notification targeting
 
+### Security & Session Management
+
+- 🛡️ **Active Login Sessions**
+  - View all devices where account is logged in
+  - Device information tracking (browser, OS, device type)
+  - Geolocation tracking (IP address & location)
+  - Last login and last active timestamps
+  - Trust management for frequently used devices
+  - Remote device logout capability
+  - Automatic device registration on authentication
+  - Device fingerprinting for unique identification
+  - Security monitoring for unauthorized access
+- 🔐 **Settings Page**
+  - Centralized security management
+  - Device trust status indicators
+  - Session activity monitoring
+
 ### Fleet Map Integration
 
 - 🗺️ **Interactive Map View**
@@ -144,6 +168,8 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
   - `Timesheet` - Activity time tracking with vehicle assignment
   - `Shift` - Work schedule management
   - `Notification` - Real-time user notifications
+  - `PushSubscription` - Web push notification subscriptions
+  - `Device` - Login session tracking and device management
 
 ### Error Handling
 
@@ -182,6 +208,7 @@ fleet-management-dashboard/
 │   │   │   ├── attendance/       # Attendance tracking
 │   │   │   ├── timesheets/       # Timesheet management
 │   │   │   ├── schedules/        # Shift scheduling
+│   │   │   ├── settings/         # User settings & session management
 │   │   │   ├── page.tsx          # Main dashboard
 │   │   │   ├── loading.tsx       # Loading state
 │   │   │   └── error.tsx         # Error boundary
@@ -189,7 +216,10 @@ fleet-management-dashboard/
 │   │   └── layout.tsx            # Locale layout with i18n provider
 │   ├── api/                      # API Routes
 │   │   ├── auth/[...nextauth]/   # NextAuth configuration
-│   │   └── push/subscribe/       # Push notification subscription endpoint
+│   │   ├── push/subscribe/       # Push notification subscription endpoint
+│   │   └── devices/              # Device management endpoints
+│   │       ├── route.ts          # GET/POST devices
+│   │       └── [id]/route.ts     # PATCH/DELETE device
 │   ├── layout.tsx                # Root layout
 │   ├── page.tsx                  # Root redirect
 │   ├── providers.tsx             # Provider setup
@@ -208,6 +238,7 @@ fleet-management-dashboard/
 │   ├── maps/                     # Map components (FleetMap)
 │   ├── locale-switcher.tsx       # Language switcher component
 │   ├── push-notification-toggle.tsx # Push notification toggle component
+│   ├── device-manager.tsx        # Login session device manager
 │   └── layout/                   # Layout components
 │       ├── sidebar.tsx           # Navigation sidebar (with locale & notifications)
 │       ├── navbar.tsx            # Mobile navbar (with notifications)
@@ -217,28 +248,26 @@ fleet-management-dashboard/
 │   ├── useVehicles.ts            # Vehicle data hooks
 │   ├── useAnalytics.ts           # Analytics data hooks
 │   ├── useNotifications.ts       # Notification hooks (TanStack Query)
+│   ├── useDeviceRegistration.ts  # Auto-register device on login
 │   └── useRole.ts                # Role-based access hook
 ├── types/
 │   ├── index.ts                  # Common types
 │   └── attendance.ts             # Attendance, Timesheet, Shift types
-├── messages/                     # i18n translation files
-│   ├── en.json                   # English translations
-│   ├── id.json                   # Indonesian translations
-│   └── ar.json                   # Arabic translations
 ├── lib/
 │   ├── auth-check.ts             # Authentication helpers
 │   ├── auth.ts                   # NextAuth configuration
 │   ├── validation.ts             # Zod schemas
 │   ├── types.ts                  # TypeScript types
 │   ├── utils.ts                  # Utility functions
+│   ├── device-utils.ts           # Device fingerprinting & parsing
 │   ├── push-notifications.ts     # Push notification helpers
 │   └── prisma.ts                 # Prisma client instance
-├── public/
-│   └── service-worker.js         # Service worker for push notifications
 ├── messages/                     # i18n translation files
 │   ├── en.json                   # English translations
 │   ├── id.json                   # Indonesian translations
 │   └── ar.json                   # Arabic translations
+├── public/
+│   └── service-worker.js         # Service worker for push notifications
 ├── prisma/
 │   ├── schema.prisma             # Database schema
 │   └── seed.ts                   # Database seeder
@@ -488,6 +517,11 @@ For detailed documentation, see:
 
 - [QUICK-START.md](QUICK-START.md) - Quick setup guide
 - [docs/TECHNICAL.md](docs/TECHNICAL.md) - Architecture & technical details
+- [docs/RBAC_SYSTEM.md](docs/RBAC_SYSTEM.md) - Role-based access control
+- [docs/ATTENDANCE_SYSTEM.md](docs/ATTENDANCE_SYSTEM.md) - Attendance tracking
+- [docs/NOTIFICATION_SYSTEM.md](docs/NOTIFICATION_SYSTEM.md) - Notification system
+- [docs/PUSH_NOTIFICATIONS.md](docs/PUSH_NOTIFICATIONS.md) - Push notification setup
+- [docs/MAP_INTEGRATION.md](docs/MAP_INTEGRATION.md) - Fleet map integration
 
 ## 📊 Key Features Demonstration
 

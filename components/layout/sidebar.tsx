@@ -11,6 +11,7 @@ import {
   Clock,
   ClipboardList,
   Calendar,
+  Settings,
   LogOut,
   ChevronLeft,
   ChevronRight,
@@ -67,6 +68,11 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
       title: t("nav.schedules"),
       href: `/${locale}/dashboard/schedules`,
       icon: Calendar,
+    },
+    {
+      title: t("nav.settings"),
+      href: `/${locale}/dashboard/settings`,
+      icon: Settings,
     },
   ];
 

@@ -260,5 +260,27 @@
     "of": "of",
     "vehicles": "vehicles",
     "clearFilters": "Clear Filters"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Manage your account settings and preferences",
+    "loginSessions": "Active Login Sessions",
+    "devices": {
+      "noDevices": "No active devices found",
+      "error": "Error",
+      "success": "Success",
+      "fetchError": "Failed to load devices",
+      "removeConfirm": "Are you sure you want to log out this device?",
+      "removeSuccess": "Device logged out successfully",
+      "removeError": "Failed to log out device",
+      "updateError": "Failed to update device",
+      "trustSuccess": "Device marked as trusted",
+      "untrustSuccess": "Device marked as untrusted",
+      "trusted": "Trusted",
+      "trust": "Mark as Trusted",
+      "untrust": "Remove Trust",
+      "lastActive": "Last active",
+      "lastLogin": "Last login"
+    }
   }
 }

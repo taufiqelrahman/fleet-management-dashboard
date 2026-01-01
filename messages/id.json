@@ -263,5 +263,27 @@
     "of": "dari",
     "vehicles": "kendaraan",
     "clearFilters": "Hapus Filter"
+  },
+  "settings": {
+    "title": "Pengaturan",
+    "description": "Kelola pengaturan dan preferensi akun Anda",
+    "loginSessions": "Sesi Login Aktif",
+    "devices": {
+      "noDevices": "Tidak ada perangkat aktif",
+      "error": "Error",
+      "success": "Berhasil",
+      "fetchError": "Gagal memuat perangkat",
+      "removeConfirm": "Apakah Anda yakin ingin logout perangkat ini?",
+      "removeSuccess": "Perangkat berhasil dilogout",
+      "removeError": "Gagal logout perangkat",
+      "updateError": "Gagal memperbarui perangkat",
+      "trustSuccess": "Perangkat ditandai sebagai terpercaya",
+      "untrustSuccess": "Perangkat ditandai sebagai tidak terpercaya",
+      "trusted": "Terpercaya",
+      "trust": "Tandai Terpercaya",
+      "untrust": "Hapus Kepercayaan",
+      "lastActive": "Terakhir aktif",
+      "lastLogin": "Terakhir login"
+    }
   }
 }
