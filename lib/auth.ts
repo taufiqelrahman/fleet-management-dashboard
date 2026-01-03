@@ -4,6 +4,7 @@ import { compare } from "bcryptjs";
 
 import type { User } from "./types";
 import { prisma } from "./prisma";
+import { trackLoginAttempt, checkSuspiciousActivity } from "./login-tracking";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -13,7 +14,7 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
@@ -41,6 +42,27 @@ export const authOptions: NextAuthOptions = {
         if (!isPasswordValid) {
           return null;
         }
+
+        // Track login attempt and detect new devices
+        const userAgent = req?.headers?.["user-agent"] || "Unknown";
+        const ipAddress =
+          (req?.headers?.["x-forwarded-for"] as string)?.split(",")[0] ||
+          (req?.headers?.["x-real-ip"] as string) ||
+          undefined;
+
+        // Track login in background (don't block auth)
+        trackLoginAttempt({
+          userId: user.id,
+          userAgent,
+          ipAddress,
+        }).catch((error) => {
+          console.error("Failed to track login:", error);
+        });
+
+        // Check for suspicious activity
+        checkSuspiciousActivity(user.id, ipAddress).catch((error) => {
+          console.error("Failed to check suspicious activity:", error);
+        });
 
         return {
           id: user.id,

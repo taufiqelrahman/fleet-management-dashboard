@@ -209,12 +209,18 @@ export async function createNotification(data: {
   title: string;
   message: string;
 }): Promise<ActionResponse<NotificationWithUser>> {
-  const authCheck = await checkAuth();
-  if (!authCheck.authorized) {
-    return {
-      success: false,
-      message: "Unauthorized",
-    };
+  // Allow system to create security notifications without auth
+  const isSecurityNotification =
+    data.type === "NEW_DEVICE_LOGIN" || data.type === "SUSPICIOUS_LOGIN";
+
+  if (!isSecurityNotification) {
+    const authCheck = await checkAuth();
+    if (!authCheck.authorized) {
+      return {
+        success: false,
+        message: "Unauthorized",
+      };
+    }
   }
 
   try {

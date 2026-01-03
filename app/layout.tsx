@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "NextFleet - Fleet Management Dashboard",
-  description: "Enterprise-grade fleet management system built with Next.js 15",
+  description: "Enterprise-grade fleet management system built with Next.js 16",
   icons: {
     icon: "/favicon.ico",
   },
