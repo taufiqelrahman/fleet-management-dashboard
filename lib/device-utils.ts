@@ -77,6 +77,8 @@ export function parseUserAgent(userAgent: string): DeviceInfo {
 
 /**
  * Generate a device fingerprint
+ * Note: This creates a stable fingerprint based on device characteristics
+ * that won't change between sessions
  */
 export function generateDeviceFingerprint(data: {
   userId: string;
@@ -84,7 +86,9 @@ export function generateDeviceFingerprint(data: {
   browser: string;
   os: string;
 }): string {
-  const fingerprint = `${data.userId}-${data.userAgent}-${data.browser}-${data.os}`;
+  // Use only stable identifiers - removing userAgent as it's too specific
+  // and can cause duplicates
+  const fingerprint = `${data.userId}-${data.browser}-${data.os}`;
   return crypto.createHash("sha256").update(fingerprint).digest("hex");
 }
 
