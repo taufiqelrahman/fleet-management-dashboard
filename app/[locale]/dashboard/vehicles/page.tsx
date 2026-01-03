@@ -182,7 +182,7 @@ export default function VehiclesPage() {
                     <TableHead>{t("vehicles.model")}</TableHead>
                     <TableHead>{t("vehicles.fuelType")}</TableHead>
                     <TableHead>{t("vehicles.plate")}</TableHead>
-                    <TableHead>{t("vehicles.status")}</TableHead>
+                    <TableHead>{t("vehicles.statusLabel")}</TableHead>
                     <TableHead>{t("vehicles.driver")}</TableHead>
                     <TableHead>{t("vehicles.lastMaintenance")}</TableHead>
                     {(canEdit || canDelete) && (

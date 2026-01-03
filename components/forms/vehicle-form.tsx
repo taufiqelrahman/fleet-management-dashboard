@@ -98,7 +98,7 @@ export function VehicleForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="status">{t("vehicles.status")}</Label>
+        <Label htmlFor="status">{t("vehicles.statusLabel")}</Label>
         <Select
           onValueChange={(value) => setValue("status", value as VehicleStatus)}
           defaultValue={vehicle?.status || "ACTIVE"}

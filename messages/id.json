@@ -112,9 +112,7 @@
     "distance": "Jarak",
     "fuelUsed": "BBM Terpakai",
     "licensePlate": "Plat Nomor",
-    "active": "Aktif",
-    "inactive": "Tidak Aktif",
-    "maintenance": "Perawatan",
+    "statusLabel": "Status",
     "status": {
       "active": "Aktif",
       "inactive": "Tidak Aktif",

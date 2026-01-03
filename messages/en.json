@@ -112,6 +112,7 @@
     "distance": "Distance",
     "fuelUsed": "Fuel Used",
     "licensePlate": "License Plate",
+    "statusLabel": "Status",
     "status": {
       "active": "Active",
       "inactive": "Inactive",

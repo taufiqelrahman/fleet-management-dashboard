@@ -112,6 +112,7 @@
     "distance": "المسافة",
     "fuelUsed": "الوقود المستخدم",
     "licensePlate": "رقم اللوحة",
+    "statusLabel": "الحالة",
     "status": {
       "active": "نشط",
       "inactive": "غير نشط",
