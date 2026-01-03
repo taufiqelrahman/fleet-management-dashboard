@@ -102,15 +102,24 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
   - Clock-in/out confirmations with timestamps
   - Vehicle status change alerts for Admin & Operators
   - Maintenance reminder notifications
+  - **New device login alerts** with device details (browser, OS, IP)
+  - **Suspicious activity warnings** for unusual login patterns
   - Multi-language notification content (EN/ID/AR)
 
 - 🔔 **Web Push Notifications**
+
   - Browser push notifications for real-time alerts
   - VAPID-authenticated secure push delivery
   - Notification permission management UI
   - Background service worker for offline notification handling
   - Auto-cleanup of expired subscriptions
   - Role-based notification targeting
+
+- 🔐 **Security Notifications**
+  - Real-time alerts for new device logins
+  - Suspicious activity detection (multiple IPs in short timeframe)
+  - Device information in notifications (browser, OS, location)
+  - Security warnings for unauthorized access attempts
 
 ### Security & Session Management
 
@@ -121,13 +130,22 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
   - Last login and last active timestamps
   - Trust management for frequently used devices
   - Remote device logout capability
-  - Automatic device registration on authentication
-  - Device fingerprinting for unique identification
-  - Security monitoring for unauthorized access
-- 🔐 **Settings Page**
+  - **Server-side device registration during authentication**
+  - Improved device fingerprinting for unique identification
+  - **Real-time security notifications for new device logins**
+  - **Automated suspicious activity detection**
+  - Device activity heartbeat for accurate "last active" tracking
+- 🔐 **Security Monitoring**
+  - Automatic new device login detection
+  - IP-based suspicious activity monitoring
+  - Multi-location access alerts (3+ IPs in 1 hour)
+  - Device trust management for known devices
+  - Security notification system integration
+- ⚙️ **Settings Page**
   - Centralized security management
   - Device trust status indicators
   - Session activity monitoring
+  - Device management and remote logout
 
 ### Fleet Map Integration
 

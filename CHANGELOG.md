@@ -5,6 +5,76 @@ All notable changes to NextFleet will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Version](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-01-03
+
+### Added
+
+- **New Device Login Notifications** 🔔
+
+  - Automatic notifications when account is accessed from a new device
+  - Real-time alerts for unrecognized login attempts
+  - Device information included in notifications (browser, OS, IP address)
+  - Security warning prompt if login wasn't user-initiated
+  - `NEW_DEVICE_LOGIN` notification type
+  - Suspicious activity detection for multiple IPs in short timeframe
+  - `SUSPICIOUS_LOGIN` notification type for security alerts
+
+- **Enhanced Device Tracking**
+  - Server-side device tracking during authentication
+  - Automatic device registration on login via `trackLoginAttempt()`
+  - Improved device fingerprinting algorithm (more stable, less duplicates)
+  - Device heartbeat system for tracking last active timestamps
+  - `/api/devices/heartbeat` endpoint for activity updates
+
+### Changed
+
+- **Device Registration Flow**
+
+  - Moved device registration from client-side to server-side (auth.ts)
+  - Device creation now happens during login authentication
+  - `useDeviceRegistration` hook now only handles activity heartbeat updates
+  - Removed redundant device registration from DashboardLayout
+  - Reduced duplicate device entries significantly
+
+- **Device Fingerprinting**
+  - Simplified fingerprint algorithm to use only: userId + browser + OS
+  - Removed full user-agent string to prevent minor version duplicates
+  - More consistent device identification across sessions
+  - Better deduplication for same browser/OS combinations
+
+### Added (Library)
+
+- `lib/login-tracking.ts` - Login attempt tracking and security monitoring
+  - `trackLoginAttempt()` - Records login and detects new devices
+  - `checkSuspiciousActivity()` - Monitors for unusual login patterns
+- `app/api/devices/heartbeat/route.ts` - Device activity heartbeat endpoint
+
+### Database
+
+- Extended `NotificationType` enum with:
+  - `NEW_DEVICE_LOGIN` - For new device detection alerts
+  - `SUSPICIOUS_LOGIN` - For security warning notifications
+
+### Security
+
+- Enhanced login security monitoring
+- IP address tracking during authentication
+- Multi-location access detection (3+ different IPs within 1 hour)
+- Automated security notifications for suspicious activity
+- Device trust management for known devices
+
+### Fixed
+
+- Duplicate device entries from parallel registration attempts
+- Device fingerprint inconsistency causing multiple entries per browser
+- Race conditions in device creation during login
+
+### Documentation
+
+- Updated README.md with new device login notification features
+- Added security monitoring documentation
+- Updated device tracking architecture notes
+
 ## [1.4.0] - 2026-01-01
 
 ### Added
