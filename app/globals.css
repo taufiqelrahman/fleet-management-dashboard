@@ -78,6 +78,13 @@
   }
 }
 
+/* 
+ * Transition Standards:
+ * - duration-150 (150ms): Simple state changes (colors, opacity)
+ * - duration-200 (200ms): Complex animations (transforms, slides)
+ * Default duration set to 150ms in tailwind.config.ts
+ */
+
 /* RTL Support */
 [dir="rtl"] {
   direction: rtl;

@@ -88,7 +88,7 @@ export function NotificationCenter() {
               <div
                 key={notification.id}
                 className={cn(
-                  "px-4 py-3 hover:bg-accent cursor-pointer border-b transition-colors",
+                  "px-4 py-3 hover:bg-accent cursor-pointer border-b transition-colors duration-150",
                   !notification.isRead && "bg-accent/50"
                 )}
               >
