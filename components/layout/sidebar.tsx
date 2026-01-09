@@ -163,7 +163,7 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
   return (
     <aside
       className={cn(
-        "flex-col border-r bg-card transition-all duration-300 hidden md:flex z-10",
+        "flex-col border-r bg-card transition-all duration-200 hidden md:flex z-10",
         collapsed ? "w-16" : "w-64"
       )}
     >
@@ -203,7 +203,7 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors",
+                  "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150",
                   isActive
                     ? "bg-primary text-primary-foreground"
                     : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
