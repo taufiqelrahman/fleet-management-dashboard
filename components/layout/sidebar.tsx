@@ -30,6 +30,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { NotificationCenter } from "./notification-center";
 import { PushNotificationToggle } from "../push-notification-toggle";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export function Sidebar({ mobile = false }: { mobile?: boolean }) {
   const t = useTranslations();
@@ -142,6 +143,7 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
 
           <div className="flex gap-2 px-3">
             <LocaleSwitcher />
+            <ThemeToggle />
             <PushNotificationToggle iconOnly />
             <NotificationCenter />
           </div>

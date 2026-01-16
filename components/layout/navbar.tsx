@@ -12,6 +12,7 @@ import {
 import { Sidebar } from "./sidebar";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { ThemeToggle } from "../ui/theme-toggle";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
@@ -42,6 +43,7 @@ export function Navbar() {
       {/* Right Side Actions - Desktop Only */}
       <div className="hidden md:flex items-center gap-2">
         <LocaleSwitcher />
+        <ThemeToggle />
       </div>
     </header>
   );

@@ -30,7 +30,7 @@ export default async function LocaleLayout({
   const fontClass = locale === "ar" ? cairo.className : inter.className;
 
   return (
-    <html lang={locale} dir={isRTL ? "rtl" : "ltr"}>
+    <html lang={locale} dir={isRTL ? "rtl" : "ltr"} suppressHydrationWarning>
       <body className={fontClass}>
         <NextIntlClientProvider messages={messages}>
           <Providers>{children}</Providers>
