@@ -12,7 +12,9 @@ NextFleet now supports dark/light mode theming using `next-themes` library. User
 - ✅ Smooth transitions (150ms for colors, 200ms for complex animations)
 - ✅ No flash of unstyled content on page load
 - ✅ Accessible with keyboard navigation and screen readers
-- ✅ Available in sidebar (mobile and desktop views)
+- ✅ **Multi-language support** (EN, ID, AR)
+- ✅ **Hydration-safe implementation** with suppressHydrationWarning
+- ✅ Available in sidebar next to language switcher
 
 ## Components
 
@@ -40,15 +42,22 @@ Wraps the entire application with `next-themes` ThemeProvider:
 
 ### ThemeToggle Component (`components/ui/theme-toggle.tsx`)
 
-A button component that toggles between light and dark modes.
+A button component that toggles between light and dark modes with i18n support.
 
 **Features:**
 
 - Sun icon for dark mode (suggests switching to light)
 - Moon icon for light mode (suggests switching to dark)
-- Tooltip showing next theme
+- Tooltip showing next theme in user's language
 - Smooth icon transition
 - Prevents hydration mismatch with `mounted` state
+- **Fully translated** using next-intl
+
+**Translations:**
+
+- `theme.toggleTheme` - Accessibility label
+- `theme.lightMode` - Light mode label
+- `theme.darkMode` - Dark mode label
 
 **Usage:**
 
@@ -57,6 +66,34 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 <ThemeToggle />;
 ```
+
+### Hydration Fix (`app/[locale]/layout.tsx`)
+
+Added `suppressHydrationWarning` to prevent hydration errors:
+
+```tsx
+<html lang={locale} dir={isRTL ? "rtl" : "ltr"} suppressHydrationWarning>
+```
+
+This is necessary because next-themes dynamically adds `className="dark"` and `style` attributes to `<html>` on the client side based on user preference.
+
+## Placement
+
+### Mobile Sidebar
+
+- Located between LocaleSwitcher and PushNotificationToggle
+- Full button with icon
+
+### Desktop Sidebar (Expanded)
+
+- **Positioned next to LocaleSwitcher** for easy access
+- Grouped in a dedicated row above notifications
+- Full button with icon and tooltip
+
+### Desktop Sidebar (Collapsed)
+
+- Theme toggle not shown in collapsed state
+- LocaleSwitcher available as icon-only button
 
 ## CSS Variables
 
@@ -98,6 +135,40 @@ transitionDuration: {
 }
 ```
 
+## Internationalization
+
+Theme toggle supports three languages:
+
+### English (en.json)
+
+```json
+"theme": {
+  "toggleTheme": "Toggle theme",
+  "lightMode": "Light Mode",
+  "darkMode": "Dark Mode"
+}
+```
+
+### Indonesian (id.json)
+
+```json
+"theme": {
+  "toggleTheme": "Ubah tema",
+  "lightMode": "Mode Terang",
+  "darkMode": "Mode Gelap"
+}
+```
+
+### Arabic (ar.json)
+
+```json
+"theme": {
+  "toggleTheme": "تبديل السمة",
+  "lightMode": "الوضع الفاتح",
+  "darkMode": "الوضع الداكن"
+}
+```
+
 ## Implementation Details
 
 ### 1. Installation
@@ -112,25 +183,53 @@ Updated `app/providers.tsx` to include ThemeProvider.
 
 ### 3. Component Creation
 
-Created `components/ui/theme-toggle.tsx` with theme switching logic.
+Created `components/ui/theme-toggle.tsx` with theme switching logic and i18n integration.
 
 ### 4. Integration
 
 Added ThemeToggle to:
 
-- Mobile sidebar
-- Desktop sidebar (expanded)
-- Desktop sidebar (collapsed)
+- Mobile sidebar (between LocaleSwitcher and notifications)
+- Desktop expanded sidebar (next to LocaleSwitcher)
+
+### 5. Hydration Fix
+
+Added `suppressHydrationWarning` to `<html>` element in layout to prevent React hydration errors.
+
+### 6. Translations
+
+Added `theme` namespace to all language files (en.json, id.json, ar.json).
+
+### 7. Jest Setup
+
+Added `window.matchMedia` mock to `jest.setup.js` for testing compatibility:
+
+```javascript
+Object.defineProperty(window, "matchMedia", {
+  writable: true,
+  value: jest.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});
+```
 
 ## Testing
 
 The theme toggle can be tested by:
 
 1. Opening the application in browser
-2. Locating the theme toggle button (Sun/Moon icon) in the sidebar
+2. Locating the theme toggle button (Sun/Moon icon) in the sidebar, next to the language switcher
 3. Clicking to switch between light and dark modes
 4. Refreshing the page to verify persistence
 5. Checking system preference synchronization
+6. Testing in different languages (EN, ID, AR)
 
 ## Best Practices
 
@@ -139,6 +238,7 @@ The theme toggle can be tested by:
 3. **Avoid theme-specific logic** - Use CSS variables instead
 4. **Consider images** - Some images may need theme-specific versions
 5. **Test transitions** - Ensure smooth theme switching
+6. **Test in all languages** - Verify translations display correctly
 
 ## Troubleshooting
 
@@ -154,11 +254,22 @@ The theme toggle can be tested by:
 - Check that CSS variables are loaded before hydration
 - Verify proper use of `mounted` state in ThemeToggle
 
+### Hydration errors
+
+- Ensure `suppressHydrationWarning` is added to `<html>` element
+- Check for mismatches between server and client rendering
+
 ### Icons not switching
 
 - Verify `theme` is correctly read from `useTheme()`
 - Check conditional rendering logic in ThemeToggle
 - Ensure component is mounted (check `mounted` state)
+
+### Translations not working
+
+- Verify translation keys exist in all language files
+- Check `useTranslations()` hook is properly imported
+- Ensure correct namespace is used (`theme.toggleTheme`, etc.)
 
 ## Future Enhancements
 
@@ -173,3 +284,5 @@ The theme toggle can be tested by:
 - [next-themes documentation](https://github.com/pacocoursey/next-themes)
 - [Tailwind CSS Dark Mode](https://tailwindcss.com/docs/dark-mode)
 - [ShadCN/UI Theming](https://ui.shadcn.com/docs/theming)
+- [Next.js Hydration](https://nextjs.org/docs/messages/react-hydration-error)
+- [next-intl Documentation](https://next-intl-docs.vercel.app/)
