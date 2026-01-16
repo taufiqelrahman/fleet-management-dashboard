@@ -22,6 +22,11 @@
     "exportCSV": "Export CSV",
     "exportPDF": "Export PDF"
   },
+  "theme": {
+    "toggleTheme": "Toggle theme",
+    "lightMode": "Light Mode",
+    "darkMode": "Dark Mode"
+  },
   "auth": {
     "login": "Login",
     "logout": "Logout",

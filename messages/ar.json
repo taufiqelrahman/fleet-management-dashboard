@@ -22,6 +22,11 @@
     "exportCSV": "تصدير CSV",
     "exportPDF": "تصدير PDF"
   },
+  "theme": {
+    "toggleTheme": "تبديل السمة",
+    "lightMode": "الوضع الفاتح",
+    "darkMode": "الوضع الداكن"
+  },
   "auth": {
     "login": "تسجيل الدخول",
     "logout": "تسجيل الخروج",

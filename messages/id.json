@@ -22,6 +22,11 @@
     "exportCSV": "Ekspor CSV",
     "exportPDF": "Ekspor PDF"
   },
+  "theme": {
+    "toggleTheme": "Ubah tema",
+    "lightMode": "Mode Terang",
+    "darkMode": "Mode Gelap"
+  },
   "auth": {
     "login": "Masuk",
     "logout": "Keluar",

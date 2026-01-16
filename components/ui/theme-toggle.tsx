@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -13,6 +14,7 @@ import {
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
+  const t = useTranslations();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -42,11 +44,11 @@ export function ThemeToggle() {
             ) : (
               <Moon className="h-5 w-5" />
             )}
-            <span className="sr-only">Toggle theme</span>
+            <span className="sr-only">{t("theme.toggleTheme")}</span>
           </Button>
         </TooltipTrigger>
         <TooltipContent>
-          <p>{theme === "dark" ? "Light Mode" : "Dark Mode"}</p>
+          <p>{theme === "dark" ? t("theme.lightMode") : t("theme.darkMode")}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
