@@ -42,6 +42,12 @@ NextFleet is a comprehensive fleet management dashboard designed to showcase ent
   - Monthly mileage trends
   - Vehicle status overview
 - ⚡ Suspense boundaries for smooth loading states
+- 🌓 **Dark/Light Mode Toggle**
+  - System preference detection
+  - Manual theme switching with next-themes
+  - Persistent theme preference
+  - Smooth transitions between themes
+  - Theme toggle available in sidebar
 
 ### Vehicle Management
 
