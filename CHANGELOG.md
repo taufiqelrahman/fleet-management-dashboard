@@ -5,6 +5,34 @@ All notable changes to NextFleet will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Version](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-01-16
+
+### Added
+
+- **Dark/Light Mode Theme Toggle** 🌓
+  - System preference detection with `next-themes`
+  - Manual theme switching between light and dark modes
+  - Persistent theme preference across sessions
+  - Smooth transitions with standardized durations (150ms/200ms)
+  - Theme toggle button in sidebar (mobile & desktop)
+  - Sun/Moon icon indicators for current theme
+  - Tooltip with current theme status
+  - Prevent transition flashing on initial load
+
+### Changed
+
+- **Standardized Transition Durations** ⏱️
+  - Unified transition timing across all components
+  - 150ms for simple state changes (colors, opacity)
+  - 200ms for complex animations (transforms, slides)
+  - Added default transition duration in Tailwind config
+  - Updated Button, Badge, Dialog, Sheet, Dropdown Menu, Toast, Table, and Sidebar components
+  - Documented transition standards in globals.css
+- **Enhanced Card Component** 💎
+  - Added subtle hover effect (shadow increase)
+  - Professional and formal interaction style
+  - Smooth transition with 200ms duration
+
 ## [1.5.0] - 2026-01-03
 
 ### Added
