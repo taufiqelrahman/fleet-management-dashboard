@@ -36,7 +36,9 @@
     "signOut": "Sign Out",
     "welcome": "Welcome back",
     "loginDescription": "Enter your credentials to access the dashboard",
-    "invalidCredentials": "Invalid email or password"
+    "invalidCredentials": "Invalid email or password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "roles": {
     "admin": "Administrator",

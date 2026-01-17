@@ -36,7 +36,9 @@
     "signOut": "تسجيل الخروج",
     "welcome": "مرحبًا بعودتك",
     "loginDescription": "أدخل بيانات الاعتماد للوصول إلى لوحة التحكم",
-    "invalidCredentials": "بريد إلكتروني أو كلمة مرور غير صحيحة"
+    "invalidCredentials": "بريد إلكتروني أو كلمة مرور غير صحيحة",
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور"
   },
   "roles": {
     "admin": "مدير النظام",

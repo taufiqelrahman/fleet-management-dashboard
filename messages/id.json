@@ -36,7 +36,9 @@
     "signOut": "Keluar",
     "welcome": "Selamat datang kembali",
     "loginDescription": "Masukkan kredensial Anda untuk mengakses dashboard",
-    "invalidCredentials": "Email atau kata sandi tidak valid"
+    "invalidCredentials": "Email atau kata sandi tidak valid",
+    "showPassword": "Tampilkan kata sandi",
+    "hidePassword": "Sembunyikan kata sandi"
   },
   "roles": {
     "admin": "Administrator",
