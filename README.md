@@ -428,7 +428,7 @@ pnpm run test:coverage
 - `pnpm dev` - Start development server
 - `pnpm build` - Build for production
 - `pnpm start` - Start production server
-- `pnpm lint` - Run ESLint
+- `pnpm lint` - Run ESLint (direct, not via Next.js)
 - `pnpm type-check` - Run TypeScript type checking
 - `pnpm test` - Run Jest tests
 - `pnpm prisma:generate` - Generate Prisma client
