@@ -30,6 +30,7 @@ export default defineConfig({
   webServer: {
     command: 'npm run dev',
     url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
+    // In CI we start the server in the workflow, so reuse existing server there.
+    reuseExistingServer: !!process.env.CI,
   },
 });
