@@ -21,6 +21,8 @@ const customJestConfig = {
     "!**/.next/**",
   ],
   passWithNoTests: true,
+  // Ignore Playwright e2e tests and generated reports
+  testPathIgnorePatterns: ["<rootDir>/e2e/", "<rootDir>/playwright-report/"],
   testMatch: ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],
 };
 
