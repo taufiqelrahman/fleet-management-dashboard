@@ -185,7 +185,6 @@ jobs:
     name: Lighthouse Performance Audit
     runs-on: ubuntu-latest
     needs: build
-    if: github.event_name == 'pull_request'
     env:
       PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING: 1
 
